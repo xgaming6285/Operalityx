@@ -4,6 +4,7 @@ import Research from "@/components/Research";
 import Community from "@/components/Community";
 import Stories from "@/components/Stories";
 import News from "@/components/News";
+import Footer from "@/components/Footer";
 
 const Index = () => {
     return (
@@ -14,6 +15,7 @@ const Index = () => {
             <Community />
             <Stories />
             <News />
+            <Footer />
         </div>
     );
 };
