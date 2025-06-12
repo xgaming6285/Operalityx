@@ -9,17 +9,41 @@ const HeroSection = () => {
                     {/* Gradient circles background */}
                     <div className="absolute inset-0 flex items-center justify-center -z-10">
                         <div className="relative w-96 h-96 md:w-[500px] md:h-[500px] lg:w-[600px] lg:h-[600px]">
-                            {/* Outermost circle */}
-                            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-teal-light/30 to-teal-medium/20 animate-float"></div>
+                            {/* Circle 1 (Outermost) */}
+                            <div className="absolute inset-0 rounded-full border-2 border-teal-light bg-gradient-to-br from-teal-light to-teal-medium/90 animate-float"></div>
 
-                            {/* Second circle */}
-                            <div className="absolute inset-8 rounded-full bg-gradient-to-br from-teal-medium/40 to-teal-dark/30 animate-float" style={{ animationDelay: '1s' }}></div>
+                            {/* Circle 2 */}
+                            <div className="absolute inset-10 rounded-full border-2 border-teal-light bg-gradient-to-br from-teal-light to-teal-medium/90 animate-float" style={{ animationDelay: '0.2s' }}></div>
 
-                            {/* Third circle */}
-                            <div className="absolute inset-16 rounded-full bg-gradient-to-br from-teal-dark/50 to-teal-darker/40 animate-float" style={{ animationDelay: '2s' }}></div>
+                            {/* Circle 3 */}
+                            <div className="absolute inset-20 rounded-full border-2 border-teal-medium bg-gradient-to-br from-teal-medium to-teal-dark/90 animate-float" style={{ animationDelay: '0.4s' }}></div>
 
-                            {/* Innermost circle */}
-                            <div className="absolute inset-24 rounded-full bg-gradient-to-br from-teal-darker/60 to-teal-darker/80 animate-float" style={{ animationDelay: '0.5s' }}></div>
+                            {/* Circle 4 */}
+                            <div className="absolute inset-30 rounded-full border-2 border-teal-medium bg-gradient-to-br from-teal-medium to-teal-dark/90 animate-float" style={{ animationDelay: '0.6s' }}></div>
+
+                            {/* Circle 5 */}
+                            <div className="absolute inset-40 rounded-full border-2 border-teal-dark bg-gradient-to-br from-teal-dark to-teal-darker/90 animate-float" style={{ animationDelay: '0.8s' }}></div>
+
+                            {/* Circle 6 */}
+                            <div className="absolute inset-[200px] rounded-full border-2 border-teal-dark bg-gradient-to-br from-teal-dark to-teal-darker/90 animate-float" style={{ animationDelay: '1.0s' }}></div>
+
+                            {/* Circle 7 */}
+                            <div className="absolute inset-[240px] rounded-full border-2 border-teal-dark bg-gradient-to-br from-teal-dark to-teal-darker/90 animate-float" style={{ animationDelay: '1.2s' }}></div>
+
+                            {/* Circle 8 */}
+                            <div className="absolute inset-[280px] rounded-full border-2 border-teal-darker bg-gradient-to-br from-teal-darker to-teal-darker/90 animate-float" style={{ animationDelay: '1.4s' }}></div>
+
+                            {/* Circle 9 */}
+                            <div className="absolute inset-[320px] rounded-full border-2 border-teal-darker bg-gradient-to-br from-teal-darker to-teal-darker/90 animate-float" style={{ animationDelay: '1.6s' }}></div>
+
+                            {/* Circle 10 */}
+                            <div className="absolute inset-[360px] rounded-full border-2 border-teal-darker bg-gradient-to-br from-teal-darker to-teal-darker/90 animate-float" style={{ animationDelay: '1.8s' }}></div>
+
+                            {/* Circle 11 */}
+                            <div className="absolute inset-[400px] rounded-full border-2 border-teal-darker bg-gradient-to-br from-teal-darker to-teal-darker/90 animate-float" style={{ animationDelay: '2.0s' }}></div>
+
+                            {/* Circle 12 (Innermost) */}
+                            <div className="absolute inset-[440px] rounded-full border-2 border-teal-darker bg-gradient-to-br from-teal-darker to-teal-darker animate-float" style={{ animationDelay: '2.2s' }}></div>
                         </div>
                     </div>
 
