@@ -34,7 +34,7 @@ const Community = () => {
                 {/* Header */}
                 <div className="flex items-center justify-between mb-12">
                     <div className="relative">
-                        <h2 className="text-4xl font-bold text-black">For Business</h2>
+                        <h2 className="text-4xl font-bold text-black">Community</h2>
                         <div className="absolute -bottom-2 left-0 w-16 h-1 bg-black"></div>
                         <div className="absolute -bottom-2 left-20 w-8 h-1 bg-gray-300"></div>
                     </div>
