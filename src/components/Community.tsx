@@ -29,33 +29,37 @@ const Community = () => {
     ];
 
     return (
-        <section id="community" className="py-16 bg-gray-50">
+        <section id="community" className="py-12 sm:py-16 lg:py-20 bg-gray-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
-                <div className="flex items-center justify-between mb-12">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 sm:mb-12 gap-6">
                     <div className="relative">
-                        <h2 className="text-4xl font-bold text-black">Community</h2>
-                        <div className="absolute -bottom-2 left-0 w-16 h-1 bg-black"></div>
-                        <div className="absolute -bottom-2 left-20 w-8 h-1 bg-gray-300"></div>
+                        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-black">Community</h2>
+                        <div className="flex items-center space-x-2 mt-2">
+                            <div className="w-16 sm:w-20 h-1 bg-black rounded-full"></div>
+                            <div className="w-8 sm:w-12 h-1 bg-gray-300 rounded-full"></div>
+                            <div className="w-6 sm:w-8 h-1 bg-gray-200 rounded-full"></div>
+                        </div>
                     </div>
-                    <div className="flex items-center space-x-3">
-                        <button className="p-3 rounded-full bg-white border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-200 group">
+                    {/* Navigation arrows - Hidden on mobile, shown on tablet and up */}
+                    <div className="hidden sm:flex items-center space-x-3">
+                        <button className="p-2 sm:p-3 rounded-full bg-white border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-200 group touch-manipulation">
                             <ChevronLeft className="w-5 h-5 text-gray-600 group-hover:text-gray-800 transition-colors" />
                         </button>
-                        <button className="p-3 rounded-full bg-white border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-200 group">
+                        <button className="p-2 sm:p-3 rounded-full bg-white border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-200 group touch-manipulation">
                             <ChevronRight className="w-5 h-5 text-gray-600 group-hover:text-gray-800 transition-colors" />
                         </button>
                     </div>
                 </div>
 
                 {/* Community Cards Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                     {communityCards.map((card, index) => (
                         <div
                             key={index}
                             className="group cursor-pointer transform transition-all duration-300 hover:scale-105 hover:-translate-y-1"
                         >
-                            <div className="relative h-80 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100">
+                            <div className="relative h-72 sm:h-80 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100">
                                 {/* Business Image Background */}
                                 <div className="absolute inset-0">
                                     <img 
@@ -69,17 +73,17 @@ const Community = () => {
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent group-hover:from-black/80 transition-all duration-300"></div>
 
                                 {/* Content */}
-                                <div className="relative h-full p-6 flex flex-col justify-between z-10">
+                                <div className="relative h-full p-4 sm:p-6 flex flex-col justify-between z-10">
                                     {/* Title */}
                                     <div className="transform transition-transform duration-300 group-hover:-translate-y-1">
-                                        <h3 className={`text-xl font-semibold leading-tight ${card.textColor} drop-shadow-sm`}>
+                                        <h3 className={`text-lg sm:text-xl font-semibold leading-tight ${card.textColor} drop-shadow-sm`}>
                                             {card.title}
                                         </h3>
                                     </div>
 
                                     {/* Description */}
                                     <div className="mt-auto transform transition-all duration-300 group-hover:translate-y-0 translate-y-1">
-                                        <p className={`text-sm leading-relaxed ${card.textColor} opacity-90 group-hover:opacity-100 transition-opacity duration-300 drop-shadow-sm`}>
+                                        <p className={`text-xs sm:text-sm leading-relaxed ${card.textColor} opacity-90 group-hover:opacity-100 transition-opacity duration-300 drop-shadow-sm`}>
                                             {card.description}
                                         </p>
                                     </div>

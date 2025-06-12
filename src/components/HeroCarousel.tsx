@@ -38,22 +38,28 @@ const HeroCarousel = () => {
             subtitle: 'True Potential.',
             description: 'Operalytx delivers intelligent automation that streamlines your processes, eliminates redundancies, and frees your team to focus on what matters most.'
         }
-    
     ];
 
+    const getCardWidth = () => {
+        if (typeof window !== 'undefined') {
+            return window.innerWidth < 768 ? window.innerWidth - 32 : window.innerWidth - 230;
+        }
+        return 0;
+    };
+
     return (
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
             <div className="relative w-full overflow-hidden">
                 <motion.div
                     ref={carouselRef}
                     className="flex gap-0 cursor-grab active:cursor-grabbing"
                     drag="x"
-                    dragConstraints={{ right: 0, left: -(cards.length - 1) * (window.innerWidth - 48) }}
+                    dragConstraints={{ right: 0, left: -(cards.length - 1) * getCardWidth() }}
                 >
                     {cards.map((card) => (
                         <div
                             key={card.id}
-                            className={`relative min-w-[calc(100vw-230px)] h-[810px] rounded-3xl overflow-hidden mx-6 ${
+                            className={`relative min-w-[calc(100vw-2rem)] sm:min-w-[calc(100vw-14.375rem)] h-[600px] sm:h-[700px] lg:h-[810px] rounded-2xl sm:rounded-3xl overflow-hidden mx-4 sm:mx-6 ${
                                 card.type === 'chat' 
                                     ? 'bg-white border-2 border-gray-200 shadow-2xl' 
                                     : ''
@@ -64,24 +70,24 @@ const HeroCarousel = () => {
                                 backgroundPosition: 'center',
                             } : {}}
                         >
-                            <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-                                <h1 className={`text-6xl lg:text-7xl mb-8 ${card.id === 2 ? 'text-black' : 'text-white'}`}>
+                            <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 sm:px-6">
+                                <h1 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl mb-6 sm:mb-8 leading-tight ${card.id === 2 ? 'text-black' : 'text-white'}`}>
                                     {card.title}
                                     <br />
                                     {card.subtitle}
                                 </h1>
-                                <p className={`text-xl lg:text-2xl opacity-90 max-w-2xl mx-auto mb-8 mt-8 ${card.id === 2 ? 'text-black' : 'text-white'}`}>
+                                <p className={`text-base sm:text-lg md:text-xl lg:text-2xl opacity-90 max-w-2xl mx-auto mb-6 sm:mb-8 mt-4 sm:mt-8 px-4 ${card.id === 2 ? 'text-black' : 'text-white'}`}>
                                     {card.description}
                                 </p>
                                 
                                 {card.type === 'chat' ? (
                                     <ChatBox />
                                 ) : (
-                                    <div className="flex gap-8 mt-8">
-                                        <button className="px-4 py-0 bg-white text-black rounded-full font-semibold hover:bg-opacity-90 transition-colors text-lg">
+                                    <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 mt-6 sm:mt-8 w-full max-w-md sm:max-w-none">
+                                        <button className="w-full sm:w-auto px-6 sm:px-4 py-3 sm:py-0 bg-white text-black rounded-full font-semibold hover:bg-opacity-90 transition-colors text-base sm:text-lg">
                                             Get Started
                                         </button>
-                                        <a href="#research" className="px-4 py-1 border bg-white border-white rounded-full font-semibold hover:bg-white/10 transition-colors text-lg text-black no-underline">
+                                        <a href="#research" className="w-full sm:w-auto px-6 sm:px-4 py-3 sm:py-1 border bg-white border-white rounded-full font-semibold hover:bg-white/10 transition-colors text-base sm:text-lg text-black no-underline text-center">
                                             Read More
                                         </a>
                                     </div>

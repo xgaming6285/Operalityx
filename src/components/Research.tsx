@@ -6,8 +6,9 @@ const Research = () => {
 
     const scrollLeft = () => {
         if (scrollContainerRef.current) {
+            const scrollAmount = window.innerWidth < 768 ? 280 : 320;
             scrollContainerRef.current.scrollBy({
-                left: -320,
+                left: -scrollAmount,
                 behavior: 'smooth'
             });
         }
@@ -15,8 +16,9 @@ const Research = () => {
 
     const scrollRight = () => {
         if (scrollContainerRef.current) {
+            const scrollAmount = window.innerWidth < 768 ? 280 : 320;
             scrollContainerRef.current.scrollBy({
-                left: 320,
+                left: scrollAmount,
                 behavior: 'smooth'
             });
         }
@@ -50,30 +52,32 @@ const Research = () => {
     ];
 
     return (
-        <section id="research" className="py-20 bg-gray-50">
+        <section id="research" className="py-12 sm:py-16 lg:py-20 bg-gray-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
-                <div className="flex items-center justify-between mb-16">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-12 sm:mb-16 gap-6">
                     <div className="relative">
-                        <h2 className="text-5xl font-bold text-gray-900 mb-2">Research</h2>
+                        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-2">Research</h2>
                         <div className="flex items-center space-x-2">
-                            <div className="w-20 h-1 bg-gray-900 rounded-full"></div>
-                            <div className="w-12 h-1 bg-gray-300 rounded-full"></div>
-                            <div className="w-8 h-1 bg-gray-200 rounded-full"></div>
+                            <div className="w-16 sm:w-20 h-1 bg-gray-900 rounded-full"></div>
+                            <div className="w-8 sm:w-12 h-1 bg-gray-300 rounded-full"></div>
+                            <div className="w-6 sm:w-8 h-1 bg-gray-200 rounded-full"></div>
                         </div>
                     </div>
                     <div className="flex items-center space-x-3">
                         <button 
                             onClick={scrollLeft}
-                            className="p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 border border-gray-100"
+                            className="p-2 sm:p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 border border-gray-100 touch-manipulation"
+                            aria-label="Scroll left"
                         >
-                            <ChevronLeft className="w-6 h-6 text-gray-600" />
+                            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
                         </button>
                         <button 
                             onClick={scrollRight}
-                            className="p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 border border-gray-100"
+                            className="p-2 sm:p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 border border-gray-100 touch-manipulation"
+                            aria-label="Scroll right"
                         >
-                            <ChevronRight className="w-6 h-6 text-gray-600" />
+                            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
                         </button>
                     </div>
                 </div>
@@ -81,7 +85,7 @@ const Research = () => {
                 {/* Research Cards - Horizontal Layout */}
                 <div 
                     ref={scrollContainerRef}
-                    className="flex space-x-8 overflow-x-auto pb-6 scrollbar-hide"
+                    className="flex space-x-4 sm:space-x-6 lg:space-x-8 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory"
                     style={{
                         scrollbarWidth: 'none',
                         msOverflowStyle: 'none'
@@ -90,7 +94,7 @@ const Research = () => {
                     {researchCards.map((card, index) => (
                         <div
                             key={index}
-                            className="flex-none w-80 h-[450px] rounded-3xl overflow-hidden cursor-pointer transform transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl group relative border border-gray-200"
+                            className="flex-none w-72 sm:w-80 h-[400px] sm:h-[450px] rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer transform transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl group relative border border-gray-200 snap-start"
                         >
                             {/* Research Image as Card */}
                             <div className="relative w-full h-full">
@@ -105,11 +109,11 @@ const Research = () => {
                                 
                                 {/* Card info overlay - always visible */}
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent">
-                                    <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                                        <div className="text-sm font-medium opacity-90 uppercase tracking-wider mb-2">
+                                    <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 text-white">
+                                        <div className="text-xs sm:text-sm font-medium opacity-90 uppercase tracking-wider mb-2">
                                             {card.title} • {card.date}
                                         </div>
-                                        <h3 className="text-lg font-bold leading-tight">
+                                        <h3 className="text-base sm:text-lg font-bold leading-tight">
                                             {card.description}
                                         </h3>
                                     </div>
@@ -120,7 +124,7 @@ const Research = () => {
                 </div>
                 
                 {/* Bottom spacing */}
-                <div className="mt-8"></div>
+                <div className="mt-6 sm:mt-8"></div>
             </div>
         </section>
     );
