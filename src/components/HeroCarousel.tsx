@@ -41,19 +41,19 @@ const HeroCarousel = () => {
                             }}
                         >
                             <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-                                <h1 className="text-6xl lg:text-7xl font-bold mb-4">
+                                <h1 className="text-6xl lg:text-7xl mb-8 text-white" >
                                     {card.title}
                                     <br />
                                     {card.subtitle}
                                 </h1>
-                                <p className="text-xl lg:text-2xl opacity-90 max-w-2xl mx-auto mb-8">
+                                <p className="text-xl lg:text-2xl opacity-90 max-w-2xl mx-auto mb-8 mt-8 text-white">
                                     {card.description}
                                 </p>
-                                <div className="flex gap-4 mt-8">
-                                    <button className="px-8 py-4 bg-white text-black rounded-full font-semibold hover:bg-opacity-90 transition-colors text-lg">
+                                <div className="flex gap-8 mt-8">
+                                    <button className="px-4 py-0 bg-white text-black rounded-full font-semibold hover:bg-opacity-90 transition-colors text-lg">
                                         Get Started
                                     </button>
-                                    <button className="px-8 py-4 border border-white rounded-full font-semibold hover:bg-white/10 transition-colors text-lg">
+                                    <button className="px-4 py-1 border  bg-white border-white rounded-full font-semibold hover:bg-white/10 transition-colors text-lg">
                                         Read More
                                     </button>
                                 </div>
