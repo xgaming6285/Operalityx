@@ -7,28 +7,28 @@ const HeroCarousel = () => {
     const cards = [
         {
             id: 1,
-            image: '/images/first.png',
+            image: '/images/first.webp',
             title: "Unlock Your Business's",
             subtitle: 'True Potential.',
             description: 'Operalytx delivers intelligent automation that streamlines your processes, eliminates redundancies, and frees your team to focus on what matters most.'
         },
         {
             id: 2,
-            image: '/images/second.png',
+            image: '/images/second.webp',
             title: 'Transform Your',
             subtitle: 'Business Operations',
             description: 'Leverage our cutting-edge solutions to optimize your workflow and drive unprecedented growth.'
         },
         {
             id: 3,
-            image: '/images/third.png',
+            image: '/images/third.jpg',
             title: 'Transform Your',
             subtitle: 'Business Operations',
             description: 'Leverage our cutting-edge solutions to optimize your workflow and drive unprecedented growth.'
         },
         {
             id: 4,
-            image: '/images/fourth.png',
+            image: '/images/fourth.jpg',
             title: 'Transform Your',
             subtitle: 'Business Operations',
             description: 'Leverage our cutting-edge solutions to optimize your workflow and drive unprecedented growth.'
