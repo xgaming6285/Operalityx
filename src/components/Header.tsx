@@ -1,7 +1,20 @@
 import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 
 const Header = () => {
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrollPosition = window.scrollY;
+            setIsScrolled(scrollPosition > 0);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     const navigationItems = [
         { name: "Research", href: "#research" },
         { name: "Solutions", href: "#solutions" },
@@ -11,7 +24,10 @@ const Header = () => {
     ];
 
     return (
-        <header className="w-full bg-white  border-gray-200 mt-4 mb-4">
+        <header className={`w-full fixed top-0 z-50 transition-all duration-300 ${isScrolled
+                ? "bg-white/80 backdrop-blur-md shadow-sm"
+                : "bg-white mt-4"
+            }`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
