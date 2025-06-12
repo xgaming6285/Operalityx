@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 
 const HeroSection = () => {
     return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-gradient-to-br from-turquoise-900 via-turquoise-800 to-black flex items-center justify-center px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center">
                 {/* Main content container */}
                 <div className="relative">
@@ -26,8 +26,7 @@ const HeroSection = () => {
                     {/* Content */}
                     <div className="relative z-10 py-20">
                         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 leading-tight">
-                            Unlock Your<br />
-                            Business's<br />
+                            Unlock Your Business's<br />
                             True Potential.
                         </h1>
 
@@ -57,11 +56,11 @@ const HeroSection = () => {
 
                 {/* Pagination dots */}
                 <div className="flex justify-center space-x-3 mt-16">
-                    <div className="w-3 h-3 rounded-full bg-gray-800"></div>
-                    <div className="w-3 h-3 rounded-full bg-gray-300"></div>
-                    <div className="w-3 h-3 rounded-full bg-gray-300"></div>
-                    <div className="w-3 h-3 rounded-full bg-gray-300"></div>
-                    <div className="w-3 h-3 rounded-full bg-gray-300"></div>
+                    <div className="w-3 h-3 rounded-full bg-white"></div>
+                    <div className="w-3 h-3 rounded-full bg-white/30"></div>
+                    <div className="w-3 h-3 rounded-full bg-white/30"></div>
+                    <div className="w-3 h-3 rounded-full bg-white/30"></div>
+                    <div className="w-3 h-3 rounded-full bg-white/30"></div>
                 </div>
             </div>
         </div>
