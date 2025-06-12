@@ -17,20 +17,20 @@ const HeroCarousel = () => {
             image: '/images/second.webp',
             title: 'Transform Your',
             subtitle: 'Business Operations',
-            description: 'Leverage our cutting-edge solutions to optimize your workflow and drive unprecedented growth.'
+            description: 'Harness the power of Artificial Intelligence to automate complex tasks, gain unprecedented insights from your data, and build a more agile, resilient operation.'
         },
         {
             id: 3,
             image: '/images/third.jpg',
-            title: 'Transform Your',
-            subtitle: 'Business Operations',
-            description: 'Leverage our cutting-edge solutions to optimize your workflow and drive unprecedented growth.'
+            title: 'Automate the Mundane',
+            subtitle: 'Accelerate the Meaningful',
+            description: 'Harness the power of Artificial Intelligence to automate complex tasks, gain unprecedented insights from your data, and build a more agile, resilient operation.'
         },
         {
             id: 4,
             image: '/images/fourth.jpg',
-            title: 'Transform Your',
-            subtitle: 'Business Operations',
+            title: 'Your Partner in Intelligent',
+            subtitle: 'Transformation',
             description: 'Leverage our cutting-edge solutions to optimize your workflow and drive unprecedented growth.'
         }
     ];
@@ -55,21 +55,21 @@ const HeroCarousel = () => {
                             }}
                         >
                             <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-                                <h1 className="text-6xl lg:text-7xl mb-8 text-white" >
+                                <h1 className={`text-6xl lg:text-7xl mb-8 ${card.id === 2 ? 'text-black' : 'text-white'}`} >
                                     {card.title}
                                     <br />
                                     {card.subtitle}
                                 </h1>
-                                <p className="text-xl lg:text-2xl opacity-90 max-w-2xl mx-auto mb-8 mt-8 text-white">
+                                <p className={`text-xl lg:text-2xl opacity-90 max-w-2xl mx-auto mb-8 mt-8 ${card.id === 2 ? 'text-black' : 'text-white'}`}>
                                     {card.description}
                                 </p>
                                 <div className="flex gap-8 mt-8">
                                     <button className="px-4 py-0 bg-white text-black rounded-full font-semibold hover:bg-opacity-90 transition-colors text-lg">
                                         Get Started
                                     </button>
-                                    <button className="px-4 py-1 border  bg-white border-white rounded-full font-semibold hover:bg-white/10 transition-colors text-lg">
+                                    <a href="#research" className="px-4 py-1 border bg-white border-white rounded-full font-semibold hover:bg-white/10 transition-colors text-lg text-black no-underline">
                                         Read More
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
                         </div>
