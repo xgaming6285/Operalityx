@@ -7,7 +7,7 @@ const Research = () => {
     const scrollLeft = () => {
         if (scrollContainerRef.current) {
             scrollContainerRef.current.scrollBy({
-                left: -320, // Width of one card plus gap
+                left: -320,
                 behavior: 'smooth'
             });
         }
@@ -16,75 +16,64 @@ const Research = () => {
     const scrollRight = () => {
         if (scrollContainerRef.current) {
             scrollContainerRef.current.scrollBy({
-                left: 320, // Width of one card plus gap
+                left: 320,
                 behavior: 'smooth'
             });
         }
     };
+
     const researchCards = [
-        {
-            title: "System Architecture",
-            date: "May 2025",
-            description: "Automated reasoning for complex enterprise workflows",
-            bgColor: "bg-gradient-to-br from-orange-50 via-orange-100 to-amber-50",
-            icon: (
-                <div className="flex flex-col items-center relative">
-                    <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center shadow-lg mb-2">
-                        <div className="w-3 h-3 bg-white rounded-full"></div>
-                    </div>
-                    <div className="w-14 h-14 bg-gradient-to-br from-orange-400 to-orange-500 rounded-full flex items-center justify-center shadow-md mb-2 -mt-3">
-                        <div className="w-2.5 h-2.5 bg-white rounded-full"></div>
-                    </div>
-                    <div className="w-12 h-12 bg-gradient-to-br from-orange-300 to-orange-400 rounded-full flex items-center justify-center shadow-sm -mt-3">
-                        <div className="w-2 h-2 bg-white rounded-full"></div>
-                    </div>
-                    <div className="absolute left-1/2 top-1/2 w-20 h-20 border-2 border-dotted border-orange-400 rounded-full opacity-50 transform -translate-x-1/2 -translate-y-1/2"></div>
-                </div>
-            )
-        },
         {
             title: "AI Research",
             date: "May 2025",
             description: "Multi-agent orchestration with dynamic task alignment",
-            bgColor: "bg-gradient-to-br from-orange-500 via-red-500 to-red-600"
+            image: "/research/Operalityx - Site Design 9062025 (4).png"
         },
         {
             title: "Product Launch",
             date: "May 2025",
             description: "Introducing FlowStack: modular pipelines for adaptive automation",
-            bgColor: "bg-gradient-to-br from-blue-600 via-purple-600 to-violet-700",
-            hasStarburst: true
+            image: "/research/Operalityx - Site Design 9062025 (5).png"
         },
         {
             title: "Efficiency & Scaling",
             date: "May 2025",
             description: "Redefining latency optimization for low-power intelligence",
-            bgColor: "bg-gradient-to-br from-teal-600 via-cyan-600 to-blue-700"
-        }
+            image: "/research/Operalityx - Site Design 9062025 (4).png"
+        },
+        {
+            title: "Efficiency & Scaling",
+            date: "May 2025",
+            description: "Redefining latency optimization for low-power intelligence",
+            image: "/research/Operalityx - Site Design 9062025 (5).png"
+        },
     ];
 
     return (
-        <section id="research" className="py-16 bg-white">
+        <section id="research" className="py-20 bg-gradient-to-b from-gray-50 to-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
-                <div className="flex items-center justify-between mb-12">
+                <div className="flex items-center justify-between mb-16">
                     <div className="relative">
-                        <h2 className="text-4xl font-bold text-black">Research</h2>
-                        <div className="absolute -bottom-2 left-0 w-16 h-1 bg-black"></div>
-                        <div className="absolute -bottom-2 left-20 w-8 h-1 bg-gray-300"></div>
+                        <h2 className="text-5xl font-bold text-gray-900 mb-2">Research</h2>
+                        <div className="flex items-center space-x-2">
+                            <div className="w-20 h-1 bg-gray-900 rounded-full"></div>
+                            <div className="w-12 h-1 bg-gray-300 rounded-full"></div>
+                            <div className="w-8 h-1 bg-gray-200 rounded-full"></div>
+                        </div>
                     </div>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-3">
                         <button 
                             onClick={scrollLeft}
-                            className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                            className="p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 border border-gray-100"
                         >
-                            <ChevronLeft className="w-5 h-5 text-gray-600" />
+                            <ChevronLeft className="w-6 h-6 text-gray-600" />
                         </button>
                         <button 
                             onClick={scrollRight}
-                            className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                            className="p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 border border-gray-100"
                         >
-                            <ChevronRight className="w-5 h-5 text-gray-600" />
+                            <ChevronRight className="w-6 h-6 text-gray-600" />
                         </button>
                     </div>
                 </div>
@@ -92,7 +81,7 @@ const Research = () => {
                 {/* Research Cards - Horizontal Layout */}
                 <div 
                     ref={scrollContainerRef}
-                    className="flex space-x-6 overflow-x-auto pb-4 scrollbar-hide"
+                    className="flex space-x-8 overflow-x-auto pb-6 scrollbar-hide"
                     style={{
                         scrollbarWidth: 'none',
                         msOverflowStyle: 'none'
@@ -101,73 +90,37 @@ const Research = () => {
                     {researchCards.map((card, index) => (
                         <div
                             key={index}
-                            className="flex-none w-80 h-96 rounded-2xl overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-xl relative"
+                            className="flex-none w-80 h-[450px] rounded-3xl overflow-hidden cursor-pointer transform transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl group relative border border-gray-200"
                         >
-                            {/* Background Gradient */}
-                            <div className={`absolute inset-0 ${card.bgColor}`}></div>
-                            
-                            {/* Starburst Effect for Product Launch Card */}
-                            {card.hasStarburst && (
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="relative w-full h-full">
-                                        {/* Radial rays */}
-                                        {[...Array(16)].map((_, i) => (
-                                            <div
-                                                key={i}
-                                                className="absolute w-0.5 bg-gradient-to-t from-transparent via-white/40 to-transparent"
-                                                style={{
-                                                    height: '70%',
-                                                    left: '50%',
-                                                    top: '50%',
-                                                    transformOrigin: 'bottom center',
-                                                    transform: `translate(-50%, -100%) rotate(${i * 22.5}deg)`,
-                                                }}
-                                            />
-                                        ))}
-                                        {/* Central bright point */}
-                                        <div className="absolute top-1/2 left-1/2 w-3 h-3 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2 opacity-90"></div>
-                                        {/* Inner glow effect */}
-                                        <div className="absolute top-1/2 left-1/2 w-8 h-8 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2 opacity-30 blur-sm"></div>
-                                        {/* Outer glow effect */}
-                                        <div className="absolute top-1/2 left-1/2 w-24 h-24 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2 opacity-10 blur-2xl"></div>
+                            {/* Research Image as Card */}
+                            <div className="relative w-full h-full">
+                                <img 
+                                    src={card.image} 
+                                    alt={card.title}
+                                    className="w-full h-full object-cover"
+                                />
+                                
+                                {/* Overlay for hover effect */}
+                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300"></div>
+                                
+                                {/* Card info overlay - always visible */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent">
+                                    <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                                        <div className="text-sm font-medium opacity-90 uppercase tracking-wider mb-2">
+                                            {card.title} • {card.date}
+                                        </div>
+                                        <h3 className="text-lg font-bold leading-tight">
+                                            {card.description}
+                                        </h3>
                                     </div>
-                                </div>
-                            )}
-                            
-                            {/* Content */}
-                            <div className="relative h-full p-6 flex flex-col text-white z-10">
-                                {/* Top Section */}
-                                <div className="mb-4">
-                                    <div className="text-sm font-medium opacity-90">
-                                        {card.title} • {card.date}
-                                    </div>
-                                </div>
-
-                                {/* Icon Section (for System Architecture card) */}
-                                {index === 0 && (
-                                    <div className="flex-1 flex items-center justify-center">
-                                        {card.icon}
-                                    </div>
-                                )}
-
-                                {/* Center content for other cards */}
-                                {index !== 0 && (
-                                    <div className="flex-1"></div>
-                                )}
-
-                                {/* Bottom Section */}
-                                <div className="mt-auto">
-                                    <h3 className="text-lg font-semibold leading-tight">
-                                        {card.description}
-                                    </h3>
                                 </div>
                             </div>
-
-                            {/* Subtle overlay for better text readability */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
                         </div>
                     ))}
                 </div>
+                
+                {/* Bottom spacing */}
+                <div className="mt-8"></div>
             </div>
         </section>
     );
