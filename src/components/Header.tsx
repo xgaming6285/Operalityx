@@ -31,54 +31,15 @@ const Header = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
-                    <div className="flex items-center space-x-2">
-                        <div className="w-8 h-8 relative">
-                            <svg
-                                viewBox="0 0 40 40"
-                                className="w-full h-full"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                {/* Atomic symbol representation */}
-                                <circle
-                                    cx="20"
-                                    cy="20"
-                                    r="18"
-                                    stroke="currentColor"
-                                    strokeWidth="1.5"
-                                    fill="none"
-                                />
-                                <ellipse
-                                    cx="20"
-                                    cy="20"
-                                    rx="18"
-                                    ry="8"
-                                    stroke="currentColor"
-                                    strokeWidth="1.5"
-                                    fill="none"
-                                    transform="rotate(45 20 20)"
-                                />
-                                <ellipse
-                                    cx="20"
-                                    cy="20"
-                                    rx="18"
-                                    ry="8"
-                                    stroke="currentColor"
-                                    strokeWidth="1.5"
-                                    fill="none"
-                                    transform="rotate(-45 20 20)"
-                                />
-                                <circle
-                                    cx="20"
-                                    cy="20"
-                                    r="3"
-                                    fill="currentColor"
-                                />
-                            </svg>
+                    <div className="flex items-center space-x-6">
+                        <div className="w-68 h-36 relative">
+                            <img
+                                src="/images/logo.png"
+                                alt="Operalytix Logo"
+                                className="w-full h-full object-contain"
+                            />
                         </div>
-                        <span className="text-xl font-semibold text-gray-900">
-                            Operalytix
-                        </span>
+                       
                     </div>
 
                     {/* Navigation Menu */}
