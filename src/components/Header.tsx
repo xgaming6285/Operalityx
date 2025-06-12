@@ -1,20 +1,18 @@
-import { Menu } from "lucide-react";
+import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Header = () => {
+    const navigationItems = [
+        { name: "Research", href: "#research" },
+        { name: "Community", href: "#community" },
+        { name: "Solutions", href: "#solutions" },
+        { name: "Company", href: "#company" },
+    ];
+
     return (
         <header className="w-full bg-white border-b border-gray-200">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
-                    {/* Menu Button */}
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className="hover:bg-gray-100 transition-colors"
-                    >
-                        <Menu className="h-6 w-6" />
-                    </Button>
-
                     {/* Logo */}
                     <div className="flex items-center space-x-2">
                         <div className="w-8 h-8 relative">
@@ -66,8 +64,27 @@ const Header = () => {
                         </span>
                     </div>
 
-                    {/* Spacer for balance */}
-                    <div className="w-10"></div>
+                    {/* Navigation Menu */}
+                    <nav className="hidden md:flex items-center space-x-8">
+                        {navigationItems.map((item) => (
+                            <a
+                                key={item.name}
+                                href={item.href}
+                                className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors duration-200"
+                            >
+                                {item.name}
+                            </a>
+                        ))}
+                    </nav>
+
+                    {/* Search Button */}
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="hover:bg-gray-100 transition-colors"
+                    >
+                        <Search className="h-5 w-5" />
+                    </Button>
                 </div>
             </div>
         </header>
