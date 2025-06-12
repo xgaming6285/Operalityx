@@ -8,10 +8,7 @@ const HeroCarousel = () => {
     const cards = [
         {
             id: 1,
-            image: '/images/first.webp',
-            title: "Unlock Your Business's",
-            subtitle: 'True Potential.',
-            description: 'Operalytx delivers intelligent automation that streamlines your processes, eliminates redundancies, and frees your team to focus on what matters most.'
+            type: 'chat',
         },
         {
             id: 2,
@@ -36,11 +33,12 @@ const HeroCarousel = () => {
         },
         {
             id: 5,
-            type: 'chat',
-            title: 'Chat with Our',
-            subtitle: 'AI Assistant',
-            description: 'Ask questions, get insights, and explore how our AI can transform your business.'
+            image: '/images/first.webp',
+            title: "Unlock Your Business's",
+            subtitle: 'True Potential.',
+            description: 'Operalytx delivers intelligent automation that streamlines your processes, eliminates redundancies, and frees your team to focus on what matters most.'
         }
+    
     ];
 
     return (
@@ -57,7 +55,7 @@ const HeroCarousel = () => {
                             key={card.id}
                             className={`relative min-w-[calc(100vw-230px)] h-[810px] rounded-3xl overflow-hidden mx-6 ${
                                 card.type === 'chat' 
-                                    ? 'bg-gradient-to-br from-slate-900 via-gray-900 to-black' 
+                                    ? 'bg-white border-2 border-gray-200 shadow-2xl' 
                                     : ''
                             }`}
                             style={card.type !== 'chat' ? {
