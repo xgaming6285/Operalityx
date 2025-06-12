@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import HeroCarousel from "@/components/HeroCarousel";
 import Research from "@/components/Research";
 import Community from "@/components/Community";
+import News from "@/components/News";
 
 const Index = () => {
     return (
@@ -10,6 +11,7 @@ const Index = () => {
             <HeroCarousel />
             <Research />
             <Community />
+            <News />
         </div>
     );
 };
