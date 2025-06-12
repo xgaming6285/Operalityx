@@ -47,7 +47,7 @@ const HeroCarousel = () => {
                     {cards.map((card) => (
                         <div
                             key={card.id}
-                            className="relative min-w-[calc(100vw-140px)] h-[810px] rounded-2xl overflow-hidden mx-6"
+                            className="relative min-w-[calc(100vw-230px)] h-[810px] rounded-3xl overflow-hidden mx-6"
                             style={{
                                 backgroundImage: `url(${card.image})`,
                                 backgroundSize: 'cover',
