@@ -30,8 +30,10 @@
         }
     },
     "include": [
-        "src"
+        "src",
+        "src/vite-env.d.ts"
     ],
+    "types": ["vite/client"],
     "references": [
         {
             "path": "./tsconfig.node.json"
