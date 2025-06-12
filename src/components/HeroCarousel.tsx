@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { motion } from 'framer-motion';
+import ChatBox from './ChatBox';
 
 const HeroCarousel = () => {
     const carouselRef = useRef<HTMLDivElement>(null);
@@ -32,6 +33,13 @@ const HeroCarousel = () => {
             title: 'Your Partner in Intelligent',
             subtitle: 'Transformation',
             description: 'Leverage our cutting-edge solutions to optimize your workflow and drive unprecedented growth.'
+        },
+        {
+            id: 5,
+            type: 'chat',
+            title: 'Chat with Our',
+            subtitle: 'AI Assistant',
+            description: 'Ask questions, get insights, and explore how our AI can transform your business.'
         }
     ];
 
@@ -47,15 +55,19 @@ const HeroCarousel = () => {
                     {cards.map((card) => (
                         <div
                             key={card.id}
-                            className="relative min-w-[calc(100vw-230px)] h-[810px] rounded-3xl overflow-hidden mx-6"
-                            style={{
+                            className={`relative min-w-[calc(100vw-230px)] h-[810px] rounded-3xl overflow-hidden mx-6 ${
+                                card.type === 'chat' 
+                                    ? 'bg-gradient-to-br from-slate-900 via-gray-900 to-black' 
+                                    : ''
+                            }`}
+                            style={card.type !== 'chat' ? {
                                 backgroundImage: `url(${card.image})`,
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center',
-                            }}
+                            } : {}}
                         >
                             <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-                                <h1 className={`text-6xl lg:text-7xl mb-8 ${card.id === 2 ? 'text-black' : 'text-white'}`} >
+                                <h1 className={`text-6xl lg:text-7xl mb-8 ${card.id === 2 ? 'text-black' : 'text-white'}`}>
                                     {card.title}
                                     <br />
                                     {card.subtitle}
@@ -63,14 +75,19 @@ const HeroCarousel = () => {
                                 <p className={`text-xl lg:text-2xl opacity-90 max-w-2xl mx-auto mb-8 mt-8 ${card.id === 2 ? 'text-black' : 'text-white'}`}>
                                     {card.description}
                                 </p>
-                                <div className="flex gap-8 mt-8">
-                                    <button className="px-4 py-0 bg-white text-black rounded-full font-semibold hover:bg-opacity-90 transition-colors text-lg">
-                                        Get Started
-                                    </button>
-                                    <a href="#research" className="px-4 py-1 border bg-white border-white rounded-full font-semibold hover:bg-white/10 transition-colors text-lg text-black no-underline">
-                                        Read More
-                                    </a>
-                                </div>
+                                
+                                {card.type === 'chat' ? (
+                                    <ChatBox />
+                                ) : (
+                                    <div className="flex gap-8 mt-8">
+                                        <button className="px-4 py-0 bg-white text-black rounded-full font-semibold hover:bg-opacity-90 transition-colors text-lg">
+                                            Get Started
+                                        </button>
+                                        <a href="#research" className="px-4 py-1 border bg-white border-white rounded-full font-semibold hover:bg-white/10 transition-colors text-lg text-black no-underline">
+                                            Read More
+                                        </a>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ))}
