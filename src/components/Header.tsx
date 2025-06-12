@@ -70,6 +70,18 @@ const Header = () => {
                             <a
                                 key={item.name}
                                 href={item.href}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    const target = document.querySelector(item.href);
+                                    if (target) {
+                                        target.scrollIntoView({
+                                            behavior: 'smooth',
+                                            block: 'start'
+                                        });
+                                        // Update URL hash
+                                        window.history.pushState(null, '', item.href);
+                                    }
+                                }}
                                 className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors duration-200"
                             >
                                 {item.name}
