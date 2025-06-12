@@ -229,9 +229,6 @@ const ChatBox = () => {
                 
                 {/* Subtle helper text */}
                 <div className="text-center mt-4">
-                    <span className="text-black/50 text-sm">
-                        Powered by Together AI & Qwen 235B
-                    </span>
                 </div>
             </div>
         </div>
