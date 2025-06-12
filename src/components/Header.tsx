@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 const Header = () => {
     const navigationItems = [
         { name: "Research", href: "#research" },
-        { name: "Community", href: "#community" },
         { name: "Solutions", href: "#solutions" },
-        { name: "Company", href: "#company" },
+        { name: "Community", href: "#community" },
+        { name: "Stories", href: "#stories" },
         { name: "News", href: "#news" },
     ];
 
