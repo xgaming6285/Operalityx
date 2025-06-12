@@ -83,11 +83,11 @@ const HeroCarousel = () => {
                                 {card.type === 'chat' ? (
                                     <ChatBox />
                                 ) : (
-                                    <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 mt-6 sm:mt-8 w-full max-w-md sm:max-w-none">
-                                        <button className="w-full sm:w-auto px-6 sm:px-4 py-3 sm:py-0 bg-white text-black rounded-full font-semibold hover:bg-opacity-90 transition-colors text-base sm:text-lg">
+                                    <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 mt-6 sm:mt-8 w-full max-w-md sm:max-w-none sm:justify-center">
+                                        <button className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-white text-black rounded-full font-semibold hover:bg-opacity-90 transition-colors text-base sm:text-lg">
                                             Get Started
                                         </button>
-                                        <a href="#research" className="w-full sm:w-auto px-6 sm:px-4 py-3 sm:py-1 border bg-white border-white rounded-full font-semibold hover:bg-white/10 transition-colors text-base sm:text-lg text-black no-underline text-center">
+                                        <a href="#research" className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border bg-white border-white rounded-full font-semibold hover:bg-white/10 transition-colors text-base sm:text-lg text-black no-underline text-center">
                                             Read More
                                         </a>
                                     </div>
