@@ -5,25 +5,25 @@ const Community = () => {
         {
             title: "Operalytix for Business",
             description: "Explore intelligent systems for companies of every kind",
-            image: "/business/Operalityx - Site Design 9062025 (1).png",
+            image: "/business/business-1.png",
             textColor: "text-white"
         },
         {
             title: "Operalytix Enterprise",
             description: "Empower your entire operation with modular AI control",
-            image: "/business/Operalityx - Site Design 9062025 (1).png",
+            image: "/business/business-2.png",
             textColor: "text-gray-800"
         },
         {
             title: "Operalytix Team",
             description: "A smart automation layer for every role on your team",
-            image: "/business/Operalityx - Site Design 9062025 (1).png",
+            image: "/business/business-3.png",
             textColor: "text-gray-800"
         },
         {
             title: "Operalytix API Community",
             description: "Integrate adaptive tools, processes, and workflows",
-            image: "/business/Operalityx - Site Design 9062025 (1).png",
+            image: "/business/business-4.png",
             textColor: "text-white"
         }
     ];

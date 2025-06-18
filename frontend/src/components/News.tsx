@@ -15,25 +15,25 @@ const News = () => {
       title: 'Product',
       subtitle: 'May 2025',
       description: 'Introducing Modular Outputs in the Operalytix API',
-      image: '/news/Operalityx - Site Design 9062025 (11).png'
+      image: '/news/news-1.png'
     },
     {
       id: '2',
       title: 'API',
       description: 'Start building intelligent workflows with one call',
-      image: '/news/Operalityx - Site Design 9062025 (13).png'
+      image: '/news/news-2.webp'
     },
     {
       id: '3',
       title: 'Quickstart',
       description: 'Get up and running with our API in minutes →',
-      image: '/news/Operalityx - Site Design 9062025 (16).png'
+      image: '/news/news-1.png'
     },
     {
       id: '4',
       title: 'Guides',
       description: 'Explore and experiment with the Operalytix system',
-      image: '/news/Operalityx - Site Design 9062025 (11).png'
+      image: '/news/news-2.webp'
     }
   ];
 

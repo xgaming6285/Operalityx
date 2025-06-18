@@ -1,53 +1,30 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useRef } from "react";
 
 const Research = () => {
-    const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-    const scrollLeft = () => {
-        if (scrollContainerRef.current) {
-            const scrollAmount = window.innerWidth < 768 ? 280 : 320;
-            scrollContainerRef.current.scrollBy({
-                left: -scrollAmount,
-                behavior: 'smooth'
-            });
-        }
-    };
-
-    const scrollRight = () => {
-        if (scrollContainerRef.current) {
-            const scrollAmount = window.innerWidth < 768 ? 280 : 320;
-            scrollContainerRef.current.scrollBy({
-                left: scrollAmount,
-                behavior: 'smooth'
-            });
-        }
-    };
-
     const researchCards = [
         {
             title: "AI Research",
             date: "May 2025",
             description: "Multi-agent orchestration with dynamic task alignment",
-            image: "/research/Operalityx - Site Design 9062025 (4).png"
+            image: "/research/research-1.png"
         },
         {
             title: "Product Launch",
             date: "May 2025",
             description: "Introducing FlowStack: modular pipelines for adaptive automation",
-            image: "/research/Operalityx - Site Design 9062025 (5).png"
+            image: "/research/research-2.png"
         },
         {
             title: "Efficiency & Scaling",
             date: "May 2025",
             description: "Redefining latency optimization for low-power intelligence",
-            image: "/research/Operalityx - Site Design 9062025 (4).png"
+            image: "/research/research-3.png"
         },
         {
             title: "Efficiency & Scaling",
             date: "May 2025",
             description: "Redefining latency optimization for low-power intelligence",
-            image: "/research/Operalityx - Site Design 9062025 (5).png"
+            image: "/research/research-4.png"
         },
     ];
 
@@ -64,67 +41,52 @@ const Research = () => {
                             <div className="w-6 sm:w-8 h-1 bg-gray-200 rounded-full"></div>
                         </div>
                     </div>
-                    <div className="flex items-center space-x-3">
-                        <button 
-                            onClick={scrollLeft}
-                            className="p-2 sm:p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 border border-gray-100 touch-manipulation"
-                            aria-label="Scroll left"
-                        >
+                    {/* Navigation arrows - Hidden on mobile, shown on tablet and up */}
+                    <div className="hidden sm:flex items-center space-x-3">
+                        <button className="p-2 sm:p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 border border-gray-100 touch-manipulation">
                             <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
                         </button>
-                        <button 
-                            onClick={scrollRight}
-                            className="p-2 sm:p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 border border-gray-100 touch-manipulation"
-                            aria-label="Scroll right"
-                        >
+                        <button className="p-2 sm:p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 border border-gray-100 touch-manipulation">
                             <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
                         </button>
                     </div>
                 </div>
 
-                {/* Research Cards - Horizontal Layout */}
-                <div 
-                    ref={scrollContainerRef}
-                    className="flex space-x-4 sm:space-x-6 lg:space-x-8 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory"
-                    style={{
-                        scrollbarWidth: 'none',
-                        msOverflowStyle: 'none'
-                    }}
-                >
+                {/* Research Cards - Grid Layout */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                     {researchCards.map((card, index) => (
                         <div
                             key={index}
-                            className="flex-none w-72 sm:w-80 h-[400px] sm:h-[450px] rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer transform transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl group relative border border-gray-200 snap-start"
+                            className="group cursor-pointer transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl relative"
                         >
-                            {/* Research Image as Card */}
-                            <div className="relative w-full h-full">
-                                <img 
-                                    src={card.image} 
-                                    alt={card.title}
-                                    className="w-full h-full object-cover"
-                                />
-                                
-                                {/* Overlay for hover effect */}
-                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300"></div>
-                                
-                                {/* Card info overlay - always visible */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent">
-                                    <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 text-white">
-                                        <div className="text-xs sm:text-sm font-medium opacity-90 uppercase tracking-wider mb-2">
-                                            {card.title} • {card.date}
+                            <div className="relative h-[400px] sm:h-[450px] rounded-2xl sm:rounded-3xl overflow-hidden border border-gray-200">
+                                {/* Research Image as Card */}
+                                <div className="relative w-full h-full">
+                                    <img 
+                                        src={card.image} 
+                                        alt={card.title}
+                                        className="w-full h-full object-cover"
+                                    />
+                                    
+                                    {/* Overlay for hover effect */}
+                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300"></div>
+                                    
+                                    {/* Card info overlay - always visible */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent">
+                                        <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 text-white">
+                                            <div className="text-xs sm:text-sm font-medium opacity-90 uppercase tracking-wider mb-2">
+                                                {card.title} • {card.date}
+                                            </div>
+                                            <h3 className="text-base sm:text-lg font-bold leading-tight">
+                                                {card.description}
+                                            </h3>
                                         </div>
-                                        <h3 className="text-base sm:text-lg font-bold leading-tight">
-                                            {card.description}
-                                        </h3>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
-                
-                {/* Bottom spacing */}
-                <div className="mt-6 sm:mt-8"></div>
             </div>
         </section>
     );
