@@ -349,10 +349,7 @@ const ChatBox = () => {
                             {/* Input Helper */}
                             <div className="flex items-center justify-between mt-3 px-2">
                                 <p className="text-xs text-slate-500">Press Enter to send, Shift+Enter for new line</p>
-                                <div className="flex items-center gap-2 text-xs text-slate-400">
-                                    <span>Powered by</span>
-                                    <span className="font-semibold text-slate-600">Qwen 2.5 Turbo</span>
-                                </div>
+                              
                             </div>
                         </form>
                     </div>
