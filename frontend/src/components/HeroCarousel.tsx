@@ -1,11 +1,9 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import ChatBox from './ChatBox';
 
 const HeroCarousel = () => {
-    const carouselRef = useRef<HTMLDivElement>(null);
     const [currentSlide, setCurrentSlide] = useState(0);
-    const [isDragDisabled, setIsDragDisabled] = useState(false);
 
     const cards = [
         {
@@ -42,6 +40,7 @@ const HeroCarousel = () => {
         }
     ];
 
+    // Calculate card width based on screen size (same as original)
     const getCardWidth = () => {
         if (typeof window !== 'undefined') {
             return window.innerWidth < 768 ? window.innerWidth - 32 : window.innerWidth - 230;
@@ -49,93 +48,63 @@ const HeroCarousel = () => {
         return 0;
     };
 
-    // Track the current slide based on carousel transform position
-    const updateCurrentSlide = () => {
-        if (carouselRef.current) {
-            const transform = carouselRef.current.style.transform;
-            const match = transform.match(/translateX\((-?\d+(?:\.\d+)?)px\)/);
-            
-            if (match) {
-                const translateX = parseFloat(match[1]);
-                const cardWidth = getCardWidth();
-                const slideIndex = Math.round(Math.abs(translateX) / cardWidth);
-                const clampedIndex = Math.max(0, Math.min(slideIndex, cards.length - 1));
-                
-                if (clampedIndex !== currentSlide) {
-                    setCurrentSlide(clampedIndex);
-                }
-            }
-        }
-    };
 
-    // Handle drag updates to track position
-    const handleDrag = () => {
-        // Use requestAnimationFrame to ensure we get the updated transform
-        requestAnimationFrame(() => {
-            updateCurrentSlide();
-        });
-    };
 
-    // Handle drag end to snap to nearest slide and update indicator
-    const handleDragEnd = () => {
-        // Small delay to allow Framer Motion to finish any momentum scrolling
-        setTimeout(() => {
-            updateCurrentSlide();
-        }, 100);
-    };
-
-    // Handle dot click to navigate to specific slide
+    // Navigate to specific slide
     const goToSlide = (index: number) => {
         setCurrentSlide(index);
-        if (carouselRef.current) {
-            const cardWidth = getCardWidth();
-            const targetX = -index * cardWidth;
-            
-            // Use Framer Motion's animate method for smooth transition
-            const motionDiv = carouselRef.current as any;
-            if (motionDiv.style) {
-                motionDiv.style.transform = `translateX(${targetX}px)`;
-                motionDiv.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-                
-                // Remove transition after animation
-                setTimeout(() => {
-                    if (motionDiv.style) {
-                        motionDiv.style.transition = '';
-                    }
-                }, 500);
-            }
-        }
     };
 
-    // Navigate to chat box (first card)
-    const goToChatBox = (event: React.MouseEvent) => {
-        event.preventDefault();
-        event.stopPropagation();
+    // Navigate to chat box (first slide)
+    const goToChatBox = () => {
+        setCurrentSlide(0);
+    };
+
+    // Handle drag end to snap to nearest slide
+    const handleDragEnd = (event: any, info: any) => {
+        const dragDistance = info.offset.x;
+        const velocity = info.velocity.x;
         
-        // Use requestAnimationFrame to ensure this runs after any drag events
-        requestAnimationFrame(() => {
-            setCurrentSlide(0);
-            goToSlide(0); // Chat box is the first card (index 0)
-        });
+        // Use a combination of distance and velocity for better detection
+        const distanceThreshold = 80; // Fixed threshold in pixels
+        const velocityThreshold = 500; // Velocity threshold for fast swipes
+        
+        const shouldGoLeft = (dragDistance < -distanceThreshold || velocity < -velocityThreshold) && currentSlide < cards.length - 1;
+        const shouldGoRight = (dragDistance > distanceThreshold || velocity > velocityThreshold) && currentSlide > 0;
+        
+        if (shouldGoRight) {
+            // Dragged right or fast swipe right, go to previous slide
+            setCurrentSlide(currentSlide - 1);
+        } else if (shouldGoLeft) {
+            // Dragged left or fast swipe left, go to next slide
+            setCurrentSlide(currentSlide + 1);
+        }
     };
 
     return (
         <div className="space-y-4 sm:space-y-6">
             <div className="relative w-full overflow-hidden">
-                <motion.div
-                    ref={carouselRef}
-                    className="flex gap-0 cursor-grab active:cursor-grabbing"
-                    drag={isDragDisabled ? false : "x"}
+                <motion.div 
+                    className="flex cursor-grab active:cursor-grabbing"
+                    drag="x"
                     dragConstraints={{ right: 0, left: -(cards.length - 1) * getCardWidth() }}
-                    onDrag={handleDrag}
-                    onDragEnd={handleDragEnd}
-                    dragElastic={0.1}
+                    dragElastic={0.2}
                     dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
+                    onDragEnd={handleDragEnd}
+                    animate={{ 
+                        x: -currentSlide * getCardWidth()
+                    }}
+                    transition={{ 
+                        type: "spring", 
+                        stiffness: 400, 
+                        damping: 40,
+                        mass: 0.8
+                    }}
                 >
                     {cards.map((card) => (
                         <div
                             key={card.id}
-                            className={`relative min-w-[calc(100vw-2rem)] sm:min-w-[calc(100vw-14.375rem)] h-[600px] sm:h-[700px] lg:h-[810px] rounded-2xl sm:rounded-3xl overflow-hidden mx-4 sm:mx-6 ${
+                            className={`relative min-w-[calc(100vw-2rem)] sm:min-w-[calc(100vw-14.375rem)] h-[600px] sm:h-[700px] lg:h-[810px] rounded-2xl sm:rounded-3xl overflow-hidden mx-4 sm:mx-6 flex-shrink-0 ${
                                 card.type === 'chat' 
                                     ? 'bg-white border-2 border-gray-200 shadow-2xl' 
                                     : ''
@@ -147,64 +116,54 @@ const HeroCarousel = () => {
                             } : {}}
                         >
                             <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 sm:px-6">
-                                <h1 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl mb-6 sm:mb-8 leading-tight ${card.id === 2 ? 'text-black' : 'text-white'}`}>
-                                    {card.title}
-                                    <br />
-                                    {card.subtitle}
-                                </h1>
-                                <p className={`text-base sm:text-lg md:text-xl lg:text-2xl opacity-90 max-w-2xl mx-auto mb-6 sm:mb-8 mt-4 sm:mt-8 px-4 ${card.id === 2 ? 'text-black' : 'text-white'}`}>
-                                    {card.description}
-                                </p>
-                                
                                 {card.type === 'chat' ? (
                                     <ChatBox />
                                 ) : (
-                                    <motion.div 
-                                        className="flex flex-col sm:flex-row gap-4 sm:gap-8 mt-6 sm:mt-8 w-full max-w-md sm:max-w-none sm:justify-center"
-                                        drag={false}
-                                        dragListener={false}
-                                    >
-                                        <button 
-                                            onClick={goToChatBox}
-                                            onMouseEnter={() => setIsDragDisabled(true)}
-                                            onMouseLeave={() => setIsDragDisabled(false)}
-                                            onPointerDown={(e) => {
-                                                e.stopPropagation();
-                                                e.preventDefault();
-                                                setIsDragDisabled(true);
-                                            }}
-                                            onPointerUp={() => setIsDragDisabled(false)}
-                                            onMouseDown={(e) => {
-                                                e.stopPropagation();
-                                                e.preventDefault();
-                                            }}
-                                            onTouchStart={(e) => {
-                                                e.stopPropagation();
-                                                e.preventDefault();
-                                                setIsDragDisabled(true);
-                                            }}
-                                            onTouchEnd={() => setIsDragDisabled(false)}
-                                            className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-white text-black rounded-full font-semibold hover:bg-opacity-90 transition-colors text-base sm:text-lg pointer-events-auto relative z-10"
-                                            style={{ touchAction: 'manipulation' }}
+                                    <>
+                                        <h1 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl mb-6 sm:mb-8 leading-tight ${card.id === 2 ? 'text-black' : 'text-white'}`}>
+                                            {card.title}
+                                            <br />
+                                            {card.subtitle}
+                                        </h1>
+                                        <p className={`text-base sm:text-lg md:text-xl lg:text-2xl opacity-90 max-w-2xl mx-auto mb-6 sm:mb-8 mt-4 sm:mt-8 px-4 ${card.id === 2 ? 'text-black' : 'text-white'}`}>
+                                            {card.description}
+                                        </p>
+                                        
+                                        <motion.div 
+                                            className="flex flex-col sm:flex-row gap-4 sm:gap-8 mt-6 sm:mt-8 w-full max-w-md sm:max-w-none sm:justify-center"
+                                            drag={false}
+                                            onPointerDown={(e) => e.stopPropagation()}
                                         >
-                                            Get Started
-                                        </button>
-                                        <a href="#research" className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border bg-white border-white rounded-full font-semibold hover:bg-white/10 transition-colors text-base sm:text-lg text-black no-underline text-center relative z-10">
-                                            Read More
-                                        </a>
-                                    </motion.div>
+                                            <button 
+                                                onClick={goToChatBox}
+                                                onPointerDown={(e) => e.stopPropagation()}
+                                               className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border bg-white border-white rounded-full font-semibold hover:bg-white/10 transition-colors text-base sm:text-lg text-black no-underline text-center"
+                                            >
+                                                Get Started
+                                            </button>
+                                            <a 
+                                                href="#research" 
+                                                onPointerDown={(e) => e.stopPropagation()}
+                                                className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border bg-white border-white rounded-full font-semibold hover:bg-white/10 transition-colors text-base sm:text-lg text-black no-underline text-center"
+                                            >
+                                                Read More
+                                            </a>
+                                        </motion.div>
+                                    </>
                                 )}
                             </div>
                         </div>
                     ))}
                 </motion.div>
             </div>
+            
+            {/* Dot indicators */}
             <div className="flex justify-center gap-2">
-                {cards.map((card, index) => (
-                    <div
-                        key={card.id}
+                {cards.map((_, index) => (
+                    <button
+                        key={index}
                         onClick={() => goToSlide(index)}
-                        className={`w-2 h-2 rounded-full cursor-pointer transition-all duration-300 ${
+                        className={`w-2 h-2 rounded-full transition-all duration-300 ${
                             index === currentSlide ? 'bg-black' : 'bg-black/50 hover:bg-black/70'
                         }`}
                     />
