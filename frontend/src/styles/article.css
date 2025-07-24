@@ -1,0 +1,197 @@
+/* Article Styling - Clean, Modern Layout */
+
+/* Reset and base styles */
+.article-content * {
+    box-sizing: border-box;
+}
+
+.article-content {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    line-height: 1.6;
+    color: #1a202c;
+    background: #ffffff;
+    margin: 0 auto;
+    padding: 60px 40px;
+    max-width: 800px;
+    position: relative;
+}
+
+/* Clean Typography */
+.article-content h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1a365d;
+    margin-bottom: 2rem;
+    line-height: 1.2;
+    text-align: left;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 1rem;
+}
+
+.article-content h2 {
+    font-size: 1.875rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin: 3rem 0 1.5rem 0;
+    line-height: 1.3;
+    position: relative;
+    padding-left: 1rem;
+}
+
+.article-content h2::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: #4299e1;
+    border-radius: 2px;
+}
+
+.article-content h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin: 2.5rem 0 1rem 0;
+    line-height: 1.4;
+}
+
+/* Clean paragraphs */
+.article-content p {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+    color: #4a5568;
+    text-align: left;
+}
+
+/* Simple list styling */
+.article-content ul {
+    margin: 2rem 0;
+    padding-left: 0;
+    list-style: none;
+}
+
+.article-content li {
+    position: relative;
+    padding: 1rem 1rem 1rem 2rem;
+    margin-bottom: 0.75rem;
+    background: #f7fafc;
+    border-radius: 8px;
+    border-left: 3px solid #4299e1;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #4a5568;
+}
+
+.article-content li::before {
+    content: '•';
+    position: absolute;
+    left: 0.75rem;
+    top: 1rem;
+    color: #4299e1;
+    font-weight: bold;
+}
+
+/* Clean image styling */
+.article-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 2rem 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Image containers */
+.article-content span[style*="display: inline-block"] {
+    display: block;
+    text-align: center;
+    margin: 2.5rem 0;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+/* Simple links */
+.article-content a {
+    color: #4299e1;
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 1px solid transparent;
+    transition: border-bottom-color 0.2s ease;
+}
+
+.article-content a:hover {
+    border-bottom-color: #4299e1;
+}
+
+/* Clean horizontal rules */
+.article-content hr {
+    border: none;
+    height: 1px;
+    background: #e2e8f0;
+    margin: 3rem 0;
+}
+
+/* Bold text */
+.article-content .c0, 
+.article-content strong, 
+.article-content b {
+    font-weight: 600;
+    color: #2d3748;
+}
+
+/* Meta description styling */
+.article-content p:first-of-type {
+    font-style: italic;
+    color: #718096;
+    background: #f7fafc;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid #4299e1;
+    margin-bottom: 2rem;
+    font-size: 1rem;
+}
+
+/* Selection styling */
+.article-content ::selection {
+    background: #4299e1;
+    color: white;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .article-content {
+        padding: 40px 20px;
+        max-width: 100%;
+    }
+    
+    .article-content h1 {
+        font-size: 2rem;
+    }
+    
+    .article-content h2 {
+        font-size: 1.5rem;
+        padding-left: 1rem;
+    }
+    
+    .article-content h3 {
+        font-size: 1.25rem;
+    }
+    
+    .article-content p, 
+    .article-content li {
+        font-size: 1rem;
+    }
+    
+    .article-content li {
+        padding: 0.75rem 0.75rem 0.75rem 1.5rem;
+    }
+}
+
+/* Smooth scrolling */
+.article-content {
+    scroll-behavior: smooth;
+} 

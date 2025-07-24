@@ -20,7 +20,7 @@ const config: Config = {
     apiKey: process.env.TOGETHER_API_KEY || '',
   },
   cors: {
-    frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000',
+    frontendUrl: process.env.FRONTEND_URL || 'http://localhost:5173',
   },
 };
 

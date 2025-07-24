@@ -1,6 +1,61 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import DocumentViewer from "./DocumentViewer";
+import "../styles/article.css";
+
+interface ArticleMeta {
+    id: string;
+    title: string;
+    subtitle?: string;
+    description: string;
+    thumbnail?: string;
+    file: string;
+    type: string;
+    author?: string;
+    createdAt?: string;
+}
 
 const Solutions = () => {
+    const [showArticle, setShowArticle] = useState(false);
+    const [articleMeta, setArticleMeta] = useState<ArticleMeta | null>(null);
+    const [articleHtml, setArticleHtml] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        // Load article metadata for solutions on mount
+        fetch("/articles/articles.json")
+            .then(res => res.json())
+            .then((data: ArticleMeta[]) => {
+                // Find the first article of type 'solution'
+                const solutionArticle = data.find(a => a.type === "solution");
+                setArticleMeta(solutionArticle || null);
+            });
+    }, []);
+
+    const handleOpenArticle = async () => {
+        if (!articleMeta) return;
+        setLoading(true);
+        try {
+            const res = await fetch(articleMeta.file);
+            const html = await res.text();
+            
+            // Fix relative image paths to absolute paths
+            const articleDir = articleMeta.file.substring(0, articleMeta.file.lastIndexOf('/'));
+            const fixedHtml = html.replace(
+                /src="images\//g, 
+                `src="${articleDir}/images/`
+            );
+            
+            // Wrap content with article-content class for styling
+            const styledHtml = `<div class="article-content">${fixedHtml}</div>`;
+            
+            setArticleHtml(styledHtml);
+            setShowArticle(true);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const solutions = [
         {
             category: "For everyone",
@@ -54,6 +109,7 @@ const Solutions = () => {
                         <div
                             key={index}
                             className="group relative h-[350px] sm:h-[400px] lg:h-[450px] rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl"
+                            onClick={index === 0 && articleMeta ? handleOpenArticle : undefined}
                         >
                             {/* Background Image - Full Coverage */}
                             <div 
@@ -92,6 +148,33 @@ const Solutions = () => {
                     ))}
                 </div>
             </div>
+            {loading && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+                    <div className="bg-white rounded-lg p-8 shadow-lg text-lg">Loading article...</div>
+                </div>
+            )}
+            {showArticle && articleMeta && articleHtml && (
+                <DocumentViewer
+                    document={{
+                        id: articleMeta.id,
+                        title: articleMeta.title,
+                        subtitle: articleMeta.subtitle,
+                        description: articleMeta.description,
+                        type: "news", // closest type
+                        contentType: "html",
+                        originalFileName: articleMeta.file.split("/").pop(),
+                        thumbnail: articleMeta.thumbnail,
+                        content: articleHtml,
+                        metadata: {
+                            author: articleMeta.author,
+                            createdAt: articleMeta.createdAt || new Date().toISOString(),
+                            updatedAt: articleMeta.createdAt || new Date().toISOString(),
+                            wordCount: articleHtml ? articleHtml.split(/\s+/).length : 0
+                        }
+                    }}
+                    onClose={() => setShowArticle(false)}
+                />
+            )}
         </section>
     );
 };
