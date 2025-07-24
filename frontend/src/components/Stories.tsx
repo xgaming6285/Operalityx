@@ -1,31 +1,18 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useRef, useState, useEffect } from "react";
-import { Document } from "../types/document";
-import { DocumentService } from "../services/documentService";
+import { useRef } from "react";
+import { useArticles } from "../hooks/useArticles";
 import DocumentViewer from "./DocumentViewer";
 
 const Stories = () => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [stories, setStories] = useState<Document[]>([]);
-  const [selectedDocument, setSelectedDocument] = useState<Document | null>(
-    null
-  );
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    loadStories();
-  }, []);
-
-  const loadStories = async () => {
-    try {
-      const documents = await DocumentService.getDocuments("story");
-      setStories(documents);
-    } catch (error) {
-      console.error("Failed to load stories:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const {
+    articles: stories,
+    loading: isLoading,
+    showArticleViewer,
+    currentDocument: selectedDocument,
+    openArticle,
+    closeArticleViewer
+  } = useArticles({ type: "story" });
 
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
@@ -47,8 +34,8 @@ const Stories = () => {
     }
   };
 
-  const openDocument = (document: Document) => {
-    setSelectedDocument(document);
+  const openDocument = (article: any) => {
+    openArticle(article);
   };
 
   return (
@@ -105,7 +92,7 @@ const Stories = () => {
             <div className="flex-none w-full text-center py-20">
               <p className="text-gray-500 text-lg">No stories available</p>
               <p className="text-gray-400 text-sm mt-2">
-                Stories will appear here once uploaded
+                Stories will appear here when available
               </p>
             </div>
           ) : (
@@ -164,10 +151,10 @@ const Stories = () => {
                   </div>
 
             {/* Document Viewer */}
-            {selectedDocument && (
+            {showArticleViewer && selectedDocument && (
                 <DocumentViewer
                     document={selectedDocument}
-                    onClose={() => setSelectedDocument(null)}
+                    onClose={closeArticleViewer}
                 />
             )}
         </section>

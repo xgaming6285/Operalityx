@@ -1,33 +1,19 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { useState, useEffect } from "react";
-import { Document } from "../types/document";
-import { DocumentService } from "../services/documentService";
+import { useArticles } from "../hooks/useArticles";
 import DocumentViewer from "./DocumentViewer";
 
 const News = () => {
-  const [newsCards, setNewsCards] = useState<Document[]>([]);
-  const [selectedDocument, setSelectedDocument] = useState<Document | null>(
-    null
-  );
-  const [isLoading, setIsLoading] = useState(true);
+  const {
+    articles: newsCards,
+    loading: isLoading,
+    showArticleViewer,
+    currentDocument: selectedDocument,
+    openArticle,
+    closeArticleViewer
+  } = useArticles({ type: "news" });
 
-  useEffect(() => {
-    loadNews();
-  }, []);
-
-  const loadNews = async () => {
-    try {
-      const documents = await DocumentService.getDocuments("news");
-      setNewsCards(documents);
-    } catch (error) {
-      console.error("Failed to load news:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const openDocument = (document: Document) => {
-    setSelectedDocument(document);
+  const openDocument = (article: any) => {
+    openArticle(article);
   };
 
   return (
@@ -69,7 +55,7 @@ const News = () => {
           ) : newsCards.length === 0 ? (
             <div className="col-span-full text-center py-20">
               <p className="text-gray-500 text-lg">No news available</p>
-              <p className="text-gray-400 text-sm mt-2">News articles will appear here once uploaded</p>
+              <p className="text-gray-400 text-sm mt-2">News articles will appear here when available</p>
             </div>
           ) : (
             newsCards.map((card) => (
@@ -124,10 +110,10 @@ const News = () => {
       </div>
 
       {/* Document Viewer */}
-      {selectedDocument && (
+      {showArticleViewer && selectedDocument && (
         <DocumentViewer
           document={selectedDocument}
-          onClose={() => setSelectedDocument(null)}
+          onClose={closeArticleViewer}
         />
       )}
     </section>

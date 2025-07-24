@@ -7,7 +7,84 @@
     "thumbnail": "/articles/ai-design-tools/images/image3.png",
     "file": "/articles/ai-design-tools/24072025News21Operalityx.html",
     "type": "solution",
-            "author": "Operalytix Editorial Team",
+    "author": "Operalytix Editorial Team",
     "createdAt": "2024-07-24T00:00:00Z"
+  },
+  {
+    "id": "story-innovation-journey",
+    "title": "Innovation Journey",
+    "subtitle": "From Concept to Reality",
+    "description": "Discover how groundbreaking ideas transform into revolutionary solutions that shape the future.",
+    "thumbnail": "/stories/Operalityx - Site Design 9062025 (19).png",
+    "file": "#",
+    "type": "story",
+    "author": "Operalityx Team",
+    "createdAt": "2024-12-15T00:00:00Z"
+  },
+  {
+    "id": "story-digital-transformation",
+    "title": "Digital Transformation",
+    "subtitle": "Redefining Business Excellence",
+    "description": "Experience the power of digital innovation and how it's revolutionizing industries worldwide.",
+    "thumbnail": "/stories/Operalityx - Site Design 9062025 (20).png",
+    "file": "#",
+    "type": "story",
+    "author": "Operalityx Team",
+    "createdAt": "2024-12-14T00:00:00Z"
+  },
+  {
+    "id": "story-future-vision",
+    "title": "Future Vision",
+    "subtitle": "Building Tomorrow Today",
+    "description": "Explore cutting-edge technologies and visionary approaches that are building the future.",
+    "thumbnail": "/stories/Operalityx - Site Design 9062025 (21).png",
+    "file": "#",
+    "type": "story",
+    "author": "Operalityx Team",
+    "createdAt": "2024-12-13T00:00:00Z"
+  },
+  {
+    "id": "news-latest-updates",
+    "title": "Latest Industry Updates",
+    "subtitle": "Breaking: Technology Trends 2024",
+    "description": "Stay informed with the latest developments in technology and business innovation.",
+    "thumbnail": "/news/news-1.png",
+    "file": "#",
+    "type": "news",
+    "author": "Operalityx Editorial",
+    "createdAt": "2024-12-15T00:00:00Z"
+  },
+  {
+    "id": "news-market-insights",
+    "title": "Market Insights",
+    "subtitle": "Global Economic Outlook",
+    "description": "Comprehensive analysis of current market trends and future predictions.",
+    "thumbnail": "/news/news-2.webp",
+    "file": "#",
+    "type": "news",
+    "author": "Operalityx Research",
+    "createdAt": "2024-12-14T00:00:00Z"
+  },
+  {
+    "id": "news-innovation-spotlight",
+    "title": "Innovation Spotlight",
+    "subtitle": "Emerging Technologies",
+    "description": "Highlighting the most promising innovations shaping our digital future.",
+    "thumbnail": "/news/news-1.png",
+    "file": "#",
+    "type": "news",
+    "author": "Operalityx Labs",
+    "createdAt": "2024-12-13T00:00:00Z"
+  },
+  {
+    "id": "news-success-stories",
+    "title": "Success Stories",
+    "subtitle": "Client Achievements",
+    "description": "Celebrating remarkable achievements and transformative results from our partnerships.",
+    "thumbnail": "/news/news-2.webp",
+    "file": "#",
+    "type": "news",
+    "author": "Operalityx Success Team",
+    "createdAt": "2024-12-12T00:00:00Z"
   }
 ] 

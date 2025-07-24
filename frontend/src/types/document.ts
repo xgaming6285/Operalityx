@@ -17,13 +17,7 @@ export interface Document {
   };
 }
 
-export interface DocumentUpload {
-  file: File;
-  type: "story" | "news";
-  title: string;
-  subtitle?: string;
-  description: string;
-}
+
 
 export interface DocumentViewerProps {
   document: Document;
