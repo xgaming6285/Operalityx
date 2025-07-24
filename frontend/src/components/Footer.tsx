@@ -61,49 +61,12 @@ const Footer = () => {
 
                     {/* Center Logo */}
                     <div className="flex justify-center order-1 lg:order-2">
-                        <div className="w-10 h-10 sm:w-12 sm:h-12">
-                            <svg
-                                viewBox="0 0 40 40"
-                                className="w-full h-full text-gray-600"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                {/* Atomic symbol representation */}
-                                <circle
-                                    cx="20"
-                                    cy="20"
-                                    r="18"
-                                    stroke="currentColor"
-                                    strokeWidth="1.5"
-                                    fill="none"
-                                />
-                                <ellipse
-                                    cx="20"
-                                    cy="20"
-                                    rx="18"
-                                    ry="8"
-                                    stroke="currentColor"
-                                    strokeWidth="1.5"
-                                    fill="none"
-                                    transform="rotate(45 20 20)"
-                                />
-                                <ellipse
-                                    cx="20"
-                                    cy="20"
-                                    rx="18"
-                                    ry="8"
-                                    stroke="currentColor"
-                                    strokeWidth="1.5"
-                                    fill="none"
-                                    transform="rotate(-45 20 20)"
-                                />
-                                <circle
-                                    cx="20"
-                                    cy="20"
-                                    r="3"
-                                    fill="currentColor"
-                                />
-                            </svg>
+                        <div className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28">
+                            <img
+                                src="/images/logo-icon.png"
+                                alt="Operalytix Logo"
+                                className="w-full h-full object-contain"
+                            />
                         </div>
                     </div>
 
