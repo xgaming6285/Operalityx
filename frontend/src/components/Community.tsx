@@ -1,38 +1,29 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useDragScroll } from "../hooks/useDragScroll";
+import { useArticles } from "../hooks/useArticles";
+import DocumentViewer from "./DocumentViewer";
 
 const Community = () => {
     const {
         scrollLeft,
         scrollRight,
-        getDragProps
+        getDragProps,
+        preventClickAfterDrag
     } = useDragScroll();
-    const communityCards = [
-        {
-            title: "Operalytix for Business",
-            description: "Explore intelligent systems for companies of every kind",
-            image: "/business/business-1.png",
-            textColor: "text-white"
-        },
-        {
-            title: "Operalytix Enterprise",
-            description: "Empower your entire operation with modular AI control",
-            image: "/business/business-2.png",
-            textColor: "text-gray-800"
-        },
-        {
-            title: "Operalytix Team",
-            description: "A smart automation layer for every role on your team",
-            image: "/business/business-3.png",
-            textColor: "text-gray-800"
-        },
-        {
-            title: "Operalytix API Community",
-            description: "Integrate adaptive tools, processes, and workflows",
-            image: "/business/business-4.png",
-            textColor: "text-white"
-        }
-    ];
+
+    const {
+        articles: communityCards,
+        loading: isLoading,
+        showArticleViewer,
+        currentDocument: selectedDocument,
+        openArticle,
+        closeArticleViewer
+    } = useArticles({ type: "community" });
+
+    const openDocument = (article: any, e: React.MouseEvent) => {
+        if (preventClickAfterDrag(e)) return;
+        openArticle(article);
+    };
 
     return (
         <section id="community" className="py-12 sm:py-16 lg:py-20 bg-gray-50">
@@ -71,48 +62,80 @@ const Community = () => {
                     {...getDragProps()}
                     className={`flex space-x-4 sm:space-x-6 lg:space-x-8 overflow-x-auto pb-6 scrollbar-hide ${getDragProps().className}`}
                 >
-                    {communityCards.map((card, index) => (
-                        <div
-                            key={index}
-                            className="flex-none w-80 sm:w-96 group cursor-pointer transform transition-all duration-300 hover:scale-105 hover:-translate-y-1"
-                        >
-                            <div className="relative h-72 sm:h-80 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100">
-                                {/* Business Image Background */}
-                                <div className="absolute inset-0">
-                                    <img 
-                                        src={card.image} 
-                                        alt={card.title}
-                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                    />
-                                </div>
-
-                                {/* Enhanced gradient overlay for better text readability */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent group-hover:from-black/80 transition-all duration-300"></div>
-
-                                {/* Content */}
-                                <div className="relative h-full p-4 sm:p-6 flex flex-col justify-between z-10">
-                                    {/* Title */}
-                                    <div className="transform transition-transform duration-300 group-hover:-translate-y-1">
-                                        <h3 className={`text-lg sm:text-xl font-semibold leading-tight ${card.textColor} drop-shadow-sm`}>
-                                            {card.title}
-                                        </h3>
-                                    </div>
-
-                                    {/* Description */}
-                                    <div className="mt-auto transform transition-all duration-300 group-hover:translate-y-0 translate-y-1">
-                                        <p className={`text-xs sm:text-sm leading-relaxed ${card.textColor} opacity-90 group-hover:opacity-100 transition-opacity duration-300 drop-shadow-sm`}>
-                                            {card.description}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                {/* Subtle hover glow effect */}
-                                <div className="absolute inset-0 rounded-2xl ring-1 ring-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            </div>
+                    {isLoading ? (
+                        // Loading skeleton
+                        Array.from({ length: 4 }).map((_, index) => (
+                            <div
+                                key={index}
+                                className="flex-none w-80 sm:w-96 h-72 sm:h-80 rounded-2xl bg-gray-200 animate-pulse"
+                            />
+                        ))
+                    ) : communityCards.length === 0 ? (
+                        <div className="flex-none w-full text-center py-20">
+                            <p className="text-gray-500 text-lg">No community articles available</p>
+                            <p className="text-gray-400 text-sm mt-2">Community articles will appear here when available</p>
                         </div>
-                    ))}
+                    ) : (
+                        communityCards.map((card, index) => (
+                            <div
+                                key={card.id}
+                                onClick={(e) => openDocument(card, e)}
+                                className="flex-none w-80 sm:w-96 group cursor-pointer transform transition-all duration-300 hover:scale-105 hover:-translate-y-1"
+                            >
+                                <div className="relative h-72 sm:h-80 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100">
+                                    {/* Business Image Background */}
+                                    <div className="absolute inset-0">
+                                        <img 
+                                            src={card.thumbnail || '/business/business-1.png'} 
+                                            alt={card.title}
+                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                        />
+                                    </div>
+
+                                    {/* Enhanced gradient overlay for better text readability */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent group-hover:from-black/80 transition-all duration-300"></div>
+
+                                    {/* Content */}
+                                    <div className="relative h-full p-4 sm:p-6 flex flex-col justify-between z-10">
+                                        {/* Title */}
+                                        <div className="transform transition-transform duration-300 group-hover:-translate-y-1">
+                                            <h3 className="text-lg sm:text-xl font-semibold leading-tight text-white drop-shadow-sm">
+                                                {card.title}
+                                            </h3>
+                                            {card.subtitle && (
+                                                <p className="text-sm text-white/80 mt-1">
+                                                    {card.subtitle}
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        {/* Description */}
+                                        <div className="mt-auto transform transition-all duration-300 group-hover:translate-y-0 translate-y-1">
+                                            <p className="text-xs sm:text-sm leading-relaxed text-white opacity-90 group-hover:opacity-100 transition-opacity duration-300 drop-shadow-sm">
+                                                {card.description}
+                                            </p>
+                                            <div className="mt-2 text-xs text-white/60">
+                                                Click to read more →
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Subtle hover glow effect */}
+                                    <div className="absolute inset-0 rounded-2xl ring-1 ring-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                </div>
+                            </div>
+                        ))
+                    )}
                 </div>
             </div>
+
+            {/* Document Viewer */}
+            {showArticleViewer && selectedDocument && (
+                <DocumentViewer
+                    document={selectedDocument}
+                    onClose={closeArticleViewer}
+                />
+            )}
         </section>
     );
 };
