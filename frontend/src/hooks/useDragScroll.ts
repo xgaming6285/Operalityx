@@ -35,8 +35,6 @@ export const useDragScroll = () => {
     setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
     setScrollStart(scrollContainerRef.current.scrollLeft);
     scrollContainerRef.current.style.cursor = 'grabbing';
-    // Disable scroll snap during drag to prevent conflicts
-    scrollContainerRef.current.style.scrollSnapType = 'none';
   }, []);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
@@ -62,12 +60,6 @@ export const useDragScroll = () => {
     setIsDragging(false);
     if (scrollContainerRef.current) {
       scrollContainerRef.current.style.cursor = 'grab';
-      // Re-enable scroll snap after a small delay to ensure smooth transition
-      setTimeout(() => {
-        if (scrollContainerRef.current) {
-          scrollContainerRef.current.style.scrollSnapType = 'x mandatory';
-        }
-      }, 50);
     }
     // Reset hasDragged after a short delay to allow click prevention
     setTimeout(() => setHasDragged(false), 100);
@@ -77,12 +69,6 @@ export const useDragScroll = () => {
     setIsDragging(false);
     if (scrollContainerRef.current) {
       scrollContainerRef.current.style.cursor = 'grab';
-      // Re-enable scroll snap after a small delay to ensure smooth transition
-      setTimeout(() => {
-        if (scrollContainerRef.current) {
-          scrollContainerRef.current.style.scrollSnapType = 'x mandatory';
-        }
-      }, 50);
     }
     // Reset hasDragged after a short delay to allow click prevention
     setTimeout(() => setHasDragged(false), 100);
@@ -94,11 +80,10 @@ export const useDragScroll = () => {
     onMouseMove: handleMouseMove,
     onMouseUp: handleMouseUp,
     onMouseLeave: handleMouseLeave,
-    className: `cursor-grab select-none snap-x snap-mandatory`,
+    className: `cursor-grab select-none`,
     style: {
       scrollbarWidth: "none" as const,
       msOverflowStyle: "none" as const,
-      scrollSnapType: "x mandatory" as const,
     }
   }), [handleMouseDown, handleMouseMove, handleMouseUp, handleMouseLeave]);
 

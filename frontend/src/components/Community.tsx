@@ -74,7 +74,7 @@ const Community = () => {
                     {communityCards.map((card, index) => (
                         <div
                             key={index}
-                            className="flex-none w-80 sm:w-96 group cursor-pointer transform transition-all duration-300 hover:scale-105 hover:-translate-y-1 snap-start"
+                            className="flex-none w-80 sm:w-96 group cursor-pointer transform transition-all duration-300 hover:scale-105 hover:-translate-y-1"
                         >
                             <div className="relative h-72 sm:h-80 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100">
                                 {/* Business Image Background */}

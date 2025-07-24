@@ -83,7 +83,7 @@ const Stories = () => {
               <div
                 key={story.id}
                 onClick={(e) => openDocument(story, e)}
-                className="flex-none w-80 sm:w-96 h-[450px] sm:h-[500px] rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer transform transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl group relative snap-start"
+                className="flex-none w-80 sm:w-96 h-[450px] sm:h-[500px] rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer transform transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl group relative"
               >
                 {/* Background Image */}
                 <div className="absolute inset-0">

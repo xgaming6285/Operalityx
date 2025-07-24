@@ -82,7 +82,7 @@ const News = () => {
               <div
                 key={card.id}
                 onClick={(e) => openDocument(card, e)}
-                className="flex-none w-80 sm:w-96 rounded-lg h-56 sm:h-64 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-[1.02] relative overflow-hidden group snap-start"
+                className="flex-none w-80 sm:w-96 rounded-lg h-56 sm:h-64 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-[1.02] relative overflow-hidden group"
               >
                 {/* Background Image */}
                 <div className="absolute inset-0">

@@ -84,7 +84,7 @@ const Solutions = () => {
                     {solutions.map((solution, index) => (
                         <div
                             key={index}
-                            className="flex-none w-80 sm:w-96 group relative h-[350px] sm:h-[400px] lg:h-[450px] rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl snap-start"
+                            className="flex-none w-80 sm:w-96 group relative h-[350px] sm:h-[400px] lg:h-[450px] rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl"
                             onClick={(e) => {
                                 if (preventClickAfterDrag(e)) return;
                                 if (index === 0 && hasArticles) {

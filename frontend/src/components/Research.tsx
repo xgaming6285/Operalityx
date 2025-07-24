@@ -74,7 +74,7 @@ const Research = () => {
                     {researchCards.map((card, index) => (
                         <div
                             key={index}
-                            className="flex-none w-80 sm:w-96 group cursor-pointer transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl relative snap-start"
+                            className="flex-none w-80 sm:w-96 group cursor-pointer transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl relative"
                         >
                             <div className="relative h-[400px] sm:h-[450px] rounded-2xl sm:rounded-3xl overflow-hidden border border-gray-200">
                                 {/* Research Image as Card */}
