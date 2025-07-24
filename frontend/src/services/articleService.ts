@@ -93,7 +93,7 @@ export class ArticleService {
             title: article.title,
             subtitle: article.subtitle,
             description: article.description,
-            type: "news", // closest type in Document interface
+            type: article.type as "story" | "news", // Use the actual article type
             contentType: "html",
             originalFileName: article.file.split("/").pop(),
             thumbnail: article.thumbnail,
