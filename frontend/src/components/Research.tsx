@@ -1,6 +1,12 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useDragScroll } from "../hooks/useDragScroll";
 
 const Research = () => {
+    const {
+        scrollLeft,
+        scrollRight,
+        getDragProps
+    } = useDragScroll();
     const researchCards = [
         {
             title: "AI Research",
@@ -30,7 +36,7 @@ const Research = () => {
 
     return (
         <section id="research" className="py-12 sm:py-16 lg:py-20 bg-gray-50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="w-full pl-8 sm:pl-12 lg:pl-16 pr-4 sm:pr-6 lg:pr-8">
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-12 sm:mb-16 gap-6">
                     <div className="relative">
@@ -41,23 +47,34 @@ const Research = () => {
                             <div className="w-6 sm:w-8 h-1 bg-gray-200 rounded-full"></div>
                         </div>
                     </div>
-                    {/* Navigation arrows - Hidden on mobile, shown on tablet and up */}
-                    <div className="hidden sm:flex items-center space-x-3">
-                        <button className="p-2 sm:p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 border border-gray-100 touch-manipulation">
+                    {/* Navigation arrows */}
+                    <div className="flex items-center space-x-3">
+                        <button
+                            onClick={scrollLeft}
+                            className="p-2 sm:p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 border border-gray-100 touch-manipulation"
+                            aria-label="Scroll left"
+                        >
                             <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
                         </button>
-                        <button className="p-2 sm:p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 border border-gray-100 touch-manipulation">
+                        <button
+                            onClick={scrollRight}
+                            className="p-2 sm:p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 border border-gray-100 touch-manipulation"
+                            aria-label="Scroll right"
+                        >
                             <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
                         </button>
                     </div>
                 </div>
 
-                {/* Research Cards - Grid Layout */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                {/* Research Cards - Horizontal Scroll */}
+                <div 
+                    {...getDragProps()}
+                    className={`flex space-x-4 sm:space-x-6 lg:space-x-8 overflow-x-auto pb-6 scrollbar-hide ${getDragProps().className}`}
+                >
                     {researchCards.map((card, index) => (
                         <div
                             key={index}
-                            className="group cursor-pointer transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl relative"
+                            className="flex-none w-80 sm:w-96 group cursor-pointer transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl relative snap-start"
                         >
                             <div className="relative h-[400px] sm:h-[450px] rounded-2xl sm:rounded-3xl overflow-hidden border border-gray-200">
                                 {/* Research Image as Card */}

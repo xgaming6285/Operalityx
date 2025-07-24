@@ -1,10 +1,9 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useRef } from "react";
 import { useArticles } from "../hooks/useArticles";
+import { useDragScroll } from "../hooks/useDragScroll";
 import DocumentViewer from "./DocumentViewer";
 
 const Stories = () => {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const {
     articles: stories,
     loading: isLoading,
@@ -14,33 +13,21 @@ const Stories = () => {
     closeArticleViewer
   } = useArticles({ type: "story" });
 
-  const scrollLeft = () => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = window.innerWidth < 768 ? 320 : 400;
-      scrollContainerRef.current.scrollBy({
-        left: -scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  };
+  const {
+    scrollLeft,
+    scrollRight,
+    getDragProps,
+    preventClickAfterDrag
+  } = useDragScroll();
 
-  const scrollRight = () => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = window.innerWidth < 768 ? 320 : 400;
-      scrollContainerRef.current.scrollBy({
-        left: scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  };
-
-  const openDocument = (article: any) => {
+  const openDocument = (article: any, e: React.MouseEvent) => {
+    if (preventClickAfterDrag(e)) return;
     openArticle(article);
   };
 
   return (
     <section id="stories" className="py-12 sm:py-16 lg:py-20 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full pl-8 sm:pl-12 lg:pl-16 pr-4 sm:pr-6 lg:pr-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-12 sm:mb-16 gap-6">
           <div className="relative">
@@ -73,12 +60,8 @@ const Stories = () => {
 
         {/* Stories Cards */}
         <div
-          ref={scrollContainerRef}
-          className="flex space-x-4 sm:space-x-6 lg:space-x-8 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory"
-          style={{
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
-          }}
+          {...getDragProps()}
+          className={`flex space-x-4 sm:space-x-6 lg:space-x-8 overflow-x-auto pb-6 scrollbar-hide ${getDragProps().className}`}
         >
           {isLoading ? (
             // Loading skeleton
@@ -99,7 +82,7 @@ const Stories = () => {
             stories.map((story) => (
               <div
                 key={story.id}
-                onClick={() => openDocument(story)}
+                onClick={(e) => openDocument(story, e)}
                 className="flex-none w-80 sm:w-96 h-[450px] sm:h-[500px] rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer transform transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl group relative snap-start"
               >
                 {/* Background Image */}

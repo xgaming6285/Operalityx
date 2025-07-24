@@ -2,6 +2,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import DocumentViewer from "./DocumentViewer";
 import "../styles/article.css";
 import { useArticles } from "../hooks/useArticles";
+import { useDragScroll } from "../hooks/useDragScroll";
 
 const Solutions = () => {
     const {
@@ -12,6 +13,13 @@ const Solutions = () => {
         currentDocument,
         hasArticles
     } = useArticles({ type: "solution" });
+
+    const {
+        scrollLeft,
+        scrollRight,
+        getDragProps,
+        preventClickAfterDrag
+    } = useDragScroll();
 
     const solutions = [
         {
@@ -37,8 +45,8 @@ const Solutions = () => {
     ];
 
     return (
-        <section id="solutions" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
-            <div className="max-w-7xl mx-auto">
+        <section id="solutions" className="py-12 sm:py-16 lg:py-20 pl-8 sm:pl-12 lg:pl-16 pr-4 sm:pr-6 lg:pr-8 bg-gray-50">
+            <div className="w-full">
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 sm:mb-12 gap-6">
                     <div className="relative">
@@ -49,24 +57,40 @@ const Solutions = () => {
                             <div className="w-6 sm:w-8 h-1 bg-gray-200 rounded-full"></div>
                         </div>
                     </div>
-                    {/* Navigation arrows - Hidden on mobile, shown on tablet and up */}
-                    <div className="hidden sm:flex space-x-2">
-                        <button className="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow duration-200 touch-manipulation">
+                    {/* Navigation arrows */}
+                    <div className="flex space-x-2">
+                        <button
+                            onClick={scrollLeft}
+                            className="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow duration-200 touch-manipulation"
+                            aria-label="Scroll left"
+                        >
                             <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
                         </button>
-                        <button className="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow duration-200 touch-manipulation">
+                        <button
+                            onClick={scrollRight}
+                            className="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow duration-200 touch-manipulation"
+                            aria-label="Scroll right"
+                        >
                             <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
                         </button>
                     </div>
                 </div>
 
-                {/* Solutions Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                {/* Solutions Cards - Horizontal Scroll */}
+                <div 
+                    {...getDragProps()}
+                    className={`flex space-x-4 sm:space-x-6 lg:space-x-8 overflow-x-auto pb-6 scrollbar-hide ${getDragProps().className}`}
+                >
                     {solutions.map((solution, index) => (
                         <div
                             key={index}
-                            className="group relative h-[350px] sm:h-[400px] lg:h-[450px] rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl"
-                            onClick={index === 0 && hasArticles ? openFirstArticle : undefined}
+                            className="flex-none w-80 sm:w-96 group relative h-[350px] sm:h-[400px] lg:h-[450px] rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl snap-start"
+                            onClick={(e) => {
+                                if (preventClickAfterDrag(e)) return;
+                                if (index === 0 && hasArticles) {
+                                    openFirstArticle();
+                                }
+                            }}
                         >
                             {/* Background Image - Full Coverage */}
                             <div 
