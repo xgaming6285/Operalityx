@@ -163,7 +163,7 @@ const HeroCarousel = () => {
                     <button
                         key={index}
                         onClick={() => goToSlide(index)}
-                        className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                        className={`w-2 h-2 rounded-full transition-all duration-300 transform scale-50 md:scale-100 ${
                             index === currentSlide ? 'bg-black' : 'bg-black/50 hover:bg-black/70'
                         }`}
                     />
