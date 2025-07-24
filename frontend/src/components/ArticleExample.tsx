@@ -1,4 +1,3 @@
-import React from "react";
 import { useArticles } from "../hooks/useArticles";
 import DocumentViewer from "./DocumentViewer";
 import "../styles/article.css";

@@ -59,7 +59,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
     }
   };
 
-  const handleDocumentUploaded = (newDocument: Document) => {
+  const handleDocumentUploaded = () => {
     // Reload all documents to ensure consistency with the service
     loadDocuments();
     setShowUploadModal(false);

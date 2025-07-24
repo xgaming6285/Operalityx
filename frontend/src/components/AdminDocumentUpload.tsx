@@ -3,7 +3,6 @@ import {
   Upload,
   File,
   X,
-  Plus,
   Save,
   AlertCircle,
   CheckCircle,
