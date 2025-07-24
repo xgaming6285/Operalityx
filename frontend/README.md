@@ -1,4 +1,4 @@
-# Operalityx
+# Operalytix
 
 A modern web application built with Vite, React, and Tailwind CSS.
 
@@ -26,7 +26,7 @@ npm run dev
 ## Project Structure
 
 ```
-operalityx/
+operalytix/
 ├── src/
 │   ├── components/    # Reusable React components
 │   ├── assets/       # Static assets
