@@ -61,7 +61,7 @@ const HeroCarousel = () => {
     };
 
     // Handle drag end to snap to nearest slide
-    const handleDragEnd = (event: any, info: any) => {
+    const handleDragEnd = (_: any, info: any) => {
         const dragDistance = info.offset.x;
         const velocity = info.velocity.x;
         
