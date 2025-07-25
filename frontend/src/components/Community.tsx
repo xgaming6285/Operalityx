@@ -76,7 +76,7 @@ const Community = () => {
                             <p className="text-gray-400 text-sm mt-2">Community articles will appear here when available</p>
                         </div>
                     ) : (
-                        communityCards.map((card, index) => (
+                        communityCards.map((card, _) => (
                             <div
                                 key={card.id}
                                 onClick={(e) => openDocument(card, e)}
