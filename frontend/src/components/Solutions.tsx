@@ -141,11 +141,7 @@ const Solutions = () => {
             {loadingArticle && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm">
                     <div className="bg-white rounded-2xl p-8 shadow-2xl">
-                        <LoadingSpinner 
-                            size="lg" 
-                            text="Loading article..." 
-                            showText={true}
-                        />
+                        <LoadingSpinner size="lg" />
                     </div>
                 </div>
             )}

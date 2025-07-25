@@ -1,16 +1,5 @@
 [
   {
-    "id": "ai-design-tools-2025",
-    "title": "AI Design Tools: Visual Optimization for All",
-    "subtitle": "Craft logos, graphics, and even UI mockups quickly with AI-assisted design software.",
-    "description": "Produce professional-quality visuals for your brand using these tools.",
-    "thumbnail": "/articles/ai-design-tools/images/image3.png",
-    "file": "/articles/ai-design-tools/24072025News21Operalityx.html",
-    "type": "solution",
-    "author": "Operalytix Editorial Team",
-    "createdAt": "2024-07-24T00:00:00Z"
-  },
-  {
     "id": "solution-enterprise-automation",
     "title": "Enterprise Automation Solutions",
     "subtitle": "Streamline Operations with Smart Technology",
@@ -598,7 +587,7 @@
     "title": "Business Intelligence Network",
     "subtitle": "Data-Driven Community",
     "description": "Leveraging business intelligence networks to create data-driven communities that thrive on insights.",
-    "thumbnail": "/business/business-1.png",
+    "thumbnail": "/business/business-5.jpeg",
     "file": "/articles/community/24072025 Community 6 Operalityx.html",
     "type": "community",
     "author": "Operalityx Community Team",
