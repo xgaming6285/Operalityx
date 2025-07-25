@@ -11,6 +11,83 @@
     "createdAt": "2024-07-24T00:00:00Z"
   },
   {
+    "id": "solution-enterprise-automation",
+    "title": "Enterprise Automation Solutions",
+    "subtitle": "Streamline Operations with Smart Technology",
+    "description": "Comprehensive automation solutions designed to optimize enterprise workflows and increase operational efficiency.",
+    "thumbnail": "/solutions/solution-1.png",
+    "file": "/articles/solutions/23072025 Solutions 1 Operatyx.html",
+    "type": "solution",
+    "author": "Operalityx Solutions Team",
+    "createdAt": "2025-07-23T00:00:00Z"
+  },
+  {
+    "id": "solution-data-analytics-platform",
+    "title": "Advanced Data Analytics Platform",
+    "subtitle": "Transform Data into Strategic Insights",
+    "description": "Powerful analytics platform that transforms raw data into actionable business intelligence and strategic insights.",
+    "thumbnail": "/solutions/solution-2.png",
+    "file": "/articles/solutions/23072025 Solutions 2 Operalityx.html",
+    "type": "solution",
+    "author": "Operalityx Solutions Team",
+    "createdAt": "2025-07-23T01:00:00Z"
+  },
+  {
+    "id": "solution-cloud-integration",
+    "title": "Cloud Integration Suite",
+    "subtitle": "Seamless Multi-Cloud Connectivity",
+    "description": "Complete cloud integration solution enabling seamless connectivity across multiple cloud platforms and services.",
+    "thumbnail": "/solutions/solution-3.png",
+    "file": "/articles/solutions/23072025 Solutions 3 Operalityx.html",
+    "type": "solution",
+    "author": "Operalityx Solutions Team",
+    "createdAt": "2025-07-23T02:00:00Z"
+  },
+  {
+    "id": "solution-security-framework",
+    "title": "Enterprise Security Framework",
+    "subtitle": "Comprehensive Cybersecurity Protection",
+    "description": "Advanced security framework providing comprehensive protection against modern cybersecurity threats and vulnerabilities.",
+    "thumbnail": "/solutions/solution-4.png",
+    "file": "/articles/solutions/23072025 Solutions 4 Operalityx.html",
+    "type": "solution",
+    "author": "Operalityx Solutions Team",
+    "createdAt": "2025-07-23T03:00:00Z"
+  },
+  {
+    "id": "solution-ai-optimization",
+    "title": "AI-Powered Optimization Engine",
+    "subtitle": "Intelligent Process Enhancement",
+    "description": "Revolutionary AI optimization engine that intelligently enhances business processes and maximizes operational performance.",
+    "thumbnail": "/solutions/solution-1.png",
+    "file": "/articles/solutions/23072025 Solutions 5 Operalityx.html",
+    "type": "solution",
+    "author": "Operalityx Solutions Team",
+    "createdAt": "2025-07-23T04:00:00Z"
+  },
+  {
+    "id": "solution-workflow-management",
+    "title": "Dynamic Workflow Management",
+    "subtitle": "Adaptive Business Process Control",
+    "description": "Dynamic workflow management system that adapts to changing business needs and optimizes process execution.",
+    "thumbnail": "/solutions/solution-2.png",
+    "file": "/articles/solutions/23072025 Solutions 6 Operalityx.html",
+    "type": "solution",
+    "author": "Operalityx Solutions Team",
+    "createdAt": "2025-07-23T05:00:00Z"
+  },
+  {
+    "id": "solution-digital-transformation",
+    "title": "Digital Transformation Accelerator",
+    "subtitle": "Future-Ready Business Evolution",
+    "description": "Complete digital transformation solution that accelerates business evolution and prepares organizations for the future.",
+    "thumbnail": "/solutions/solution-3.png",
+    "file": "/articles/solutions/23072025 Solutions 7 Operalityx.html",
+    "type": "solution",
+    "author": "Operalityx Solutions Team",
+    "createdAt": "2025-07-23T06:00:00Z"
+  },
+  {
     "id": "story-innovation-journey",
     "title": "Innovation Journey",
     "subtitle": "From Concept to Reality",

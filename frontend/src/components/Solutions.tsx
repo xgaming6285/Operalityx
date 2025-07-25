@@ -6,9 +6,10 @@ import { useDragScroll } from "../hooks/useDragScroll";
 
 const Solutions = () => {
     const {
+        articles,
         showArticleViewer,
         loadingArticle,
-        openFirstArticle,
+        openArticle,
         closeArticleViewer,
         currentDocument,
         hasArticles
@@ -20,29 +21,6 @@ const Solutions = () => {
         getDragProps,
         preventClickAfterDrag
     } = useDragScroll();
-
-    const solutions = [
-        {
-            category: "For everyone",
-            title: "Your competitive edge from day one.",
-            image: "/solutions/solution-1.png",
-        },
-        {
-            category: "For teams",
-            title: "Streamline workflows, amplify output.",
-            image: "/solutions/solution-2.png",
-        },
-        {
-            category: "For enterprise",
-            title: "Scalable intelligence for complex challenges.",
-            image: "/solutions/solution-3.png",
-        },
-        {
-            category: "For nonprofits",
-            title: "Transforming with AI",
-            image: "/solutions/solution-4.png",
-        }
-    ];
 
     return (
         <section id="solutions" className="py-12 sm:py-16 lg:py-20 pl-8 sm:pl-12 lg:pl-16 pr-4 sm:pr-6 lg:pr-8 bg-gray-50">
@@ -81,53 +59,81 @@ const Solutions = () => {
                     {...getDragProps()}
                     className={`flex space-x-4 sm:space-x-6 lg:space-x-8 overflow-x-auto pb-6 scrollbar-hide ${getDragProps().className}`}
                 >
-                    {solutions.map((solution, index) => (
-                        <div
-                            key={index}
-                            className="flex-none w-80 sm:w-96 group relative h-[350px] sm:h-[400px] lg:h-[450px] rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl"
-                            onClick={(e) => {
-                                if (preventClickAfterDrag(e)) return;
-                                if (index === 0 && hasArticles) {
-                                    openFirstArticle();
-                                }
-                            }}
-                        >
-                            {/* Background Image - Full Coverage */}
-                            <div 
-                                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                                style={{
-                                    backgroundImage: `url(${solution.image})`,
-                                }}
-                            />
+                    {articles.map((solution, index) => {
+                        // Create categories similar to the original design
+                        const categories = [
+                            "For everyone",
+                            "For teams", 
+                            "For enterprise",
+                            "For nonprofits",
+                            "For startups",
+                            "For developers",
+                            "For organizations",
+                            "For businesses"
+                        ];
+                        const category = categories[index % categories.length];
 
-                            {/* Enhanced gradient overlay for better readability */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent group-hover:from-black/90 group-hover:via-black/40 transition-all duration-300" />
-                            
-                            {/* Content Overlay */}
-                            <div className="relative h-full flex flex-col justify-between p-6 sm:p-8 text-white z-10">
-                                {/* Category badge at the top */}
-                                <div className="flex-shrink-0">
-                                    <span className="inline-block px-3 sm:px-5 py-2 sm:py-2.5 bg-white/60 backdrop-blur-lg rounded-full text-xs sm:text-sm font-bold border border-white shadow-xl text-gray-800">
-                                        {solution.category}
-                                    </span>
+                        return (
+                            <div
+                                key={solution.id}
+                                className="flex-none w-80 sm:w-96 group relative h-[350px] sm:h-[400px] lg:h-[450px] cursor-pointer transform transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl"
+                                style={{ 
+                                    borderRadius: '1rem',
+                                    overflow: 'hidden',
+                                    backfaceVisibility: 'hidden',
+                                    WebkitBackfaceVisibility: 'hidden',
+                                    transformStyle: 'preserve-3d'
+                                }}
+                                onClick={(e) => {
+                                    if (preventClickAfterDrag(e)) return;
+                                    openArticle(solution);
+                                }}
+                            >
+                                {/* Background Image - Full Coverage */}
+                                <div 
+                                    className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                                    style={{
+                                        backgroundImage: `url(${solution.thumbnail})`,
+                                        borderRadius: '1rem',
+                                    }}
+                                />
+
+                                {/* Enhanced gradient overlay for better readability */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent group-hover:from-black/90 group-hover:via-black/40 transition-all duration-300" />
+                                
+                                {/* Content Overlay */}
+                                <div className="relative h-full flex flex-col justify-between p-6 sm:p-8 text-white z-10">
+                                    {/* Category badge at the top */}
+                                    <div className="flex-shrink-0">
+                                        <span className="inline-block px-3 sm:px-5 py-2 sm:py-2.5 bg-white/60 backdrop-blur-lg rounded-full text-xs sm:text-sm font-bold border border-white shadow-xl text-gray-800">
+                                            {category}
+                                        </span>
+                                    </div>
+                                    
+                                    {/* Title at the bottom */}
+                                    <div className="transform transition-all duration-300 group-hover:-translate-y-2">
+                                        <h3 className="text-xl sm:text-2xl md:text-3xl font-bold leading-tight drop-shadow-2xl">
+                                            {solution.title}
+                                        </h3>
+                                        
+                                        {/* Subtle animation line */}
+                                        <div className="mt-3 sm:mt-4 w-0 h-1 bg-white/80 rounded-full transition-all duration-500 group-hover:w-12 sm:group-hover:w-16"></div>
+                                    </div>
                                 </div>
                                 
-                                {/* Title at the bottom */}
-                                <div className="transform transition-all duration-300 group-hover:-translate-y-2">
-                                    <h3 className="text-xl sm:text-2xl md:text-3xl font-bold leading-tight drop-shadow-2xl">
-                                        {solution.title}
-                                    </h3>
-                                    
-                                    {/* Subtle animation line */}
-                                    <div className="mt-3 sm:mt-4 w-0 h-1 bg-white/80 rounded-full transition-all duration-500 group-hover:w-12 sm:group-hover:w-16"></div>
-                                </div>
+                                {/* Hover glow effect */}
+                                <div className="absolute inset-0 ring-2 ring-white/0 group-hover:ring-white/30 transition-all duration-300" style={{ borderRadius: '1rem' }} />
                             </div>
-                            
-                            {/* Hover glow effect */}
-                            <div className="absolute inset-0 rounded-2xl sm:rounded-3xl ring-2 ring-white/0 group-hover:ring-white/30 transition-all duration-300" />
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
+
+                {/* No articles message */}
+                {!hasArticles && (
+                    <div className="text-center py-12">
+                        <p className="text-gray-500 text-lg">No solution articles available at the moment.</p>
+                    </div>
+                )}
             </div>
 
             {/* Loading indicator */}
