@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import DocumentViewer from "./DocumentViewer";
+import LoadingSpinner from "./ui/LoadingSpinner";
 import "../styles/article.css";
 import { useArticles } from "../hooks/useArticles";
 import { useDragScroll } from "../hooks/useDragScroll";
@@ -138,8 +139,14 @@ const Solutions = () => {
 
             {/* Loading indicator */}
             {loadingArticle && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-                    <div className="bg-white rounded-lg p-8 shadow-lg text-lg">Loading article...</div>
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm">
+                    <div className="bg-white rounded-2xl p-8 shadow-2xl">
+                        <LoadingSpinner 
+                            size="lg" 
+                            text="Loading article..." 
+                            showText={true}
+                        />
+                    </div>
                 </div>
             )}
 
