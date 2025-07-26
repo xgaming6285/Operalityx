@@ -3,7 +3,7 @@ import HeroCarousel from "@/components/HeroCarousel";
 import Research from "@/components/Research";
 import Community from "@/components/Community";
 import Stories from "@/components/Stories";
-import News from "@/components/News";
+import News from "@/components/news";
 import Footer from "@/components/Footer";
 import Solutions from "@/components/Solutions";
 
