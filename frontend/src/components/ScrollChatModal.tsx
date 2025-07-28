@@ -1,17 +1,6 @@
 import { useState } from 'react';
 import { X, ArrowUp } from 'lucide-react';
 
-interface Message {
-    role: 'user' | 'assistant';
-    content: string;
-    thinking?: string;
-}
-
-interface TogetherMessage {
-    role: 'user' | 'assistant' | 'system';
-    content: string;
-}
-
 interface ScrollChatModalProps {
   isVisible: boolean;
   onClose: () => void;
@@ -24,13 +13,6 @@ const ScrollChatModal = ({ isVisible, onClose, onActiveChange }: ScrollChatModal
     const [showResponse, setShowResponse] = useState(false);
     const [response, setResponse] = useState('');
     const [isInputFocused, setIsInputFocused] = useState(false);
-
-    const convertToTogetherFormat = (messages: Message[]): TogetherMessage[] => {
-        return messages.map(msg => ({
-            role: msg.role as 'user' | 'assistant',
-            content: msg.content
-        }));
-    };
 
     const parseResponse = (response: string): { content: string; thinking?: string } => {
         const thinkingMatch = response.match(/<think>(.*?)<\/think>/s);
@@ -111,6 +93,14 @@ const ScrollChatModal = ({ isVisible, onClose, onActiveChange }: ScrollChatModal
         }
     };
 
+    const handleBackdropClick = () => {
+        if (showResponse) {
+            handleResponseClose();
+        } else {
+            onClose();
+        }
+    };
+
     if (!isVisible) return null;
 
     return (
@@ -119,7 +109,7 @@ const ScrollChatModal = ({ isVisible, onClose, onActiveChange }: ScrollChatModal
             {showResponse && (
                 <div 
                     className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40"
-                    onClick={handleResponseClose}
+                    onClick={handleBackdropClick}
                 />
             )}
 
