@@ -2,11 +2,19 @@ import { Search, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import SearchModal from "./SearchModal";
+import DocumentViewer from "./DocumentViewer";
+import { useArticles } from "@/hooks/useArticles";
+import { ArticleMeta } from "@/services/articleService";
 
 const Header = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
     const location = useLocation();
+
+    // Load all articles for search
+    const { articles, openArticle, currentDocument, closeArticleViewer, showArticleViewer } = useArticles();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -34,7 +42,22 @@ const Header = () => {
         setIsMobileMenuOpen(false);
     };
 
+    const openSearchModal = () => {
+        setIsSearchModalOpen(true);
+    };
+
+    const closeSearchModal = () => {
+        setIsSearchModalOpen(false);
+    };
+
+    const handleDocumentOpen = (article: ArticleMeta, e: React.MouseEvent) => {
+        e.preventDefault();
+        openArticle(article);
+        closeSearchModal();
+    };
+
     return (
+        <>
         <header className={`w-full fixed top-0 z-50 transition-all duration-300 ${isScrolled
                 ? "bg-white/80 backdrop-blur-md shadow-sm"
                 : "bg-white mt-4"
@@ -75,6 +98,7 @@ const Header = () => {
                             variant="ghost"
                             size="icon"
                             className="hover:bg-gray-100 transition-colors"
+                            onClick={openSearchModal}
                         >
                             <Search className="h-5 w-5" />
                         </Button>
@@ -118,6 +142,23 @@ const Header = () => {
                 )}
             </div>
         </header>
+
+        {/* Search Modal */}
+        <SearchModal
+            isOpen={isSearchModalOpen}
+            onClose={closeSearchModal}
+            articles={articles}
+            openDocument={handleDocumentOpen}
+        />
+
+        {/* Document Viewer */}
+        {showArticleViewer && currentDocument && (
+            <DocumentViewer
+                document={currentDocument}
+                onClose={closeArticleViewer}
+            />
+        )}
+        </>
     );
 };
 
