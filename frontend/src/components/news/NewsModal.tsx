@@ -15,6 +15,71 @@ const NewsModal = ({
   openDocument
 }: NewsModalProps) => {
   const [showContent, setShowContent] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState('All');
+
+  const filterCategories = [
+    'All',
+    'AI & Machine Learning',
+    'Cloud & Infrastructure', 
+    'Emerging Technologies',
+    'Business & Innovation',
+    'Security & Privacy',
+    'Healthcare & Biotech',
+    'Sustainability & Energy'
+  ];
+
+  // Enhanced filtering function that searches across multiple fields
+  const filterArticlesByCategory = (articles: any[], category: string) => {
+    if (category === 'All') return articles;
+
+    const categoryKeywords = {
+      'AI & Machine Learning': [
+        'ai', 'artificial intelligence', 'machine learning', 'neural networks', 
+        'deep learning', 'automation', 'robotics', 'autonomous'
+      ],
+      'Cloud & Infrastructure': [
+        'cloud', 'computing', 'infrastructure', 'edge computing', '5g', 
+        'network', 'connectivity', 'distributed', 'processing'
+      ],
+      'Emerging Technologies': [
+        'blockchain', 'quantum', 'iot', 'internet of things', 'augmented reality', 
+        'virtual reality', 'vr', 'ar', 'digital twin', 'space technology'
+      ],
+      'Business & Innovation': [
+        'innovation', 'market', 'business', 'digital transformation', 
+        'fintech', 'enterprise', 'industry', 'disruption', 'trends'
+      ],
+      'Security & Privacy': [
+        'security', 'cybersecurity', 'privacy', 'protection', 'secure', 'cyber'
+      ],
+      'Healthcare & Biotech': [
+        'healthcare', 'medical', 'biotechnology', 'biotech', 'life sciences', 
+        'treatment', 'patient'
+      ],
+      'Sustainability & Energy': [
+        'sustainable', 'sustainability', 'energy', 'green', 'renewable', 
+        'environment', 'eco'
+      ]
+    };
+
+    const keywords = categoryKeywords[category as keyof typeof categoryKeywords] || [];
+    
+    return articles.filter(article => {
+      const searchText = [
+        article.title || '',
+        article.subtitle || '',
+        article.description || '',
+        article.author || ''
+      ].join(' ').toLowerCase();
+
+      return keywords.some(keyword => 
+        searchText.includes(keyword.toLowerCase())
+      );
+    });
+  };
+
+  // Filter news cards based on selected category
+  const filteredNewsCards = filterArticlesByCategory(newsCards, selectedFilter);
 
   useEffect(() => {
     if (isOpen) {
@@ -46,7 +111,7 @@ const NewsModal = ({
             <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
             <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">All News</h3>
             <div className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-              {newsCards.length} {newsCards.length === 1 ? 'article' : 'articles'}
+              {filteredNewsCards.length} {filteredNewsCards.length === 1 ? 'article' : 'articles'}
             </div>
           </div>
           <button
@@ -58,19 +123,45 @@ const NewsModal = ({
           </button>
         </div>
 
+        {/* Filter Section */}
+        <div className="px-6 sm:px-8 py-4 bg-gray-50 border-b border-gray-200">
+          <div className="flex flex-wrap gap-2">
+            {filterCategories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedFilter(category)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                  selectedFilter === category
+                    ? 'bg-black text-white'
+                    : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Modal Body */}
         <div className="h-full overflow-auto p-6 sm:p-8">
-          {newsCards.length === 0 ? (
+          {filteredNewsCards.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center">
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                 <ArrowRight className="w-8 h-8 text-gray-400" />
               </div>
-              <p className="text-gray-500 text-lg">No news available</p>
-              <p className="text-gray-400 text-sm mt-2">News articles will appear here when available</p>
+              <p className="text-gray-500 text-lg">
+                {selectedFilter === 'All' ? 'No news available' : `No articles found for "${selectedFilter}"`}
+              </p>
+              <p className="text-gray-400 text-sm mt-2">
+                {selectedFilter === 'All' 
+                  ? 'News articles will appear here when available' 
+                  : 'Try selecting a different category or choose "All" to see all articles'
+                }
+              </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {newsCards.map((card, index) => (
+              {filteredNewsCards.map((card, index) => (
                 <div
                   key={card.id}
                   onClick={(e) => openDocument(card, e)}

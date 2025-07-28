@@ -1,10 +1,12 @@
 import { Search, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 const Header = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const location = useLocation();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -17,22 +19,18 @@ const Header = () => {
     }, []);
 
     const navigationItems = [
-        { name: "Research", href: "#research" },
-        { name: "Solutions", href: "#solutions" },
-        { name: "Community", href: "#community" },
-        { name: "Stories", href: "#stories" },
-        { name: "News", href: "#news" },
+        { name: "Research", href: "/research" },
+        { name: "Solutions", href: "/solutions" },
+        { name: "Community", href: "/community" },
+        { name: "Stories", href: "/stories" },
+        { name: "News", href: "/news" },
     ];
 
-    const handleNavClick = (href: string) => {
-        const target = document.querySelector(href);
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-            window.history.pushState(null, '', href);
-        }
+    const handleMobileMenuToggle = () => {
+        setIsMobileMenuOpen(!isMobileMenuOpen);
+    };
+
+    const closeMobileMenu = () => {
         setIsMobileMenuOpen(false);
     };
 
@@ -45,29 +43,29 @@ const Header = () => {
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
                     <div className="flex items-center space-x-6">
-                        <div className="w-48 sm:w-56 md:w-68 h-24 sm:h-28 md:h-36 relative">
+                        <Link to="/" className="w-48 sm:w-56 md:w-68 h-24 sm:h-28 md:h-36 relative">
                             <img
                                 src="/images/logo.png"
                                 alt="Operalytix Logo"
                                 className="w-full h-full object-contain"
                             />
-                        </div>
+                        </Link>
                     </div>
 
                     {/* Desktop Navigation Menu */}
                     <nav className="hidden md:flex items-center space-x-8">
                         {navigationItems.map((item) => (
-                            <a
+                            <Link
                                 key={item.name}
-                                href={item.href}
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    handleNavClick(item.href);
-                                }}
-                                className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors duration-200"
+                                to={item.href}
+                                className={`px-3 py-2 text-sm font-medium transition-colors duration-200 ${
+                                    location.pathname === item.href
+                                        ? "text-gray-900 border-b-2 border-gray-900"
+                                        : "text-gray-600 hover:text-gray-900"
+                                }`}
                             >
                                 {item.name}
-                            </a>
+                            </Link>
                         ))}
                     </nav>
 
@@ -86,7 +84,7 @@ const Header = () => {
                             variant="ghost"
                             size="icon"
                             className="md:hidden hover:bg-gray-100 transition-colors"
-                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                            onClick={handleMobileMenuToggle}
                         >
                             {isMobileMenuOpen ? (
                                 <X className="h-6 w-6" />
@@ -102,17 +100,18 @@ const Header = () => {
                     <div className="md:hidden absolute top-16 left-0 right-0 bg-white/95 backdrop-blur-md shadow-lg border-t border-gray-100">
                         <nav className="px-4 py-6">
                             {navigationItems.map((item) => (
-                                <a
+                                <Link
                                     key={item.name}
-                                    href={item.href}
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        handleNavClick(item.href);
-                                    }}
-                                    className="block text-gray-600 hover:text-gray-900 py-3 text-lg font-medium transition-colors duration-200 border-b border-gray-100 last:border-b-0"
+                                    to={item.href}
+                                    onClick={closeMobileMenu}
+                                    className={`block py-3 text-lg font-medium transition-colors duration-200 border-b border-gray-100 last:border-b-0 ${
+                                        location.pathname === item.href
+                                            ? "text-gray-900 font-bold"
+                                            : "text-gray-600 hover:text-gray-900"
+                                    }`}
                                 >
                                     {item.name}
-                                </a>
+                                </Link>
                             ))}
                         </nav>
                     </div>
