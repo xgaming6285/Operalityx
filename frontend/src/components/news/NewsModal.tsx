@@ -1,4 +1,5 @@
 import { ArrowRight, X } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface NewsModalProps {
   isOpen: boolean;
@@ -13,6 +14,20 @@ const NewsModal = ({
   newsCards,
   openDocument
 }: NewsModalProps) => {
+  const [showContent, setShowContent] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      // Small delay to allow modal to appear first
+      const timer = setTimeout(() => {
+        setShowContent(true);
+      }, 150);
+      return () => clearTimeout(timer);
+    } else {
+      setShowContent(false);
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
@@ -24,7 +39,7 @@ const NewsModal = ({
       />
 
       {/* Modal Content */}
-      <div className="fixed inset-[5%] z-50 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
+      <div className="fixed inset-[5%] z-50 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden animate-in fade-in-0 zoom-in-95 duration-300">
         {/* Modal Header */}
         <div className="flex items-center justify-between px-6 sm:px-8 py-6 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white">
           <div className="flex items-center gap-4">
@@ -55,18 +70,26 @@ const NewsModal = ({
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {newsCards.map((card) => (
+              {newsCards.map((card, index) => (
                 <div
                   key={card.id}
                   onClick={(e) => openDocument(card, e)}
-                  className="rounded-lg h-64 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-[1.02] relative overflow-hidden group"
+                  className={`rounded-lg h-64 cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105 relative overflow-hidden group ${
+                    showContent 
+                      ? 'opacity-100 translate-y-0' 
+                      : 'opacity-0 translate-y-8'
+                  }`}
+                  style={{
+                    transitionDelay: showContent ? `${index * 100}ms` : '0ms',
+                    transform: showContent ? 'translateY(0)' : 'translateY(32px)',
+                  }}
                 >
                   {/* Background Image */}
                   <div className="absolute inset-0">
                     <img
                       src={card.thumbnail || '/news/news-1.png'}
                       alt={card.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
                   </div>
 
@@ -76,10 +99,17 @@ const NewsModal = ({
                   {/* Hover effect overlay */}
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
 
+                  {/* Shimmer effect on card appearance */}
+                  <div className={`absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 transition-all duration-1000 ${
+                    showContent ? 'translate-x-full opacity-0' : '-translate-x-full opacity-100'
+                  }`} style={{ transitionDelay: `${index * 100 + 200}ms` }} />
+
                   {/* Card Content */}
                   <div className="relative w-full h-full p-4 flex flex-col justify-between z-10">
                     {/* Title and Subtitle */}
-                    <div>
+                    <div className={`transition-all duration-500 ${
+                      showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                    }`} style={{ transitionDelay: `${index * 100 + 300}ms` }}>
                       <h3 className="text-sm font-semibold text-white mb-1 line-clamp-2">
                         {card.title}
                       </h3>
@@ -91,12 +121,15 @@ const NewsModal = ({
                     </div>
 
                     {/* Description */}
-                    <div>
+                    <div className={`transition-all duration-500 ${
+                      showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                    }`} style={{ transitionDelay: `${index * 100 + 400}ms` }}>
                       <p className="text-xs text-white font-medium leading-relaxed line-clamp-3">
                         {card.description}
                       </p>
-                      <div className="mt-2 text-xs text-white/60">
-                        Click to read more →
+                      <div className="mt-2 text-xs text-white/60 flex items-center gap-1">
+                        Click to read more 
+                        <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
                       </div>
                     </div>
                   </div>
