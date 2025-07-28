@@ -37,17 +37,17 @@ const Solutions = () => {
                         </div>
                     </div>
                     {/* Navigation arrows */}
-                    <div className="flex space-x-2">
+                    <div className="flex items-center space-x-3">
                         <button
                             onClick={scrollLeft}
-                            className="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow duration-200 touch-manipulation"
+                            className="p-2 sm:p-3 rounded-full bg-white border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-200 group touch-manipulation"
                             aria-label="Scroll left"
                         >
                             <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
                         </button>
                         <button
                             onClick={scrollRight}
-                            className="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow duration-200 touch-manipulation"
+                            className="p-2 sm:p-3 rounded-full bg-white border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-200 group touch-manipulation"
                             aria-label="Scroll right"
                         >
                             <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />

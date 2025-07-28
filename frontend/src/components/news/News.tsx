@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { useArticles } from "../../hooks/useArticles";
 import { useDragScroll } from "../../hooks/useDragScroll";
@@ -83,14 +83,14 @@ const News = () => {
               className="p-2 sm:p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 border border-gray-100 touch-manipulation"
               aria-label="Scroll left"
             >
-              <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
+              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
             </button>
             <button
               onClick={scrollRightBtn}
               className="p-2 sm:p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 border border-gray-100 touch-manipulation"
               aria-label="Scroll right"
             >
-              <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
+              <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
             </button>
           </div>
         </div>
