@@ -16,10 +16,33 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({
   onClose,
   fullscreen = false,
 }) => {
+  // Check if device is mobile on component mount
+  const [isMobile, setIsMobile] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(fullscreen);
   const [showMetadata, setShowMetadata] = useState(false);
   const [isCleanView, setIsCleanView] = useState(false);
   const [showHelpTooltip, setShowHelpTooltip] = useState(false);
+
+  // Detect mobile device and window size changes
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth <= 768; // Mobile breakpoint
+      setIsMobile(mobile);
+      // Auto-enable fullscreen on mobile, but allow manual override on desktop
+      if (mobile && !fullscreen) {
+        setIsFullscreen(true);
+      } else if (!mobile && !fullscreen) {
+        setIsFullscreen(false);
+      }
+    };
+
+    // Check on mount
+    checkMobile();
+
+    // Listen for window resize
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, [fullscreen]);
 
   // Handle escape key to close
   useEffect(() => {
@@ -27,7 +50,8 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({
       if (e.key === "Escape") {
         if (isCleanView) {
           setIsCleanView(false);
-        } else if (isFullscreen) {
+        } else if (isFullscreen && !isMobile) {
+          // On mobile, don't allow exiting fullscreen with escape - only close
           setIsFullscreen(false);
         } else {
           onClose();
@@ -43,7 +67,7 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({
 
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-  }, [isFullscreen, isCleanView, onClose, doc.contentType]);
+  }, [isFullscreen, isCleanView, isMobile, onClose, doc.contentType]);
 
   // Show help tooltip when entering clean view
   useEffect(() => {
@@ -57,6 +81,10 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({
   }, [isCleanView]);
 
   const toggleFullscreen = () => {
+    // On mobile, prevent users from exiting fullscreen manually
+    if (isMobile && isFullscreen) {
+      return;
+    }
     setIsFullscreen(!isFullscreen);
   };
 
@@ -132,8 +160,8 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({
               </div>
 
               <div className="flex items-center space-x-2">
-                {/* Clean view toggle for PDFs */}
-                {doc.contentType === "pdf" && (
+                {/* Clean view toggle for PDFs - Hide on mobile to save space */}
+                {doc.contentType === "pdf" && !isMobile && (
                   <button
                     onClick={toggleCleanView}
                     className="p-2 rounded-md hover:bg-gray-100 transition-colors"
@@ -161,14 +189,16 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({
                   </button>
                 )}
 
-                {/* Metadata toggle */}
-                <button
-                  onClick={() => setShowMetadata(!showMetadata)}
-                  className="p-2 rounded-md hover:bg-gray-100 transition-colors"
-                  title="Show document info"
-                >
-                  <FileText className="w-4 h-4 text-gray-600" />
-                </button>
+                {/* Metadata toggle - Hide on mobile to save space */}
+                {!isMobile && (
+                  <button
+                    onClick={() => setShowMetadata(!showMetadata)}
+                    className="p-2 rounded-md hover:bg-gray-100 transition-colors"
+                    title="Show document info"
+                  >
+                    <FileText className="w-4 h-4 text-gray-600" />
+                  </button>
+                )}
 
                 {/* Download button */}
                 <button
@@ -179,18 +209,20 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({
                   <Download className="w-4 h-4 text-gray-600" />
                 </button>
 
-                {/* Fullscreen toggle */}
-                <button
-                  onClick={toggleFullscreen}
-                  className="p-2 rounded-md hover:bg-gray-100 transition-colors"
-                  title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-                >
-                  {isFullscreen ? (
-                    <Minimize2 className="w-4 h-4 text-gray-600" />
-                  ) : (
-                    <Maximize2 className="w-4 h-4 text-gray-600" />
-                  )}
-                </button>
+                {/* Fullscreen toggle - Hide on mobile since it's always fullscreen */}
+                {!isMobile && (
+                  <button
+                    onClick={toggleFullscreen}
+                    className="p-2 rounded-md hover:bg-gray-100 transition-colors"
+                    title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+                  >
+                    {isFullscreen ? (
+                      <Minimize2 className="w-4 h-4 text-gray-600" />
+                    ) : (
+                      <Maximize2 className="w-4 h-4 text-gray-600" />
+                    )}
+                  </button>
+                )}
 
                 {/* Close button */}
                 <button
@@ -203,8 +235,8 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({
               </div>
             </div>
 
-            {/* Metadata Panel */}
-            {showMetadata && (
+            {/* Metadata Panel - Only show on desktop when metadata is toggled */}
+            {showMetadata && !isMobile && (
               <div className="mt-3 pt-3 border-t border-gray-200 text-xs text-gray-600">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {doc.metadata.author && (

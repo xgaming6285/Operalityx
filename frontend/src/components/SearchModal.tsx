@@ -157,67 +157,69 @@ const SearchModal = ({
         onClick={onClose}
       />
 
-      {/* Modal Content */}
-      <div className="fixed inset-[5%] z-50 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden animate-in fade-in-0 zoom-in-95 duration-300">
+      {/* Modal Content - Full screen on mobile, inset on larger screens */}
+      <div className="fixed inset-0 sm:inset-[3%] md:inset-[5%] z-50 bg-white sm:rounded-2xl shadow-2xl border-0 sm:border border-gray-200 overflow-hidden animate-in fade-in-0 zoom-in-95 duration-300 max-h-screen">
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 sm:px-8 py-6 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white">
-          <div className="flex items-center gap-4">
-            <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
-            <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">Search Articles</h3>
-            <div className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+        <div className="flex items-center justify-between px-4 sm:px-6 md:px-8 py-4 sm:py-6 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white">
+          <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
+            <div className="w-2 h-2 sm:w-3 sm:h-3 bg-blue-500 rounded-full animate-pulse flex-shrink-0"></div>
+            <h3 className="text-lg sm:text-2xl md:text-3xl font-bold text-gray-900 truncate">Search Articles</h3>
+            <div className="text-xs sm:text-sm text-gray-500 bg-gray-100 px-2 sm:px-3 py-1 rounded-full whitespace-nowrap">
               {filteredArticles.length} {filteredArticles.length === 1 ? 'result' : 'results'}
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+            className="p-2 sm:p-3 rounded-full hover:bg-gray-100 transition-colors flex-shrink-0 ml-2"
             aria-label="Close modal"
           >
-            <X className="w-6 h-6 text-gray-600" />
+            <X className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
           </button>
         </div>
 
         {/* Search Section */}
-        <div className="px-6 sm:px-8 py-4 bg-gray-50 border-b border-gray-200">
+        <div className="px-4 sm:px-6 md:px-8 py-3 sm:py-4 bg-gray-50 border-b border-gray-200">
           {/* Search Input */}
-          <div className="relative mb-4">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <div className="relative mb-3 sm:mb-4">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
             <input
               type="text"
               placeholder="Search articles by title, description, author..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-gray-900 placeholder-gray-500"
+              className="w-full pl-9 sm:pl-10 pr-4 py-2.5 sm:py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-gray-900 placeholder-gray-500 text-sm sm:text-base"
               autoFocus
             />
           </div>
 
-          {/* Filter Categories */}
-          <div className="flex flex-wrap gap-2">
-            {filterCategories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedFilter(category)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-                  selectedFilter === category
-                    ? 'bg-black text-white'
-                    : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
-                }`}
-              >
-                {category}
-              </button>
-            ))}
+          {/* Filter Categories - Horizontal scroll on mobile */}
+          <div className="overflow-x-auto pb-1">
+            <div className="flex gap-2 min-w-max sm:min-w-0 sm:flex-wrap">
+              {filterCategories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedFilter(category)}
+                  className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 whitespace-nowrap ${
+                    selectedFilter === category
+                      ? 'bg-black text-white'
+                      : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
         {/* Modal Body */}
-        <div className="h-full overflow-auto p-6 sm:p-8">
+        <div className="h-full overflow-auto p-4 sm:p-6 md:p-8 pb-20 sm:pb-8">
           {filteredArticles.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-center">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                <Search className="w-8 h-8 text-gray-400" />
+            <div className="flex flex-col items-center justify-center h-full text-center px-4">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                <Search className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" />
               </div>
-              <p className="text-gray-500 text-lg">
+              <p className="text-gray-500 text-base sm:text-lg">
                 {searchQuery.trim() 
                   ? `No articles found for "${searchQuery}"` 
                   : selectedFilter === 'All' 
@@ -225,7 +227,7 @@ const SearchModal = ({
                     : `No articles found for "${selectedFilter}"`
                 }
               </p>
-              <p className="text-gray-400 text-sm mt-2">
+              <p className="text-gray-400 text-sm mt-2 max-w-md">
                 {searchQuery.trim()
                   ? 'Try different keywords or remove some filters'
                   : 'Search across all articles by title, description, author, and more'
@@ -233,12 +235,12 @@ const SearchModal = ({
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
               {filteredArticles.map((article, index) => (
                 <div
                   key={article.id}
                   onClick={(e) => openDocument(article, e)}
-                  className={`rounded-lg h-64 cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105 relative overflow-hidden group ${
+                  className={`rounded-lg h-56 sm:h-64 cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105 relative overflow-hidden group ${
                     showContent 
                       ? 'opacity-100 translate-y-0' 
                       : 'opacity-0 translate-y-8'
@@ -264,19 +266,19 @@ const SearchModal = ({
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
 
                   {/* Article Type Badge */}
-                  <div className="absolute top-3 left-3 z-20">
+                  <div className="absolute top-2 sm:top-3 left-2 sm:left-3 z-20">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${getArticleTypeColor(article.type)}`}>
                       {getArticleTypeLabel(article.type)}
                     </span>
                   </div>
 
                   {/* Card Content */}
-                  <div className="relative w-full h-full p-4 flex flex-col justify-between z-10">
+                  <div className="relative w-full h-full p-3 sm:p-4 flex flex-col justify-between z-10">
                     {/* Title and Subtitle */}
                     <div className={`transition-all duration-500 ${
                       showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                     }`} style={{ transitionDelay: `${index * 50 + 200}ms` }}>
-                      <h3 className="text-sm font-semibold text-white mb-1 line-clamp-2">
+                      <h3 className="text-sm sm:text-base font-semibold text-white mb-1 line-clamp-2">
                         {article.title}
                       </h3>
                       {article.subtitle && (
@@ -290,7 +292,7 @@ const SearchModal = ({
                     <div className={`transition-all duration-500 ${
                       showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                     }`} style={{ transitionDelay: `${index * 50 + 300}ms` }}>
-                      <p className="text-xs text-white font-medium leading-relaxed line-clamp-3 mb-2">
+                      <p className="text-xs text-white font-medium leading-relaxed line-clamp-2 sm:line-clamp-3 mb-2">
                         {article.description}
                       </p>
                       {article.author && (
