@@ -1,26 +1,21 @@
-import Header from "@/components/Header";
+import Layout from "@/components/Layout";
 import HeroCarousel from "@/components/HeroCarousel";
 import Research from "@/components/Research";
+import Solutions from "@/components/Solutions";
 import Community from "@/components/Community";
 import Stories from "@/components/Stories";
 import News from "@/components/news";
-import Footer from "@/components/Footer";
-import Solutions from "@/components/Solutions";
 
 const Index = () => {
   return (
-    <div className="min-h-screen">
-      <Header />
-      <main className="pt-20">
-        <HeroCarousel />
-        <Research />
-        <Solutions />
-        <Community />
-        <Stories />
-        <News />
-        <Footer />
-      </main>
-    </div>
+    <Layout>
+      <HeroCarousel />
+      <Research />
+      <Solutions />
+      <Community />
+      <Stories />
+      <News />
+    </Layout>
   );
 };
 
