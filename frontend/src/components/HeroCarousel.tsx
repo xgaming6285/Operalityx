@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ChatBox from './ChatBox';
 
 const HeroCarousel = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
+    const [cardWidth, setCardWidth] = useState(0);
 
     const cards = [
         {
@@ -40,14 +41,32 @@ const HeroCarousel = () => {
         }
     ];
 
-    // Calculate card width based on screen size (same as original)
-    const getCardWidth = () => {
+    // Calculate card width based on screen size and update on resize
+    const calculateCardWidth = () => {
         if (typeof window !== 'undefined') {
+            // For mobile: card width + gap = viewport width - container padding
+            // Card width: calc(100vw - 3rem), gap: 0.5rem on each side = 1rem total
+            // Total per slide: calc(100vw - 2rem) 
             return window.innerWidth < 768 ? window.innerWidth - 32 : window.innerWidth - 230;
         }
         return 0;
     };
 
+    // Initialize card width and set up resize listener
+    useEffect(() => {
+        const updateCardWidth = () => {
+            setCardWidth(calculateCardWidth());
+        };
+
+        // Set initial width
+        updateCardWidth();
+
+        // Add resize listener
+        window.addEventListener('resize', updateCardWidth);
+        
+        // Cleanup
+        return () => window.removeEventListener('resize', updateCardWidth);
+    }, []);
 
 
     // Navigate to specific slide
@@ -83,16 +102,16 @@ const HeroCarousel = () => {
 
     return (
         <div className="space-y-4 sm:space-y-6">
-            <div className="relative w-full overflow-hidden">
+            <div className="relative w-full overflow-hidden px-4 sm:px-0">
                 <motion.div 
                     className="flex cursor-grab active:cursor-grabbing"
                     drag="x"
-                    dragConstraints={{ right: 0, left: -(cards.length - 1) * getCardWidth() }}
+                    dragConstraints={{ right: 0, left: -(cards.length - 1) * cardWidth }}
                     dragElastic={0.2}
                     dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
                     onDragEnd={handleDragEnd}
                     animate={{ 
-                        x: -currentSlide * getCardWidth()
+                        x: -currentSlide * cardWidth
                     }}
                     transition={{ 
                         type: "spring", 
@@ -104,7 +123,7 @@ const HeroCarousel = () => {
                     {cards.map((card) => (
                         <div
                             key={card.id}
-                            className={`relative min-w-[calc(100vw-2rem)] sm:min-w-[calc(100vw-14.375rem)] h-[600px] sm:h-[700px] lg:h-[810px] rounded-2xl sm:rounded-3xl overflow-hidden mx-4 sm:mx-6 flex-shrink-0 ${
+                            className={`relative min-w-[calc(100vw-3rem)] sm:min-w-[calc(100vw-14.375rem)] h-[600px] sm:h-[700px] lg:h-[810px] rounded-2xl sm:rounded-3xl overflow-hidden mx-2 sm:mx-6 flex-shrink-0 ${
                                 card.type === 'chat' 
                                     ? 'bg-white border-2 border-gray-200 shadow-2xl' 
                                     : ''
