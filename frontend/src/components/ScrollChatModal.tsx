@@ -15,13 +15,15 @@ interface TogetherMessage {
 interface ScrollChatModalProps {
   isVisible: boolean;
   onClose: () => void;
+  onActiveChange?: (isActive: boolean) => void;
 }
 
-const ScrollChatModal = ({ isVisible, onClose }: ScrollChatModalProps) => {
+const ScrollChatModal = ({ isVisible, onClose, onActiveChange }: ScrollChatModalProps) => {
     const [message, setMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [showResponse, setShowResponse] = useState(false);
     const [response, setResponse] = useState('');
+    const [isInputFocused, setIsInputFocused] = useState(false);
 
     const convertToTogetherFormat = (messages: Message[]): TogetherMessage[] => {
         return messages.map(msg => ({
@@ -88,6 +90,27 @@ const ScrollChatModal = ({ isVisible, onClose }: ScrollChatModalProps) => {
         setShowResponse(false);
     };
 
+    const handleInputFocus = () => {
+        setIsInputFocused(true);
+        onActiveChange?.(true);
+    };
+
+    const handleInputBlur = () => {
+        setIsInputFocused(false);
+        // Only set inactive if not showing response and not loading
+        if (!showResponse && !isLoading) {
+            onActiveChange?.(false);
+        }
+    };
+
+    const handleResponseClose = () => {
+        setShowResponse(false);
+        // Set inactive when closing response if input is not focused
+        if (!isInputFocused) {
+            onActiveChange?.(false);
+        }
+    };
+
     if (!isVisible) return null;
 
     return (
@@ -96,7 +119,7 @@ const ScrollChatModal = ({ isVisible, onClose }: ScrollChatModalProps) => {
             {showResponse && (
                 <div 
                     className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40"
-                    onClick={() => setShowResponse(false)}
+                    onClick={handleResponseClose}
                 />
             )}
 
@@ -110,7 +133,7 @@ const ScrollChatModal = ({ isVisible, onClose }: ScrollChatModalProps) => {
                             <div className="flex justify-between items-start mb-3">
                                 <h3 className="font-medium text-gray-800 text-sm">Operalytix Response</h3>
                                 <button
-                                    onClick={() => setShowResponse(false)}
+                                    onClick={handleResponseClose}
                                     className="text-gray-400 hover:text-gray-600 transition-colors"
                                 >
                                     <X className="w-4 h-4" />
@@ -143,8 +166,6 @@ const ScrollChatModal = ({ isVisible, onClose }: ScrollChatModalProps) => {
                         </div>
                     )}
 
-
-
                     {/* Main input bubble */}
                     <form onSubmit={handleSubmit} className="relative">
                         <div className="bg-white rounded-full shadow-xl border border-gray-200 px-4 py-3 flex items-center gap-3 transition-all duration-200 hover:shadow-2xl focus-within:shadow-2xl focus-within:border-blue-300">
@@ -154,6 +175,8 @@ const ScrollChatModal = ({ isVisible, onClose }: ScrollChatModalProps) => {
                                 type="text"
                                 value={message}
                                 onChange={(e) => setMessage(e.target.value)}
+                                onFocus={handleInputFocus}
+                                onBlur={handleInputBlur}
                                 placeholder="Ask Operalytix"
                                 className="flex-1 text-gray-700 placeholder-gray-400 bg-transparent focus:outline-none text-sm"
                                 disabled={isLoading}

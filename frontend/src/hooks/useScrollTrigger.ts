@@ -1,44 +1,53 @@
 import { useState, useEffect } from 'react';
 
 interface UseScrollTriggerOptions {
-  threshold?: number; // Scroll distance in pixels before triggering
-  delay?: number; // Delay in milliseconds before showing
+  hideDelay?: number; // Delay in milliseconds before hiding when scrolling stops
+  isActive?: boolean; // Whether the modal is actively being used
 }
 
 export const useScrollTrigger = ({ 
-  threshold = 300, 
-  delay = 1000 
+  hideDelay = 3000, // Hide after 3 seconds of no scrolling
+  isActive = false
 }: UseScrollTriggerOptions = {}) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [hasScrolledEnough, setHasScrolledEnough] = useState(false);
 
   useEffect(() => {
-    let timeoutId: number;
+    let hideTimeoutId: number;
 
     const handleScroll = () => {
-      const scrollPosition = window.scrollY;
+      // Show modal immediately when scrolling
+      setIsVisible(true);
       
-      if (scrollPosition > threshold && !hasScrolledEnough) {
-        setHasScrolledEnough(true);
-        // Add delay before showing the modal
-        timeoutId = setTimeout(() => {
-          setIsVisible(true);
-        }, delay);
+      // Clear existing timeout
+      if (hideTimeoutId) {
+        clearTimeout(hideTimeoutId);
+      }
+      
+      // Only set timeout to hide if not actively being used
+      if (!isActive) {
+        hideTimeoutId = setTimeout(() => {
+          setIsVisible(false);
+        }, hideDelay);
       }
     };
 
     window.addEventListener('scroll', handleScroll);
-    
-    // Check initial scroll position
-    handleScroll();
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      if (timeoutId) {
-        clearTimeout(timeoutId);
+      if (hideTimeoutId) {
+        clearTimeout(hideTimeoutId);
       }
     };
-  }, [threshold, delay, hasScrolledEnough]);
+  }, [hideDelay, isActive]);
+
+  // Effect to handle when active state changes
+  useEffect(() => {
+    if (isActive) {
+      // Keep visible when active
+      setIsVisible(true);
+    }
+  }, [isActive]);
 
   const hideModal = () => {
     setIsVisible(false);
@@ -51,7 +60,6 @@ export const useScrollTrigger = ({
   return {
     isVisible,
     hideModal,
-    showModal,
-    hasScrolledEnough
+    showModal
   };
 }; 
