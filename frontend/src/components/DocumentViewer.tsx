@@ -9,6 +9,7 @@ import {
   User,
 } from "lucide-react";
 import { DocumentViewerProps } from "../types/document";
+import ContactForm from "./ContactForm";
 
 const DocumentViewer: React.FC<DocumentViewerProps> = ({
   document: doc,
@@ -281,15 +282,24 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({
               />
             ) : (
               // For other content types, render the HTML directly
-              <div
-                dangerouslySetInnerHTML={{ __html: doc.content }}
-                style={{
-                  // Critical: No borders, margins, or styling that would interfere
-                  width: "100%",
-                  minHeight: "100%",
-                  backgroundColor: "white",
-                }}
-              />
+              <>
+                <div
+                  dangerouslySetInnerHTML={{ __html: doc.content }}
+                  style={{
+                    // Critical: No borders, margins, or styling that would interfere
+                    width: "100%",
+                    minHeight: "100%",
+                    backgroundColor: "white",
+                  }}
+                />
+                {/* Contact Form at the bottom of HTML articles */}
+                <div className="px-6 py-8 bg-white border-t border-gray-200">
+                  <ContactForm 
+                    articleTitle={doc.title}
+                    className="max-w-2xl mx-auto"
+                  />
+                </div>
+              </>
             )}
           </div>
         </div>
