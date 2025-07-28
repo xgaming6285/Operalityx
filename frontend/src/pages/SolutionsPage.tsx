@@ -1,8 +1,7 @@
 import Layout from "@/components/Layout";
 import Solutions from "@/components/Solutions";
 import { motion } from "framer-motion";
-import { Cog, Zap, TrendingUp, Shield, CheckCircle, ArrowRight, Search, BarChart } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Cog, Zap, TrendingUp, Shield, CheckCircle, BarChart } from "lucide-react";
 
 const SolutionsPage = () => {
   const features = [
@@ -81,17 +80,6 @@ const SolutionsPage = () => {
               Unlock unprecedented efficiency and growth with our AI-powered solutions designed 
               to revolutionize how your business operates and scales.
             </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button size="lg" className="bg-white text-black hover:bg-gray-100 px-8 py-4 text-lg font-medium">
-                <Search className="mr-2 h-5 w-5" />
-                Get Started
-              </Button>
-              <Button variant="outline" size="lg" className="border-gray-600 text-gray-300 hover:bg-gray-800 px-8 py-4 text-lg font-medium">
-                Schedule Demo
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </div>
           </motion.div>
         </div>
       </section>
@@ -236,14 +224,6 @@ const SolutionsPage = () => {
           <p className="text-xl text-gray-400 mb-8 leading-relaxed font-light">
             Join thousands of companies that have already revolutionized their operations with our AI solutions.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-black hover:bg-gray-100 px-8 py-4 font-medium">
-              Start Free Trial
-            </Button>
-            <Button variant="outline" size="lg" className="border-gray-600 text-gray-300 hover:bg-gray-800 px-8 py-4 font-medium">
-              Contact Sales Team
-            </Button>
-          </div>
         </div>
       </section>
     </Layout>

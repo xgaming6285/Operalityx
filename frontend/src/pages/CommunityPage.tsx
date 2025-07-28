@@ -2,7 +2,6 @@ import Layout from "@/components/Layout";
 import Community from "@/components/Community";
 import { motion } from "framer-motion";
 import { Users, MessageCircle, Star, Globe, Calendar, Award, TrendingUp } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 const CommunityPage = () => {
   const communityStats = [
@@ -73,17 +72,6 @@ const CommunityPage = () => {
               Connect with thousands of AI enthusiasts, researchers, and practitioners. 
               Share knowledge, collaborate on projects, and grow together in our vibrant community.
             </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button size="lg" className="bg-white text-black hover:bg-gray-100 px-8 py-4 text-lg font-medium">
-                <Users className="mr-2 h-5 w-5" />
-                Join Community
-              </Button>
-              <Button variant="outline" size="lg" className="border-gray-600 text-gray-300 hover:bg-gray-800 px-8 py-4 text-lg font-medium">
-                <MessageCircle className="mr-2 h-5 w-5" />
-                Start Discussion
-              </Button>
-            </div>
           </motion.div>
         </div>
       </section>
@@ -191,14 +179,6 @@ const CommunityPage = () => {
           <p className="text-xl text-gray-400 mb-8 leading-relaxed font-light">
             Join thousands of AI enthusiasts and be part of the conversation that's shaping the future of technology.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-black hover:bg-gray-100 px-8 py-4 font-medium">
-              Join for Free
-            </Button>
-            <Button variant="outline" size="lg" className="border-gray-600 text-gray-300 hover:bg-gray-800 px-8 py-4 font-medium">
-              Explore Discussions
-            </Button>
-          </div>
         </div>
       </section>
     </Layout>

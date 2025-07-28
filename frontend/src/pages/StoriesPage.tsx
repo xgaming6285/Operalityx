@@ -1,7 +1,7 @@
 import Layout from "@/components/Layout";
 import Stories from "@/components/Stories";
 import { motion } from "framer-motion";
-import { BookOpen, Lightbulb, Users, Rocket, Quote, Play, Share, Award } from "lucide-react";
+import { BookOpen, Lightbulb, Users, Rocket, Quote, Play, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const StoriesPage = () => {
@@ -66,6 +66,13 @@ const StoriesPage = () => {
     }
   ];
 
+  const scrollToStories = () => {
+    const storiesSection = document.getElementById('stories');
+    if (storiesSection) {
+      storiesSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <Layout>
       {/* Hero Section */}
@@ -88,13 +95,13 @@ const StoriesPage = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button size="lg" className="bg-white text-black hover:bg-gray-100 px-8 py-4 text-lg font-medium">
+              <Button 
+                size="lg" 
+                className="bg-white text-black hover:bg-gray-100 px-8 py-4 text-lg font-medium"
+                onClick={scrollToStories}
+              >
                 <BookOpen className="mr-2 h-5 w-5" />
                 Read Stories
-              </Button>
-              <Button variant="outline" size="lg" className="border-gray-600 text-gray-300 hover:bg-gray-800 px-8 py-4 text-lg font-medium">
-                <Share className="mr-2 h-5 w-5" />
-                Share Your Story
               </Button>
             </div>
           </motion.div>
@@ -260,26 +267,6 @@ const StoriesPage = () => {
       {/* Main Stories Section */}
       <Stories />
 
-      {/* CTA Section */}
-      <section className="py-20 bg-black">
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-6">
-            Your Story Matters
-          </h2>
-          <p className="text-xl text-gray-400 mb-8 leading-relaxed font-light">
-            Have an inspiring AI transformation story to share? We'd love to feature your journey 
-            and inspire others in the community.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-black hover:bg-gray-100 px-8 py-4 font-medium">
-              Share Your Story
-            </Button>
-            <Button variant="outline" size="lg" className="border-gray-600 text-gray-300 hover:bg-gray-800 px-8 py-4 font-medium">
-              Browse All Stories
-            </Button>
-          </div>
-        </div>
-      </section>
     </Layout>
   );
 };
