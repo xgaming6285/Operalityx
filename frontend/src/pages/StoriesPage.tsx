@@ -1,22 +1,11 @@
 import Layout from "@/components/Layout";
 import Stories from "@/components/Stories";
-import VideoModal from "@/components/VideoModal";
+import FeaturedStory from "@/components/FeaturedStory";
 import { motion } from "framer-motion";
-import { BookOpen, Lightbulb, Users, Rocket, Quote, Play, Award } from "lucide-react";
+import { BookOpen, Lightbulb, Users, Rocket, Quote, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
 
 const StoriesPage = () => {
-  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
-
-  const openVideoModal = () => {
-    setIsVideoModalOpen(true);
-  };
-
-  const closeVideoModal = () => {
-    setIsVideoModalOpen(false);
-  };
-
   const impactStats = [
     { label: "Success Stories", value: "250+", icon: Award },
     { label: "Lives Transformed", value: "10K+", icon: Users },
@@ -51,15 +40,7 @@ const StoriesPage = () => {
     }
   ];
 
-  const featuredStory = {
-    title: "Operalityx Stories: AI Transformation Journey",
-    subtitle: "Experience the Future of AI Innovation",
-    excerpt: "Watch exclusive behind-the-scenes footage showcasing real AI transformations, breakthrough moments, and the human stories that drive innovation forward.",
-    author: "Operalityx Team",
-    readTime: "Featured Video",
-    category: "Featured Story",
-    videoSrc: "/stories/stories-video.mp4"
-  };
+
 
   const inspiringQuotes = [
     {
@@ -143,80 +124,7 @@ const StoriesPage = () => {
       </section>
 
       {/* Featured Story */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="bg-white rounded-lg p-8 lg:p-12 shadow-lg border border-gray-200"
-          >
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <div>
-                <div className="inline-flex px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium mb-6">
-                  Featured Story
-                </div>
-                <h2 className="text-3xl md:text-4xl font-semibold text-black mb-4">
-                  {featuredStory.title}
-                </h2>
-                <h3 className="text-xl text-gray-600 font-medium mb-6">
-                  {featuredStory.subtitle}
-                </h3>
-                <p className="text-gray-600 leading-relaxed mb-8 font-light">
-                  {featuredStory.excerpt}
-                </p>
-                <div className="flex items-center justify-between mb-8">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-gray-900 rounded-full flex items-center justify-center text-white font-semibold">
-                      M
-                    </div>
-                    <div>
-                      <div className="font-semibold text-black">{featuredStory.author}</div>
-                      <div className="text-gray-600 text-sm font-medium">{featuredStory.readTime}</div>
-                    </div>
-                  </div>
-                  <div className="text-gray-600 font-medium">{featuredStory.category}</div>
-                </div>
-                <Button 
-                  size="lg" 
-                  className="bg-black hover:bg-gray-800 text-white px-8 py-3 font-medium"
-                  onClick={openVideoModal}
-                >
-                  <Play className="mr-2 h-5 w-5" />
-                  Watch Story
-                </Button>
-              </div>
-              <div className="relative">
-                <div 
-                  className="aspect-video bg-black rounded-lg overflow-hidden cursor-pointer group border border-gray-200 hover:shadow-lg transition-all duration-300"
-                  onClick={openVideoModal}
-                >
-                  <video 
-                    className="w-full h-full object-cover"
-                    muted
-                    playsInline
-                    poster="/stories/stories-9.jpeg"
-                  >
-                    <source src={featuredStory.videoSrc} type="video/mp4" />
-                  </video>
-                  
-                  {/* Video overlay */}
-                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
-                    <div className="bg-white/90 backdrop-blur-sm rounded-full p-4 group-hover:scale-110 transition-transform duration-300">
-                      <Play className="w-8 h-8 text-black ml-1" />
-                    </div>
-                  </div>
-                  
-                  {/* Video badge */}
-                  <div className="absolute top-4 right-4 bg-black/70 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-medium">
-                    Featured Story
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      <FeaturedStory />
 
       {/* Story Categories */}
       <section className="py-20 bg-white">
@@ -301,15 +209,6 @@ const StoriesPage = () => {
 
       {/* Main Stories Section */}
       <Stories />
-
-      {/* Video Modal */}
-      <VideoModal
-        isOpen={isVideoModalOpen}
-        onClose={closeVideoModal}
-        videoSrc={featuredStory.videoSrc}
-        title={featuredStory.title}
-        subtitle={featuredStory.subtitle}
-      />
 
     </Layout>
   );

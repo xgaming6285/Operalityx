@@ -96,7 +96,7 @@ const Research = () => {
                         ) : researchArticles.length === 0 ? (
                             renderEmptyState()
                         ) : (
-                            researchArticles.map((article, index) => (
+                            researchArticles.map((article) => (
                                 <div
                                     key={article.id}
                                     className="flex-none w-80 sm:w-96 group cursor-pointer transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl relative"
