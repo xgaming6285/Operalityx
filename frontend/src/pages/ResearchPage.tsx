@@ -3,8 +3,25 @@ import Research from "@/components/Research";
 import { motion } from "framer-motion";
 import { Brain, Zap, Target, Users, ChevronRight, Download, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const ResearchPage = () => {
+  const navigate = useNavigate();
+
+  const navigateToNewsletterSignup = () => {
+    navigate('/news');
+    // Scroll to newsletter section after navigation
+    setTimeout(() => {
+      const newsletterSection = document.getElementById('newsletter-signup');
+      if (newsletterSection) {
+        newsletterSection.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }, 100); // Small delay to ensure page has loaded
+  };
+
   const stats = [
     { label: "Research Projects", value: "50+", icon: Brain },
     { label: "Publications", value: "25+", icon: ExternalLink },
@@ -43,6 +60,7 @@ const ResearchPage = () => {
         <video
           autoPlay
           muted
+          loop
           playsInline
           className="absolute inset-0 w-full h-full object-cover z-0"
           style={{ objectPosition: 'center 40%' }}
@@ -71,13 +89,19 @@ const ResearchPage = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button size="lg" className="bg-white text-black hover:bg-gray-100 px-8 py-4 text-lg font-medium">
+              <Button 
+                size="lg" 
+                className="bg-white text-black hover:bg-gray-100 px-8 py-4 text-lg font-medium"
+                onClick={() => {
+                  // Scroll to the Research section
+                  const researchSection = document.querySelector('#research-section');
+                  if (researchSection) {
+                    researchSection.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+              >
                 <Download className="mr-2 h-5 w-5" />
                 Research Papers
-              </Button>
-              <Button variant="outline" size="lg" className="border-gray-600 text-gray-300 hover:bg-gray-800 px-8 py-4 text-lg font-medium">
-                <ExternalLink className="mr-2 h-5 w-5" />
-                Publications
               </Button>
             </div>
           </motion.div>
@@ -136,7 +160,17 @@ const ResearchPage = () => {
                 <p className="text-gray-600 leading-relaxed mb-6 font-light">
                   {area.description}
                 </p>
-                <Button variant="ghost" className="group/btn p-0 h-auto text-black hover:text-gray-600 font-medium">
+                <Button 
+                  variant="ghost" 
+                  className="group/btn p-0 h-auto text-black hover:text-gray-600 font-medium"
+                  onClick={() => {
+                    // Scroll to the main research section to show more details
+                    const researchSection = document.querySelector('#research-section');
+                    if (researchSection) {
+                      researchSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                >
                   Learn More
                   <ChevronRight className="ml-1 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
                 </Button>
@@ -147,7 +181,9 @@ const ResearchPage = () => {
       </section>
 
       {/* Main Research Section */}
-      <Research />
+      <div id="research-section">
+        <Research />
+      </div>
 
       {/* Call to Action */}
       <section className="py-20 bg-black">
@@ -160,11 +196,12 @@ const ResearchPage = () => {
             Explore partnership opportunities and research initiatives.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-black hover:bg-gray-100 px-8 py-4 font-medium">
+            <Button 
+              size="lg" 
+              className="bg-white text-black hover:bg-gray-100 px-8 py-4 font-medium"
+              onClick={navigateToNewsletterSignup}
+            >
               Research Partnerships
-            </Button>
-            <Button variant="outline" size="lg" className="border-gray-600 text-gray-300 hover:bg-gray-800 px-8 py-4 font-medium">
-              Contact Research Team
             </Button>
           </div>
         </div>
