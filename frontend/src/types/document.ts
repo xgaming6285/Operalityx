@@ -3,7 +3,7 @@ export interface Document {
   title: string;
   subtitle?: string;
   description: string;
-  type: "story" | "news";
+  type: "story" | "news" | "research";
   contentType: "word" | "pdf" | "html" | "markdown" | "image";
   originalFileName?: string;
   thumbnail?: string;

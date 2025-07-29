@@ -647,5 +647,77 @@
     "type": "community",
     "author": "Operalityx Community Team",
     "createdAt": "2024-07-25T09:00:00Z"
+  },
+  {
+    "id": "research-employee-monitoring",
+    "title": "Employee Monitoring with Local AI",
+    "subtitle": "Privacy-First Workplace Analytics",
+    "description": "Analyzes employee monitoring using local AI and video technology, examining GDPR compliance, psychological impact, and ethical challenges for responsible implementation.",
+    "thumbnail": "/research/research-1.png",
+    "file": "/articles/research/25072025 - Summary of Employee Monitoring with Local AI - Operalityx.html",
+    "pdfFile": "/articles/research/25072025 - Employee Monitoring with Local AI - Operalityx.pdf",
+    "type": "research",
+    "author": "Operalityx Research Team",
+    "createdAt": "2025-07-25T00:00:00Z"
+  },
+  {
+    "id": "research-data-scraping-ai",
+    "title": "Architectures and Methodologies for Data Scraping with Locally Hosted AI",
+    "subtitle": "Next-Generation Data Collection",
+    "description": "Explores advanced architectures and methodologies for implementing data scraping solutions using locally hosted artificial intelligence systems.",
+    "thumbnail": "/research/research-2.png",
+    "file": "/articles/research/28072025 - Summary of Architectures and Methodologies for Data Scraping with Locally Hosted Artificial Intelligence - Operalityx.html",
+    "pdfFile": "/articles/research/28072025 - Architectures and Methodologies for Data Scraping with Locally Hosted Artificial Intelligence - Operalityx.pdf",
+    "type": "research",
+    "author": "Operalityx Research Team",
+    "createdAt": "2025-07-28T00:00:00Z"
+  },
+  {
+    "id": "research-b2b-automation",
+    "title": "Hybrid B2B Automation Architectures",
+    "subtitle": "Enterprise Integration Solutions",
+    "description": "Comprehensive analysis of hybrid B2B automation architectures for seamless enterprise integration and process optimization.",
+    "thumbnail": "/research/research-3.png",
+    "file": "/articles/research/28072025 - Summary of Hybrid B2B Automation Architectures.html",
+    "pdfFile": "/articles/research/28072025 - Hybrid B2B Automation Architectures.pdf",
+    "type": "research",
+    "author": "Operalityx Research Team",
+    "createdAt": "2025-07-28T01:00:00Z"
+  },
+  {
+    "id": "research-kyc-compliance",
+    "title": "Local AI for KYC Compliance",
+    "subtitle": "Financial Security & Privacy",
+    "description": "Explores strategic advantages of local AI for KYC compliance in finance, focusing on data sovereignty, security, and real-time performance.",
+    "thumbnail": "/research/research-4.png",
+    "file": "/articles/research/28072025 - Summary of Local AI for KYC Compliance.html",
+    "pdfFile": "/articles/research/28072025 - Local AI for KYC Compliance.pdf",
+    "type": "research",
+    "author": "Operalityx Research Team",  
+    "createdAt": "2025-07-28T02:00:00Z"
+  },
+  {
+    "id": "research-infinitus-framework",
+    "title": "The Infinitus Framework",
+    "subtitle": "Self-Improving Multi-Agent Systems",
+    "description": "Conceptual architecture for a self-improving, continually learning, and fully autonomous multi-agent system framework.",
+    "thumbnail": "/research/research-1.png",
+    "file": "/articles/research/28072025- Summary of The Infinitus Framework_ A Conceptual Architecture for a Self-Improving, Continually Learning, and Fully Autonomous Multi-Agent System-Operalityx.html",
+    "pdfFile": "/articles/research/28072025- The Infinitus Framework_ A Conceptual Architecture for a Self-Improving, Continually Learning, and Fully Autonomous Multi-Agent System-Operalityx.pdf",
+    "type": "research",
+    "author": "Operalityx Research Team",
+    "createdAt": "2025-07-28T03:00:00Z"
+  },
+  {
+    "id": "research-onpremises-ai-agent",
+    "title": "The On-Premises AI Agent",
+    "subtitle": "SIM Gateway-Powered Conversational AI",
+    "description": "Architectural and feasibility analysis of SIM gateway-powered conversational AI for on-premises deployment and enhanced security.",
+    "thumbnail": "/research/research-2.png",
+    "file": "/articles/research/28072025- Summary of The On-Premises AI Agent_ An Architectural and Feasibility Analysis of SIM Gateway-Powered Conversational AI - Operalityx.html",
+    "pdfFile": "/articles/research/28072025- The On-Premises AI Agent_ An Architectural and Feasibility Analysis of SIM Gateway-Powered Conversational AI - Operalityx.pdf",
+    "type": "research",
+    "author": "Operalityx Research Team",
+    "createdAt": "2025-07-28T04:00:00Z"
   }
 ] 
