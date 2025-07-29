@@ -5,6 +5,7 @@ import SolutionsPage from './pages/SolutionsPage';
 import CommunityPage from './pages/CommunityPage';
 import StoriesPage from './pages/StoriesPage';
 import NewsPage from './pages/NewsPage';
+import AboutPage from './pages/AboutPage';
 
 function App() {
     return (
@@ -16,6 +17,7 @@ function App() {
                 <Route path="/community" element={<CommunityPage />} />
                 <Route path="/stories" element={<StoriesPage />} />
                 <Route path="/news" element={<NewsPage />} />
+                <Route path="/about" element={<AboutPage />} />
             </Routes>
         </Router>
     )
