@@ -38,8 +38,22 @@ const ResearchPage = () => {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="relative py-24 lg:py-32 bg-gradient-to-b from-black to-gray-900">
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section className="relative py-24 lg:py-32 overflow-hidden">
+        {/* Video Background */}
+        <video
+          autoPlay
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover z-0"
+          style={{ objectPosition: 'center 40%' }}
+        >
+          <source src="/research/research-video.mp4" type="video/mp4" />
+        </video>
+        
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-black bg-opacity-60 z-10"></div>
+        
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
