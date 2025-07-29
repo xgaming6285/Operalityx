@@ -11,6 +11,7 @@ import PrivacyPage from './pages/PrivacyPage';
 import CookiePage from './pages/CookiePage';
 import BrandManifestoPage from './pages/BrandManifestoPage';
 import SupportPage from './pages/SupportPage';
+import CareersPage from './pages/CareersPage';
 
 function App() {
     return (
@@ -23,6 +24,7 @@ function App() {
                 <Route path="/stories" element={<StoriesPage />} />
                 <Route path="/news" element={<NewsPage />} />
                 <Route path="/about" element={<AboutPage />} />
+                <Route path="/careers" element={<CareersPage />} />
                 <Route path="/support" element={<SupportPage />} />
                 <Route path="/terms" element={<TermsPage />} />
                 <Route path="/privacy" element={<PrivacyPage />} />
