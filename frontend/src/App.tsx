@@ -9,6 +9,7 @@ import AboutPage from './pages/AboutPage';
 import TermsPage from './pages/TermsPage';
 import PrivacyPage from './pages/PrivacyPage';
 import CookiePage from './pages/CookiePage';
+import BrandManifestoPage from './pages/BrandManifestoPage';
 
 function App() {
     return (
@@ -24,6 +25,7 @@ function App() {
                 <Route path="/terms" element={<TermsPage />} />
                 <Route path="/privacy" element={<PrivacyPage />} />
                 <Route path="/cookies" element={<CookiePage />} />
+                <Route path="/manifesto" element={<BrandManifestoPage />} />
             </Routes>
         </Router>
     )
