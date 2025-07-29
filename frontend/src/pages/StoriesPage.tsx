@@ -1,10 +1,22 @@
 import Layout from "@/components/Layout";
 import Stories from "@/components/Stories";
+import VideoModal from "@/components/VideoModal";
 import { motion } from "framer-motion";
 import { BookOpen, Lightbulb, Users, Rocket, Quote, Play, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 const StoriesPage = () => {
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+
+  const openVideoModal = () => {
+    setIsVideoModalOpen(true);
+  };
+
+  const closeVideoModal = () => {
+    setIsVideoModalOpen(false);
+  };
+
   const impactStats = [
     { label: "Success Stories", value: "250+", icon: Award },
     { label: "Lives Transformed", value: "10K+", icon: Users },
@@ -40,12 +52,13 @@ const StoriesPage = () => {
   ];
 
   const featuredStory = {
-    title: "From Manual Chaos to AI-Powered Efficiency",
-    subtitle: "How TechStart reduced processing time by 90%",
-    excerpt: "A small startup's journey from manual data processing nightmares to streamlined AI automation that saved their business and scaled their operations globally.",
-    author: "Maria Santos, CEO of TechStart",
-    readTime: "8 min read",
-    category: "Transformation"
+    title: "Operalityx Stories: AI Transformation Journey",
+    subtitle: "Experience the Future of AI Innovation",
+    excerpt: "Watch exclusive behind-the-scenes footage showcasing real AI transformations, breakthrough moments, and the human stories that drive innovation forward.",
+    author: "Operalityx Team",
+    readTime: "Featured Video",
+    category: "Featured Story",
+    videoSrc: "/stories/stories-video.mp4"
   };
 
   const inspiringQuotes = [
@@ -164,17 +177,39 @@ const StoriesPage = () => {
                   </div>
                   <div className="text-gray-600 font-medium">{featuredStory.category}</div>
                 </div>
-                <Button size="lg" className="bg-black hover:bg-gray-800 text-white px-8 py-3 font-medium">
+                <Button 
+                  size="lg" 
+                  className="bg-black hover:bg-gray-800 text-white px-8 py-3 font-medium"
+                  onClick={openVideoModal}
+                >
                   <Play className="mr-2 h-5 w-5" />
-                  Read Full Story
+                  Watch Story
                 </Button>
               </div>
               <div className="relative">
-                <div className="aspect-square bg-gray-100 rounded-lg flex items-center justify-center border border-gray-200">
-                  <div className="text-center p-8">
-                    <BookOpen className="h-24 w-24 text-gray-700 mx-auto mb-6" />
-                    <div className="text-6xl font-semibold text-black mb-2">90%</div>
-                    <div className="text-gray-600 font-medium">Time Reduction</div>
+                <div 
+                  className="aspect-video bg-black rounded-lg overflow-hidden cursor-pointer group border border-gray-200 hover:shadow-lg transition-all duration-300"
+                  onClick={openVideoModal}
+                >
+                  <video 
+                    className="w-full h-full object-cover"
+                    muted
+                    playsInline
+                    poster="/stories/stories-9.jpeg"
+                  >
+                    <source src={featuredStory.videoSrc} type="video/mp4" />
+                  </video>
+                  
+                  {/* Video overlay */}
+                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                    <div className="bg-white/90 backdrop-blur-sm rounded-full p-4 group-hover:scale-110 transition-transform duration-300">
+                      <Play className="w-8 h-8 text-black ml-1" />
+                    </div>
+                  </div>
+                  
+                  {/* Video badge */}
+                  <div className="absolute top-4 right-4 bg-black/70 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-medium">
+                    Featured Story
                   </div>
                 </div>
               </div>
@@ -266,6 +301,15 @@ const StoriesPage = () => {
 
       {/* Main Stories Section */}
       <Stories />
+
+      {/* Video Modal */}
+      <VideoModal
+        isOpen={isVideoModalOpen}
+        onClose={closeVideoModal}
+        videoSrc={featuredStory.videoSrc}
+        title={featuredStory.title}
+        subtitle={featuredStory.subtitle}
+      />
 
     </Layout>
   );
