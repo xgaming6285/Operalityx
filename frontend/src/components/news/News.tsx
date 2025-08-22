@@ -44,19 +44,20 @@ const News = () => {
     setIsModalOpen(false);
   };
 
-  const renderLoadingSkeleton = () => (
+  const renderLoadingSkeleton = () =>
     Array.from({ length: 4 }).map((_, index) => (
       <div
         key={index}
         className="flex-none w-80 sm:w-96 rounded-lg h-56 sm:h-64 bg-gray-200 animate-pulse snap-start"
       />
-    ))
-  );
+    ));
 
   const renderEmptyState = () => (
     <div className="flex-none w-full text-center py-20">
       <p className="text-gray-500 text-lg">No news available</p>
-      <p className="text-gray-400 text-sm mt-2">News articles will appear here when available</p>
+      <p className="text-gray-400 text-sm mt-2">
+        News articles will appear here when available
+      </p>
     </div>
   );
 
@@ -70,14 +71,22 @@ const News = () => {
               News
             </h2>
             <div className="flex items-center space-x-2">
-              <div className="w-16 sm:w-20 h-1 bg-gray-900 rounded-full"></div>
-              <div className="w-8 sm:w-12 h-1 bg-gray-300 rounded-full"></div>
-              <div className="w-6 sm:w-8 h-1 bg-gray-200 rounded-full"></div>
+              <div className="w-16 sm:w-20 h-1 bg-gray-900 rounded-full" />
+              <div className="w-8 sm:w-12 h-1 bg-gray-300 rounded-full" />
+              <div className="w-6 sm:w-8 h-1 bg-gray-200 rounded-full" />
             </div>
           </div>
 
-          {/* Navigation arrows - Hidden on mobile, shown on tablet and up */}
-          <div className="flex items-center space-x-3">
+          {/* Right-side actions: Explore All + arrows (shown on sm and up) */}
+          <div className="hidden sm:flex items-center gap-3">
+            <ExploreAllButton
+              onClick={handleExploreAll}
+              totalCount={allNewsCards.length}
+              displayedCount={DISPLAYED_CARDS_LIMIT}
+              label="Explore All News"
+              layout="inline"
+              size="sm"
+            />
             <button
               onClick={scrollLeftBtn}
               className="p-2 sm:p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 border border-gray-100 touch-manipulation"
@@ -98,7 +107,7 @@ const News = () => {
         {/* News Cards - Horizontal Scroll */}
         <div
           {...getDragProps()}
-          className={`flex space-x-4 sm:space-x-6 lg:space-x-8 overflow-x-auto pb-6 scrollbar-hide ${getDragProps().className}`}
+          className={`flex space-x-4 sm:space-x-6 lg:space-8 overflow-x-auto pb-6 scrollbar-hide ${getDragProps().className}`}
         >
           {isLoading ? (
             renderLoadingSkeleton()
@@ -116,13 +125,16 @@ const News = () => {
           )}
         </div>
 
-        {/* Explore All News Button */}
-        <ExploreAllButton
-          onClick={handleExploreAll}
-          totalCount={allNewsCards.length}
-          displayedCount={DISPLAYED_CARDS_LIMIT}
-          label="Explore All News"
-        />
+        {/* Mobile-only Explore All (kept near the cards) */}
+        <div className="sm:hidden">
+          <ExploreAllButton
+            onClick={handleExploreAll}
+            totalCount={allNewsCards.length}
+            displayedCount={DISPLAYED_CARDS_LIMIT}
+            label="Explore All News"
+            layout="centered"
+          />
+        </div>
       </div>
 
       {/* News Modal */}
@@ -135,10 +147,7 @@ const News = () => {
 
       {/* Document Viewer */}
       {showArticleViewer && selectedDocument && (
-        <DocumentViewer
-          document={selectedDocument}
-          onClose={closeArticleViewer}
-        />
+        <DocumentViewer document={selectedDocument} onClose={closeArticleViewer} />
       )}
     </section>
   );
