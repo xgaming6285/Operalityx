@@ -12,7 +12,6 @@ const Research = () => {
     loading: isLoading,
     showArticleViewer,
     currentDocument: selectedDocument, // derived Document
-    selectedArticle,                   // raw ArticleMeta
     openArticle,
     openArticleById,                   // <-- use this for sidebar clicks
     closeArticleViewer,
