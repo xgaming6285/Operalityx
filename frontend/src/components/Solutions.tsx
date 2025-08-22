@@ -1,4 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useMemo } from "react";
 import DocumentViewer from "./DocumentViewer";
 import LoadingSpinner from "./ui/LoadingSpinner";
 import "../styles/article.css";
@@ -11,9 +12,12 @@ const Solutions = () => {
         showArticleViewer,
         loadingArticle,
         openArticle,
+        openArticleById,
         closeArticleViewer,
         currentDocument,
-        hasArticles
+        hasArticles,
+        relatedByType,
+        getRelated
     } = useArticles({ type: "solution" });
 
     const {
@@ -22,6 +26,20 @@ const Solutions = () => {
         getDragProps,
         preventClickAfterDrag
     } = useDragScroll();
+
+    // Build the sidebar list: prefer same-category (if your ArticleMeta has `category`), else same-type
+    const relatedForSidebar = useMemo(() => {
+        const sameCategory = getRelated ? getRelated({ byCategory: true, limit: 12 }) : [];
+        const base = sameCategory && sameCategory.length ? sameCategory : (relatedByType || []);
+        return base.map((a: any) => ({
+            id: a.id,
+            title: a.title,
+            subtitle: a.subtitle,
+            thumbnail: a.thumbnail,
+            createdAt: a.createdAt,
+            description: a.description,
+        }));
+    }, [getRelated, relatedByType]);
 
     return (
         <section id="solutions" className="py-12 sm:py-16 lg:py-20 pl-8 sm:pl-12 lg:pl-16 pr-4 sm:pr-6 lg:pr-8 bg-gray-50">
@@ -152,6 +170,8 @@ const Solutions = () => {
                 document={currentDocument}
                 onClose={closeArticleViewer}
                 fullscreen // 👈 force fullscreen on desktop too
+                relatedArticles={relatedForSidebar}
+                onSelectArticle={(a) => openArticleById(String(a.id))}
             />
             )}
         </section>

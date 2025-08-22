@@ -10,11 +10,14 @@ const Community = () => {
     articles: communityCards,
     loading: isLoading,
     showArticleViewer,
-    currentDocument: selectedDocument,
+    currentDocument: selectedDocument, // derived Document
     openArticle,
-    closeArticleViewer
-  } = useArticles({ type: "community" });
+    openArticleById,                   // <-- use this for sidebar clicks
+    closeArticleViewer,
 
+    // from enhanced hook (optional but nice):
+    relatedByType,
+  } = useArticles({ type: "community" });
   const openDocument = (article: any, e: React.MouseEvent) => {
     if (preventClickAfterDrag(e)) return;
     openArticle(article);
@@ -124,11 +127,13 @@ const Community = () => {
 
       {/* Document Viewer */}
       {showArticleViewer && selectedDocument && (
-        <DocumentViewer
-          document={selectedDocument}
-          onClose={closeArticleViewer}
-          fullscreen // 👈 force fullscreen on desktop too
-        />
+         <DocumentViewer
+         document={selectedDocument}
+         onClose={closeArticleViewer}
+         fullscreen
+         relatedArticles={relatedByType}
+         onSelectArticle={(a) => openArticleById(String(a.id))} // <-- FIX: open by id
+       />
       )}
     </section>
   );
