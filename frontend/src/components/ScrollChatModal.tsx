@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { X, ArrowUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { ReactNode, FormEvent, CSSProperties } from 'react';
+import type { ReactNode, FormEvent } from 'react';
 
 type UiState = 'hidden' | 'expanded' | 'collapsed';
 
@@ -296,7 +296,6 @@ const ScrollChatModal = ({
                   transition={FADE}
                   className="absolute top-full text-center text-xs text-gray-500 mt-2 w-full"
                 >
-                  Ask me about Operalytix solutions, automation, or business transformation
                 </motion.p>
               )}
             </AnimatePresence>
