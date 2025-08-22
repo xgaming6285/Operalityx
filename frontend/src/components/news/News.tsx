@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useArticles } from "../../hooks/useArticles";
 import { useDragScroll } from "../../hooks/useDragScroll";
 import DocumentViewer from "../DocumentViewer";
@@ -16,13 +16,30 @@ const News = () => {
     showArticleViewer,
     currentDocument: selectedDocument,
     openArticle,
-    closeArticleViewer
+    openArticleById,
+    closeArticleViewer,
+    relatedByType,
+    getRelated
   } = useArticles({ type: "news" });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Limit to displayed cards for the main display
   const displayedNewsCards = allNewsCards.slice(0, DISPLAYED_CARDS_LIMIT);
+
+  // Build the sidebar list: prefer same-category (if your ArticleMeta has `category`), else same-type
+  const relatedForSidebar = useMemo(() => {
+    const sameCategory = getRelated ? getRelated({ byCategory: true, limit: 12 }) : [];
+    const base = sameCategory && sameCategory.length ? sameCategory : (relatedByType || []);
+    return base.map((a: any) => ({
+      id: a.id,
+      title: a.title,
+      subtitle: a.subtitle,
+      thumbnail: a.thumbnail,
+      createdAt: a.createdAt,
+      description: a.description,
+    }));
+  }, [getRelated, relatedByType]);
 
   const {
     scrollLeft: scrollLeftBtn,
@@ -151,6 +168,8 @@ const News = () => {
     document={selectedDocument}
     onClose={closeArticleViewer}
     fullscreen // 👈 force fullscreen on desktop too
+    relatedArticles={relatedForSidebar}
+    onSelectArticle={(a) => openArticleById(String(a.id))}
   />
 )}
     </section>
