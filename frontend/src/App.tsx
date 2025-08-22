@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useScrollToTop } from './hooks/useScrollToTop';
 import Index from './pages/Index';
 import ResearchPage from './pages/ResearchPage';
@@ -34,6 +34,7 @@ function AppRoutes() {
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/cookies" element={<CookiePage />} />
             <Route path="/manifesto" element={<BrandManifestoPage />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
     );
 }
