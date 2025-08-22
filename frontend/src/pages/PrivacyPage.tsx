@@ -1,266 +1,205 @@
 import { Link } from 'react-router-dom';
 import Layout from '../components/Layout';
 
-const PrivacyPage = () => {
-    return (
-        <Layout>
-            <div className="min-h-screen bg-white">
-                {/* Hero Section */}
-                <section className="py-20 sm:py-32">
-                    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-8 leading-tight">
-                            Privacy Policy
-                        </h1>
-                        <p className="text-xl sm:text-2xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
-                            Your privacy is fundamental to how we build and operate our AI solutions.
-                        </p>
-                        <p className="text-sm text-gray-500 mt-6">
-                            Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                        </p>
-                    </div>
-                </section>
+// Optional: you can pass a `lastUpdated` prop if you want to control the date from outside
+// <PrivacyPage lastUpdated={new Date('2025-08-10')} />
+// If not provided, it defaults to *today* so it never looks stale during development.
 
-                {/* Privacy Promise */}
-                <section className="py-16 sm:py-20 border-t border-gray-200">
-                    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">
-                            Our Privacy Promise
-                        </h2>
-                        <p className="text-lg text-gray-600 leading-relaxed mb-8 max-w-3xl mx-auto">
-                            We believe your data should stay yours. Our on-premises AI solutions are designed to keep your information 
-                            secure and under your complete control.
-                        </p>
-                    </div>
-                </section>
+const formatDate = (d: Date) =>
+  new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }).format(d);
 
-                {/* Data Collection */}
-                <section className="py-16 sm:py-20 border-t border-gray-200">
-                    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-                            <div>
-                                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-8">What We Collect</h2>
-                                <p className="text-lg text-gray-600 leading-relaxed mb-8">
-                                    We collect only what's necessary to provide our AI services and improve your experience.
-                                </p>
-                                
-                                <div className="space-y-6">
-                                    <div>
-                                        <h3 className="text-lg font-semibold text-gray-900 mb-2">Account Information</h3>
-                                        <p className="text-gray-600">Basic details like name, email, and company information for service delivery.</p>
-                                    </div>
-                                    
-                                    <div>
-                                        <h3 className="text-lg font-semibold text-gray-900 mb-2">Usage Data</h3>
-                                        <p className="text-gray-600">How you interact with our platform to improve performance and user experience.</p>
-                                    </div>
+interface PrivacyPageProps {
+  lastUpdated?: Date;
+}
 
-                                    <div>
-                                        <h3 className="text-lg font-semibold text-gray-900 mb-2">Technical Information</h3>
-                                        <p className="text-gray-600">System logs and performance metrics for security and optimization.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div className="bg-gray-50 p-8 rounded-lg">
-                                <h3 className="text-xl font-semibold text-gray-900 mb-4">Your AI Data Stays Private</h3>
-                                <p className="text-gray-600 leading-relaxed mb-4">
-                                    Any data processed through our on-premises AI solutions remains entirely on your infrastructure.
-                                </p>
-                                <p className="text-gray-600 leading-relaxed">
-                                    We never access, store, or analyze your AI model inputs or outputs.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+const PrivacyPage = ({ lastUpdated }: PrivacyPageProps) => {
+  const updated = lastUpdated ?? new Date();
 
-                {/* How We Use Data */}
-                <section className="py-16 sm:py-20 border-t border-gray-200">
-                    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-8">How We Use Your Information</h2>
-                        <p className="text-lg text-gray-600 leading-relaxed mb-12 max-w-2xl mx-auto">
-                            We use your data responsibly and only for purposes that benefit your experience with our platform.
-                        </p>
+  return (
+    <Layout>
+      <div className="min-h-screen bg-white">
+        <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+          {/* Meta (date first, like a blog post) */}
+          <p className="text-sm tracking-wide text-gray-500 uppercase mb-3">
+            Last updated {formatDate(updated)}
+          </p>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                            <div className="text-left p-6 bg-white border border-gray-200 rounded-lg">
-                                <h3 className="text-xl font-semibold text-gray-900 mb-4">Service Delivery</h3>
-                                <p className="text-gray-600 mb-4">
-                                    Providing AI solutions, technical support, and maintaining platform functionality.
-                                </p>
-                            </div>
-                            
-                            <div className="text-left p-6 bg-white border border-gray-200 rounded-lg">
-                                <h3 className="text-xl font-semibold text-gray-900 mb-4">Communication</h3>
-                                <p className="text-gray-600 mb-4">
-                                    Sending updates about services, security alerts, and responding to inquiries.
-                                </p>
-                            </div>
+          {/* Headline immediately after the date */}
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight mb-8">
+            Privacy Policy
+          </h1>
 
-                            <div className="text-left p-6 bg-white border border-gray-200 rounded-lg">
-                                <h3 className="text-xl font-semibold text-gray-900 mb-4">Platform Improvement</h3>
-                                <p className="text-gray-600 mb-4">
-                                    Analyzing usage patterns to enhance security, performance, and user experience.
-                                </p>
-                            </div>
-                            
-                            <div className="text-left p-6 bg-white border border-gray-200 rounded-lg">
-                                <h3 className="text-xl font-semibold text-gray-900 mb-4">Security & Compliance</h3>
-                                <p className="text-gray-600 mb-4">
-                                    Protecting against threats and ensuring compliance with applicable regulations.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+          {/* Solid block of text — clean, single-column typography like a blog post */}
+          <div className="text-gray-800 leading-7 space-y-5">
+            <p>
+              Your privacy is important to us. This Privacy Policy describes how we collect, use,
+              and safeguard information when you use our websites, products, and services
+              (collectively, the “Services”). It also explains the choices you have and how you can
+              contact us about our practices.
+            </p>
 
-                {/* Data Protection */}
-                <section className="py-16 sm:py-20 border-t border-gray-200">
-                    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                            <div className="bg-gray-50 p-8 rounded-lg">
-                                <h3 className="text-2xl font-bold text-gray-900 mb-4">Security First</h3>
-                                <p className="text-gray-600 leading-relaxed mb-6">
-                                    We implement enterprise-grade security measures to protect your information at every level.
-                                </p>
-                                <div className="space-y-3">
-                                    <div className="flex items-start gap-3">
-                                        <div className="w-2 h-2 bg-gray-900 rounded-full mt-2 flex-shrink-0"></div>
-                                        <p className="text-gray-600 text-sm">End-to-end encryption</p>
-                                    </div>
-                                    <div className="flex items-start gap-3">
-                                        <div className="w-2 h-2 bg-gray-900 rounded-full mt-2 flex-shrink-0"></div>
-                                        <p className="text-gray-600 text-sm">Regular security audits</p>
-                                    </div>
-                                    <div className="flex items-start gap-3">
-                                        <div className="w-2 h-2 bg-gray-900 rounded-full mt-2 flex-shrink-0"></div>
-                                        <p className="text-gray-600 text-sm">Access controls & monitoring</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">Your Data Rights</h2>
-                                <p className="text-lg text-gray-600 leading-relaxed mb-8">
-                                    You have complete control over your personal information and how it's used.
-                                </p>
-                                
-                                <div className="space-y-4">
-                                    <div className="flex items-start gap-3">
-                                        <div className="w-2 h-2 bg-gray-900 rounded-full mt-2 flex-shrink-0"></div>
-                                        <p className="text-gray-600"><strong>Access:</strong> Request copies of your personal data</p>
-                                    </div>
-                                    <div className="flex items-start gap-3">
-                                        <div className="w-2 h-2 bg-gray-900 rounded-full mt-2 flex-shrink-0"></div>
-                                        <p className="text-gray-600"><strong>Correction:</strong> Update or correct inaccurate information</p>
-                                    </div>
-                                    <div className="flex items-start gap-3">
-                                        <div className="w-2 h-2 bg-gray-900 rounded-full mt-2 flex-shrink-0"></div>
-                                        <p className="text-gray-600"><strong>Deletion:</strong> Request removal of your personal data</p>
-                                    </div>
-                                    <div className="flex items-start gap-3">
-                                        <div className="w-2 h-2 bg-gray-900 rounded-full mt-2 flex-shrink-0"></div>
-                                        <p className="text-gray-600"><strong>Portability:</strong> Transfer your data to another service</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8">1. Information We Collect</h2>
+            <p>
+              We collect information you provide directly, such as account details (name, email,
+              company), and information generated through your use of the Services, including usage
+              logs and technical telemetry (e.g., device identifiers, browser type, IP address,
+              timestamps, and error diagnostics). For on‑premises AI deployments, your model inputs
+              and outputs remain within your infrastructure by default.
+            </p>
 
-                {/* Data Sharing */}
-                <section className="py-16 sm:py-20 border-t border-gray-200">
-                    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-8">Data Sharing</h2>
-                        <p className="text-lg text-gray-600 leading-relaxed mb-12 max-w-3xl mx-auto">
-                            We don't sell your data. We only share information when necessary for service delivery or legal compliance.
-                        </p>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8">2. How We Use Information</h2>
+            <p>
+              We use information to operate and deliver the Services, provide customer support,
+              communicate with you, improve performance and reliability, maintain security, and
+              comply with legal obligations. Where required by law, we will seek your consent for
+              specific uses and you may withdraw that consent at any time.
+            </p>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto text-left">
-                            <div className="p-6 bg-white border border-gray-200 rounded-lg">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-3">Service Providers</h3>
-                                <p className="text-gray-600 text-sm">
-                                    Trusted partners who help deliver our services under strict confidentiality agreements.
-                                </p>
-                            </div>
-                            
-                            <div className="p-6 bg-white border border-gray-200 rounded-lg">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-3">Legal Requirements</h3>
-                                <p className="text-gray-600 text-sm">
-                                    When required by law, court orders, or to protect our rights and safety.
-                                </p>
-                            </div>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8">3. Legal Bases for Processing</h2>
+            <p>
+              If you are in the EEA or UK, we process personal data where necessary for performance
+              of a contract, compliance with legal obligations, our legitimate interests (such as
+              ensuring the security and reliability of the Services), or based on your consent.
+            </p>
 
-                            <div className="p-6 bg-white border border-gray-200 rounded-lg">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-3">Business Transfers</h3>
-                                <p className="text-gray-600 text-sm">
-                                    In the event of a merger or acquisition, with advance notice to affected users.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Contact & Updates */}
-                <section className="py-16 sm:py-20 border-t border-gray-200">
-                    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-8">Stay Informed</h2>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-4xl mx-auto text-left mb-12">
-                            <div>
-                                <h3 className="text-xl font-semibold text-gray-900 mb-4">Policy Updates</h3>
-                                <p className="text-gray-600 leading-relaxed">
-                                    We'll notify you of any significant changes to this privacy policy via email or platform notifications.
-                                </p>
-                            </div>
-                            
-                            <div>
-                                <h3 className="text-xl font-semibold text-gray-900 mb-4">Data Retention</h3>
-                                <p className="text-gray-600 leading-relaxed">
-                                    We keep your data only as long as necessary to provide services or meet legal obligations.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="bg-white border border-gray-200 rounded-lg p-8">
-                            <h3 className="text-xl font-semibold text-gray-900 mb-4">Questions About Privacy?</h3>
-                            <p className="text-gray-600 leading-relaxed mb-6">
-                                We're committed to transparency about our privacy practices. 
-                                Contact us anytime with questions or to exercise your data rights.
-                            </p>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Call to Action */}
-                <section className="py-16 sm:py-20 border-t border-gray-200">
-                    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">
-                            Ready to experience secure AI?
-                        </h2>
-                        <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-                            Discover how our privacy-first approach can transform your business operations.
-                        </p>
-                        
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <Link
-                                to="/solutions"
-                                className="bg-gray-900 text-white px-6 py-3 rounded-md font-medium hover:bg-gray-800 transition-colors duration-200"
-                            >
-                                Explore Solutions
-                            </Link>
-                            <Link
-                                to="/contact"
-                                className="border border-gray-300 text-gray-700 px-6 py-3 rounded-md font-medium hover:border-gray-400 hover:bg-gray-50 transition-colors duration-200"
-                            >
-                                Contact Us
-                            </Link>
-                        </div>
-                    </div>
-                </section>
+            <div className="mt-6 overflow-x-auto">
+              <table className="min-w-full border border-gray-300 rounded-lg">
+                <thead>
+                  <tr className="bg-gray-50">
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-900 border-b border-gray-300">
+                      Purpose of processing
+                    </th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-900 border-b border-gray-300">
+                      Type of Personal Data processed, depending on the processing activity
+                    </th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-900 border-b border-gray-300">
+                      Legal basis, depending on the process activity
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="px-4 py-4 text-sm text-gray-900 border-b border-gray-200 align-top">
+                      To provide, analyze, and maintain our Services
+                    </td>
+                    <td className="px-4 py-4 text-sm text-gray-700 border-b border-gray-200 align-top">
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>Account Information</li>
+                        <li>User Content</li>
+                        <li>Communication Information</li>
+                        <li>Other Information You Provide</li>
+                        <li>Log Data</li>
+                        <li>Usage Data</li>
+                        <li>Device Information</li>
+                        <li>Location Information</li>
+                        <li>Cookies and Similar Technologies</li>
+                      </ul>
+                    </td>
+                    <td className="px-4 py-4 text-sm text-gray-700 border-b border-gray-200 align-top">
+                      Where necessary to perform a contract with you, such as processing a user's prompts to provide a response.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="px-4 py-4 text-sm text-gray-900 border-b border-gray-200 align-top">
+                      To improve and develop our Services and conduct research
+                    </td>
+                    <td className="px-4 py-4 text-sm text-gray-700 border-b border-gray-200 align-top">
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>Account Information</li>
+                        <li>User Content</li>
+                        <li>Communication Information</li>
+                        <li>Other Information You Provide</li>
+                        <li>Data We Receive From Other Sources</li>
+                        <li>Log Data</li>
+                        <li>Usage Data</li>
+                        <li>Device Information</li>
+                      </ul>
+                    </td>
+                    <td className="px-4 py-4 text-sm text-gray-700 border-b border-gray-200 align-top">
+                      Where necessary for our legitimate interests and those of third parties and broader society, including in developing, improving, or promoting our Services, such as when we train and improve our models. See here for more information.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-        </Layout>
-    );
+
+            <h2 className="text-xl font-semibold text-gray-900 mt-8">4. Data Retention</h2>
+            <p>
+              We retain personal information only for as long as necessary to provide the Services,
+              fulfill the purposes described in this Policy, or meet legal, accounting, or reporting
+              requirements. Retention periods may vary depending on the nature of the data and our
+              obligations.
+            </p>
+
+            <h2 className="text-xl font-semibold text-gray-900 mt-8">5. Sharing of Information</h2>
+            <p>
+              We do not sell your personal information. We may share information with trusted
+              service providers who process it on our behalf under strict confidentiality and
+              security obligations; with competent authorities when required by law; or in
+              connection with a corporate transaction (such as a merger, acquisition, or asset
+              sale). In such cases, we will take steps to ensure appropriate protection and provide
+              notice where required.
+            </p>
+
+            <h2 className="text-xl font-semibold text-gray-900 mt-8">6. Security</h2>
+            <p>
+              We implement administrative, technical, and physical safeguards designed to protect
+              personal information, including access controls, audit logging, encryption in transit
+              and at rest (where applicable), and regular security reviews. No system is perfectly
+              secure, and we encourage you to use strong passwords and enable available security
+              features.
+            </p>
+
+            <h2 className="text-xl font-semibold text-gray-900 mt-8">7. International Transfers</h2>
+            <p>
+              Where information is transferred internationally, we rely on appropriate safeguards,
+              such as standard contractual clauses or other lawful transfer mechanisms, to protect
+              your data consistent with applicable laws.
+            </p>
+
+            <h2 className="text-xl font-semibold text-gray-900 mt-8">8. Your Rights</h2>
+            <p>
+              Subject to applicable law, you may have rights to access, correct, delete, or restrict
+              processing of your personal information; to object to processing; and to data
+              portability. You may also lodge a complaint with your local data protection authority.
+              To exercise your rights, contact us using the details below.
+            </p>
+
+            <h2 className="text-xl font-semibold text-gray-900 mt-8">9. Children</h2>
+            <p>
+              The Services are not directed to children and we do not knowingly collect personal
+              information from children. If you believe a child has provided us with personal
+              information, please contact us so that we can take appropriate action.
+            </p>
+
+            <h2 className="text-xl font-semibold text-gray-900 mt-8">10. Changes to this Policy</h2>
+            <p>
+              We may update this Privacy Policy from time to time. When we make material changes, we
+              will notify you by updating the date at the top of this page and, when appropriate,
+              providing additional notice (such as email or in‑product messaging).
+            </p>
+
+            <h2 className="text-xl font-semibold text-gray-900 mt-8">11. Contact</h2>
+            <p>
+              If you have questions about this Privacy Policy or our privacy practices, please
+              <Link to="/contact" className="text-gray-900 underline underline-offset-2"> contact us</Link>.
+            </p>
+
+            <hr className="my-10 border-gray-200" />
+
+            <p className="text-sm text-gray-500">
+              This Privacy Policy is intended to provide a clear and concise summary of our
+              practices. It does not limit any rights you may have under applicable law.
+            </p>
+          </div>
+        </article>
+      </div>
+    </Layout>
+  );
 };
 
-export default PrivacyPage; 
+export default PrivacyPage;
