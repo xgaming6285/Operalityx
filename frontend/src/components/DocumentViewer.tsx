@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { DocumentViewerProps } from "../types/document";
 import ContactForm from "./ContactForm";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // -----------------------------
 // Types
@@ -54,10 +54,11 @@ type NavigationItem = {
   href: string;
   icon: React.ComponentType<{ className?: string }>;
   description: string;
+  action?: 'navigate' | 'close';
 };
 
 const navigationItems: NavigationItem[] = [
-  { name: "Home", href: "/", icon: Home, description: "Main page" },
+  { name: "Home", href: "/", icon: Home, description: "Close viewer", action: 'close' },
   { name: "Research", href: "/research", icon: Brain, description: "Research papers and studies" },
   { name: "Solutions", href: "/solutions", icon: Zap, description: "Business solutions" },
   { name: "Community", href: "/community", icon: Users, description: "Community content" },
@@ -67,8 +68,19 @@ const navigationItems: NavigationItem[] = [
   { name: "Support", href: "/support", icon: HelpCircle, description: "Get help" },
 ];
 
-const NavigationSidebar: React.FC = () => {
+const NavigationSidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const navigate = useNavigate();
+
+  const handleItemClick = (item: NavigationItem) => {
+    if (item.action === 'close') {
+      onClose();
+    } else {
+      // Use React Router navigation for SPA behavior
+      onClose(); // Close the modal first
+      navigate(item.href); // Then navigate
+    }
+  };
 
   return (
     <aside className={`hidden xl:flex flex-col border-r border-gray-200 bg-gray-50/80 backdrop-blur supports-[backdrop-filter]:bg-gray-50 min-h-0 transition-all duration-300 ${
@@ -98,10 +110,10 @@ const NavigationSidebar: React.FC = () => {
       {/* Navigation List */}
       <div className="flex-1 overflow-auto scrollbar-hide px-3 py-4 space-y-2">
         {navigationItems.map((item) => (
-          <Link
+          <button
             key={item.name}
-            to={item.href}
-            className={`group flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white hover:shadow-sm transition-all duration-200 ${
+            onClick={() => handleItemClick(item)}
+            className={`group flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white hover:shadow-sm transition-all duration-200 w-full text-left ${
               isCollapsed ? "justify-center" : ""
             }`}
             title={isCollapsed ? item.description : undefined}
@@ -119,7 +131,7 @@ const NavigationSidebar: React.FC = () => {
                 </div>
               </div>
             )}
-          </Link>
+          </button>
         ))}
       </div>
 
@@ -529,7 +541,7 @@ const DocumentViewer: React.FC<Props> = ({
         <div className="flex-1 min-h-0">
           <div className="flex h-full">
             {/* Navigation Sidebar (left) */}
-            <NavigationSidebar />
+            <NavigationSidebar onClose={onClose} />
             
             {/* Main content and related sidebar */}
             <div
