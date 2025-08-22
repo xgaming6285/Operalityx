@@ -129,13 +129,14 @@ const ScrollChatModal = ({
 
       {/* Docked container */}
       <div
-        className={[
-          'fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-md px-4',
-          'transition-all duration-300',
-          containerVisibility,
-        ].join(' ')}
-        aria-hidden={mode === 'hidden'}
-      >
+  className={[
+    'fixed bottom-6 left-1/2 -translate-x-1/2 z-30 w-fit max-w-md',
+    'transition-all duration-300',
+    containerVisibility,
+  ].join(' ')}
+  aria-hidden={mode === 'hidden'}
+>
+
         <div className="relative">
 
           {/* Response Card */}
