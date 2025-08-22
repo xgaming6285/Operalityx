@@ -31,7 +31,7 @@ const Index = () => {
         uiState={state}
         onClose={() => {}}
         onActiveChange={setIsChatActive}
-        logo={<img src="/images/logo-icon.png" alt="Operalytix" className="w-8 h-8 object-contain" />}
+        logo={<img src="/images/smaller-logo-hd.png" alt="Operalytix" className="w-8 h-8 object-contain" />}
       />
     </Layout>
   );
