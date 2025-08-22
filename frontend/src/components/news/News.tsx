@@ -145,10 +145,14 @@ const News = () => {
         openDocument={handleCardClick}
       />
 
-      {/* Document Viewer */}
-      {showArticleViewer && selectedDocument && (
-        <DocumentViewer document={selectedDocument} onClose={closeArticleViewer} />
-      )}
+     {/* Document Viewer */}
+  {showArticleViewer && selectedDocument && (
+  <DocumentViewer
+    document={selectedDocument}
+    onClose={closeArticleViewer}
+    fullscreen // 👈 force fullscreen on desktop too
+  />
+)}
     </section>
   );
 };

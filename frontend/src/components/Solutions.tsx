@@ -148,10 +148,11 @@ const Solutions = () => {
 
             {/* Article Viewer */}
             {showArticleViewer && currentDocument && (
-                <DocumentViewer
-                    document={currentDocument}
-                    onClose={closeArticleViewer}
-                />
+            <DocumentViewer
+                document={currentDocument}
+                onClose={closeArticleViewer}
+                fullscreen // 👈 force fullscreen on desktop too
+            />
             )}
         </section>
     );

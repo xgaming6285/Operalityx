@@ -133,12 +133,13 @@ const Stories = () => {
         </div>
                   </div>
 
-            {/* Document Viewer */}
+            {/* Article Viewer */}
             {showArticleViewer && selectedDocument && (
-                <DocumentViewer
-                    document={selectedDocument}
-                    onClose={closeArticleViewer}
-                />
+            <DocumentViewer
+                document={selectedDocument}
+                onClose={closeArticleViewer}
+                fullscreen // 👈 force fullscreen on desktop too
+            />
             )}
         </section>
     );
