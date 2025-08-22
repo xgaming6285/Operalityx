@@ -4,13 +4,10 @@ import { X, ArrowUp } from 'lucide-react';
 type UiState = 'hidden' | 'expanded' | 'collapsed';
 
 interface ScrollChatModalProps {
-  // New prop (preferred)
   uiState?: UiState;
-  // Back-compat with your old usage
   isVisible?: boolean;
   onClose: () => void;
   onActiveChange?: (isActive: boolean) => void;
-  // Optional: provide your real logo element (svg/img/component)
   logo?: React.ReactNode;
 }
 
@@ -27,7 +24,6 @@ const ScrollChatModal = ({
   const [response, setResponse] = useState('');
   const [isInputFocused, setIsInputFocused] = useState(false);
 
-  // Resolve UI mode (support old isVisible prop)
   const mode: UiState = uiState ?? (isVisible ? 'expanded' : 'hidden');
 
   const parseResponse = (response: string): { content: string; thinking?: string } => {
@@ -112,7 +108,7 @@ const ScrollChatModal = ({
       ? 'opacity-0 translate-y-4 pointer-events-none'
       : 'opacity-100 translate-y-0 pointer-events-auto';
 
-  const bubbleWidth = mode === 'collapsed' ? 'w-16' : 'w-full'; // collapsed = circle
+  const bubbleWidth = mode === 'collapsed' ? 'w-16' : 'w-full';
   const bubblePadding = mode === 'collapsed' ? 'px-0 py-0' : 'px-4 py-3';
 
   return (
@@ -129,17 +125,16 @@ const ScrollChatModal = ({
 
       {/* Docked container */}
       <div
-  className={[
-    'fixed bottom-6 left-1/2 -translate-x-1/2 z-30 w-fit max-w-md',
-    'transition-all duration-300',
-    containerVisibility,
-  ].join(' ')}
-  aria-hidden={mode === 'hidden'}
->
-
+        className={[
+          'fixed bottom-6 left-1/2 -translate-x-1/2 z-30 w-fit max-w-md',
+          'transition-all duration-300',
+          containerVisibility,
+        ].join(' ')}
+        aria-hidden={mode === 'hidden'}
+      >
         <div className="relative">
 
-          {/* Response Card */}
+          {/* Response Card (normal, not transparent) */}
           <div
             className={[
               'mb-3 bg-white rounded-xl shadow-xl border border-gray-200 p-4',
@@ -185,17 +180,19 @@ const ScrollChatModal = ({
           {/* COLLAPSED (logo button) & EXPANDED (search) */}
           <div
             className={[
-              'bg-white rounded-full shadow-xl border border-gray-200 flex items-center gap-3',
-              'transition-all duration-300 hover:shadow-2xl',
+              'rounded-full flex items-center gap-3 transition-all duration-300',
               bubbleWidth,
               bubblePadding,
+              mode === 'collapsed'
+                ? 'bg-white/55 supports-[backdrop-filter]:bg-white/35 backdrop-blur-xl border border-white/30 ring-1 ring-black/5 shadow-2xl dark:bg-gray-900/45 dark:supports-[backdrop-filter]:bg-gray-900/30 dark:border-white/10'
+                : 'bg-white shadow-xl border border-gray-200 hover:shadow-2xl',
             ].join(' ')}
           >
             {mode === 'collapsed' ? (
               <button
                 type="button"
                 onClick={() => onActiveChange?.(true)}
-                className="w-16 h-16 rounded-full flex items-center justify-center bg-white hover:bg-gray-50 transition-all duration-200"
+                className="w-16 h-16 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-[1.03]"
                 aria-label="Open Operalytix search"
               >
                 <div className="flex items-center justify-center w-8 h-8">
@@ -203,7 +200,7 @@ const ScrollChatModal = ({
                     <img
                       src="/logo.svg"
                       alt="Operalytix"
-                      className="w-8 h-8 object-contain"
+                      className="w-8 h-8 object-contain drop-shadow"
                     />
                   )}
                 </div>
