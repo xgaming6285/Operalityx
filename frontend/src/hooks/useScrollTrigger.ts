@@ -1,65 +1,105 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface UseScrollTriggerOptions {
-  hideDelay?: number; // Delay in milliseconds before hiding when scrolling stops
-  isActive?: boolean; // Whether the modal is actively being used
+  hideDelay?: number; // Hide after ms of no scrolling
+  isActive?: boolean; // Keep visible while interacting
 }
 
-export const useScrollTrigger = ({ 
-  hideDelay = 3000, // Hide after 3 seconds of no scrolling
-  isActive = false
+export const useScrollTrigger = ({
+  hideDelay = 3000,
+  isActive = false,
 }: UseScrollTriggerOptions = {}) => {
   const [isVisible, setIsVisible] = useState(false);
 
-  useEffect(() => {
-    let hideTimeoutId: number;
+  // Refs to avoid stale closures and to persist between renders
+  const hideTimeoutRef = useRef<number | null>(null);
+  const lastYRef = useRef<number>(typeof window !== 'undefined' ? window.scrollY : 0);
+  const rafRef = useRef<number | null>(null);
 
-    const handleScroll = () => {
-      // Show modal immediately when scrolling
-      setIsVisible(true);
-      
-      // Clear existing timeout
-      if (hideTimeoutId) {
-        clearTimeout(hideTimeoutId);
-      }
-      
-      // Only set timeout to hide if not actively being used
-      if (!isActive) {
-        hideTimeoutId = setTimeout(() => {
+  // Tunables (kept internal to preserve your public API)
+  const TOP_OFFSET = 8;       // px within which we still consider "top"
+  const DIR_THRESHOLD = 4;    // px delta before we consider it a direction change
+
+  const clearHideTimer = () => {
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current);
+      hideTimeoutRef.current = null;
+    }
+  };
+
+  const scheduleHide = () => {
+    if (isActive) return; // don't auto-hide while active
+    clearHideTimer();
+    hideTimeoutRef.current = window.setTimeout(() => setIsVisible(false), hideDelay);
+  };
+
+  useEffect(() => {
+    // Initialize on mount
+    const y0 = window.scrollY;
+    lastYRef.current = y0;
+    setIsVisible(y0 > TOP_OFFSET); // hidden at top, visible if already scrolled
+    scheduleHide();
+
+    const onScroll = () => {
+      // Use rAF to coalesce events and avoid layout thrash
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => {
+        const y = window.scrollY;
+        const dy = y - lastYRef.current;
+
+        // Hide when at the very top
+        if (y <= TOP_OFFSET) {
           setIsVisible(false);
-        }, hideDelay);
-      }
+        } else if (dy > DIR_THRESHOLD) {
+          // Show when scrolling DOWN (ignore tiny jiggles)
+          setIsVisible(true);
+        }
+        // (Intentionally NOT hiding on scroll up per your requirement)
+
+        lastYRef.current = y;
+
+        // Any scroll activity resets the inactivity timer
+        clearHideTimer();
+        scheduleHide();
+      });
     };
 
-    window.addEventListener('scroll', handleScroll);
+    // Passive for perf; also capture touchmove for mobile
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('touchmove', onScroll, { passive: true });
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
-      if (hideTimeoutId) {
-        clearTimeout(hideTimeoutId);
-      }
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('touchmove', onScroll);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      clearHideTimer();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hideDelay, isActive]);
 
-  // Effect to handle when active state changes
+  // Keep visible while active (e.g., typing)
   useEffect(() => {
     if (isActive) {
-      // Keep visible when active
       setIsVisible(true);
+      // Also pause the hide timer while active
+      // (timer is already skipped in scheduleHide)
+    } else {
+      // When activity ends, schedule a hide after the delay, unless at top
+      scheduleHide();
     }
-  }, [isActive]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isActive, hideDelay]);
 
   const hideModal = () => {
+    clearHideTimer();
     setIsVisible(false);
   };
 
   const showModal = () => {
+    clearHideTimer();
     setIsVisible(true);
+    scheduleHide();
   };
 
-  return {
-    isVisible,
-    hideModal,
-    showModal
-  };
-}; 
+  return { isVisible, hideModal, showModal };
+};
