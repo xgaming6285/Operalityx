@@ -23,7 +23,7 @@ The Operalityx website now includes a powerful document visualizer system that a
 - **Document Organization**: Separate stories and news articles
 - **Real-time Preview**: Preview documents before publishing
 
-## Access
+## Accessс
 
 ### For Developers/Administrators
 
