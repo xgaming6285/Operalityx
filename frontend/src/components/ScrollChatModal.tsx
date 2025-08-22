@@ -1,15 +1,20 @@
 import { useState } from 'react';
 import { X, ArrowUp } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import type { ReactNode, FormEvent, CSSProperties } from 'react';
 
 type UiState = 'hidden' | 'expanded' | 'collapsed';
 
 interface ScrollChatModalProps {
-  uiState?: UiState;
-  isVisible?: boolean;
+  uiState?: UiState;           // preferred
+  isVisible?: boolean;         // back-compat
   onClose: () => void;
   onActiveChange?: (isActive: boolean) => void;
-  logo?: React.ReactNode;
+  logo?: ReactNode;
 }
+
+const SPRING = { type: 'spring', stiffness: 360, damping: 32, mass: 0.9 } as const;
+const FADE = { duration: 0.18, ease: 'easeOut' } as const;
 
 const ScrollChatModal = ({
   uiState,
@@ -24,19 +29,20 @@ const ScrollChatModal = ({
   const [response, setResponse] = useState('');
   const [isInputFocused, setIsInputFocused] = useState(false);
 
+  // Resolve UI mode (support old isVisible prop)
   const mode: UiState = uiState ?? (isVisible ? 'expanded' : 'hidden');
 
-  const parseResponse = (response: string): { content: string; thinking?: string } => {
-    const thinkingMatch = response.match(/<think>(.*?)<\/think>/s);
+  const parseResponse = (rawResponse: string): { content: string; thinking?: string } => {
+    const thinkingMatch = rawResponse.match(/<think>(.*?)<\/think>/s);
     if (thinkingMatch) {
       const thinking = thinkingMatch[1].trim();
-      const content = response.replace(/<think>.*?<\/think>/s, '').trim();
+      const content = rawResponse.replace(/<think>.*?<\/think>/s, '').trim();
       return { content, thinking };
     }
-    return { content: response };
+    return { content: rawResponse };
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!message.trim()) return;
 
@@ -54,7 +60,7 @@ const ScrollChatModal = ({
       const data = await apiResponse.json();
 
       if (apiResponse.ok) {
-        const parsed = parseResponse(data.response);
+        const parsed = parseResponse(data.response as string);
         setResponse(parsed.content);
       } else {
         const errorMessage =
@@ -62,11 +68,12 @@ const ScrollChatModal = ({
             ? 'Authentication issue with AI service. Please contact support.'
             : data.error === 'Rate limit exceeded'
             ? 'AI service is busy. Please try again in a moment.'
-            : data.response || 'Sorry, I encountered an error. Please try again.';
+            : (data.response as string) || 'Sorry, I encountered an error. Please try again.';
         setResponse(errorMessage);
       }
-    } catch (error) {
-      console.error('Error sending message:', error);
+    } catch (err: unknown) {
+      // eslint-disable-next-line no-console
+      console.error('Error sending message:', err);
       setResponse("Sorry, I'm having trouble connecting to the server. Please check your connection and try again.");
     } finally {
       setIsLoading(false);
@@ -102,143 +109,199 @@ const ScrollChatModal = ({
     }
   };
 
-  // ---------- UI ----------
-  const containerVisibility =
-    mode === 'hidden'
-      ? 'opacity-0 translate-y-4 pointer-events-none'
-      : 'opacity-100 translate-y-0 pointer-events-auto';
+  // glass style only for the logo orb
+  const glassCollapsed =
+    'bg-white/55 supports-[backdrop-filter]:bg-white/35 backdrop-blur-xl ' +
+    'border border-white/30 ring-1 ring-black/5 shadow-2xl ' +
+    'dark:bg-gray-900/45 dark:supports-[backdrop-filter]:bg-gray-900/30 dark:border-white/10';
 
-  const bubbleWidth = mode === 'collapsed' ? 'w-16' : 'w-full';
-  const bubblePadding = mode === 'collapsed' ? 'px-0 py-0' : 'px-4 py-3';
+  // Shared layoutId lets Framer Motion morph shape/size/borderRadius smoothly
+  const BUBBLE_ID = 'operalytix-bubble';
 
   return (
     <>
       {/* Backdrop when the response panel is open */}
-      <div
-        className={[
-          'fixed inset-0 bg-black/30 backdrop-blur-sm z-40 transition-opacity duration-200',
-          showResponse ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none',
-        ].join(' ')}
-        onClick={handleBackdropClick}
-        aria-hidden={!showResponse}
-      />
+      <AnimatePresence>
+        {showResponse && (
+          <motion.div
+            key="opx-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={FADE}
+            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40"
+            onClick={handleBackdropClick}
+            aria-hidden={!showResponse}
+          />
+        )}
+      </AnimatePresence>
 
-      {/* Docked container */}
+      {/* Docked container - Fixed centering with consistent width */}
       <div
-        className={[
-          'fixed bottom-6 left-1/2 -translate-x-1/2 z-30 w-fit max-w-md',
-          'transition-all duration-300',
-          containerVisibility,
-        ].join(' ')}
+        className="fixed inset-x-0 bottom-6 z-30 flex justify-center pointer-events-none px-4"
         aria-hidden={mode === 'hidden'}
       >
-        <div className="relative">
-
-          {/* Response Card (normal, not transparent) */}
-          <div
-            className={[
-              'mb-3 bg-white rounded-xl shadow-xl border border-gray-200 p-4',
-              'transition-all duration-200',
-              showResponse ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-1 pointer-events-none',
-            ].join(' ')}
-          >
-            <div className="flex justify-between items-start mb-3">
-              <h3 className="font-medium text-gray-800 text-sm">Operalytix Response</h3>
-              <button
-                onClick={handleResponseClose}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            {isLoading ? (
-              <div className="flex items-center gap-2 py-3">
-                <div className="flex gap-1">
-                  <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce" />
-                  <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
-                  <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
-                </div>
-                <span className="text-gray-600 text-sm">Operalytix is thinking...</span>
-              </div>
-            ) : (
-              <div className="text-gray-700 leading-relaxed whitespace-pre-wrap text-sm">
-                {response}
-              </div>
-            )}
-
-            {!isLoading && response && (
-              <button
-                onClick={resetChat}
-                className="mt-3 text-xs text-blue-600 hover:text-blue-700 transition-colors"
-              >
-                Ask another question
-              </button>
-            )}
-          </div>
-
-          {/* COLLAPSED (logo button) & EXPANDED (search) */}
-          <div
-            className={[
-              'rounded-full flex items-center gap-3 transition-all duration-300',
-              bubbleWidth,
-              bubblePadding,
-              mode === 'collapsed'
-                ? 'bg-white/55 supports-[backdrop-filter]:bg-white/35 backdrop-blur-xl border border-white/30 ring-1 ring-black/5 shadow-2xl dark:bg-gray-900/45 dark:supports-[backdrop-filter]:bg-gray-900/30 dark:border-white/10'
-                : 'bg-white shadow-xl border border-gray-200 hover:shadow-2xl',
-            ].join(' ')}
-          >
-            {mode === 'collapsed' ? (
-              <button
-                type="button"
-                onClick={() => onActiveChange?.(true)}
-                className="w-16 h-16 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-[1.03]"
-                aria-label="Open Operalytix search"
-              >
-                <div className="flex items-center justify-center w-8 h-8">
-                  {logo ?? (
-                    <img
-                      src="/logo.svg"
-                      alt="Operalytix"
-                      className="w-8 h-8 object-contain drop-shadow"
-                    />
-                  )}
-                </div>
-              </button>
-            ) : (
-              <form onSubmit={handleSubmit} className="relative flex-1 flex items-center gap-3">
-                <input
-                  type="text"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  onFocus={handleInputFocus}
-                  onBlur={handleInputBlur}
-                  placeholder="Ask Operalytix"
-                  className="flex-1 text-gray-700 placeholder-gray-400 bg-transparent focus:outline-none text-sm"
-                  disabled={isLoading}
-                  autoFocus
-                />
-                <button
-                  type="submit"
-                  disabled={isLoading || !message.trim()}
-                  className="w-8 h-8 bg-gray-800 hover:bg-gray-900 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center transition-all duration-200 disabled:cursor-not-allowed group flex-shrink-0"
+        <motion.div
+          className={[
+            'w-full max-w-md pointer-events-auto',
+            'transform-gpu will-change-transform will-change-opacity',
+            mode === 'hidden' ? 'opacity-0' : 'opacity-100',
+          ].join(' ')}
+          initial={{ y: 16, opacity: 0 }}
+          animate={{ y: mode === 'hidden' ? 16 : 0, opacity: mode === 'hidden' ? 0 : 1 }}
+          exit={{ y: 16, opacity: 0 }}
+          transition={SPRING}
+        >
+          <div className="relative flex justify-center">
+            {/* Response Card */}
+            <AnimatePresence initial={false}>
+              {showResponse && (
+                <motion.div
+                  key="opx-response"
+                  initial={{ opacity: 0, y: -8, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -6, scale: 0.98 }}
+                  transition={SPRING}
+                  className="absolute bottom-full mb-3 w-full bg-white rounded-xl shadow-xl border border-gray-200 p-4"
                 >
-                  {isLoading ? (
-                    <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  ) : (
-                    <ArrowUp className="w-3 h-3 group-hover:translate-y-[-1px] transition-transform" />
-                  )}
-                </button>
-              </form>
-            )}
-          </div>
+                  <div className="flex justify-between items-start mb-3">
+                    <h3 className="font-medium text-gray-800 text-sm">Operalytix Response</h3>
+                    <button
+                      onClick={handleResponseClose}
+                      className="text-gray-400 hover:text-gray-600 transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
 
-          {mode === 'expanded' && (
-            <p className="text-center text-xs text-gray-500 mt-2">
-              Ask me about Operalytix solutions, automation, or business transformation
-            </p>
-          )}
-        </div>
+                  {isLoading ? (
+                    <div className="flex items-center gap-2 py-3">
+                      <div className="flex gap-1">
+                        <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce" />
+                        <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
+                        <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                      </div>
+                      <span className="text-gray-600 text-sm">Operalytix is thinking...</span>
+                    </div>
+                  ) : (
+                    <div className="text-gray-700 leading-relaxed whitespace-pre-wrap text-sm">
+                      {response}
+                    </div>
+                  )}
+
+                  {!isLoading && response && (
+                    <button
+                      onClick={resetChat}
+                      className="mt-3 text-xs text-blue-600 hover:text-blue-700 transition-colors"
+                    >
+                      Ask another question
+                    </button>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Main bubble container - Fixed width for consistent centering */}
+            <motion.div
+              layout
+              layoutId={BUBBLE_ID}
+              transition={SPRING}
+              className={[
+                'flex items-center justify-center transform-gpu will-change-transform',
+                mode === 'collapsed' ? 'w-16 h-16' : 'w-full h-14',
+                mode === 'collapsed' ? 'px-0 py-0' : 'px-4 py-3',
+                mode === 'collapsed'
+                  ? glassCollapsed
+                  : 'bg-white shadow-xl border border-gray-200',
+                'rounded-full',
+              ].join(' ')}
+            >
+              <AnimatePresence initial={false} mode="wait">
+                {mode === 'collapsed' ? (
+                  <motion.button
+                    key="orb"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={SPRING}
+                    type="button"
+                    onClick={() => onActiveChange?.(true)}
+                    className="w-16 h-16 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-[1.03]"
+                    aria-label="Open Operalytix search"
+                  >
+                    <motion.div
+                      className="flex items-center justify-center w-8 h-8"
+                    >
+                      {logo ?? (
+                        <motion.img
+                          src="/logo.svg"
+                          alt="Operalytix"
+                          className="w-8 h-8 object-contain drop-shadow"
+                          initial={{ rotate: -6 }}
+                          animate={{ rotate: 0 }}
+                          transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+                        />
+                      )}
+                    </motion.div>
+                  </motion.button>
+                ) : (
+                  <motion.form
+                    key="form"
+                    onSubmit={handleSubmit}
+                    className="relative flex-1 flex items-center gap-3 w-full"
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.98 }}
+                    transition={SPRING}
+                  >
+                    <motion.input
+                      type="text"
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
+                      placeholder="Ask Operalytix"
+                      className="flex-1 text-gray-700 placeholder-gray-400 bg-transparent focus:outline-none text-sm"
+                      disabled={isLoading}
+                      autoFocus
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={FADE}
+                    />
+                    <motion.button
+                      type="submit"
+                      disabled={isLoading || !message.trim()}
+                      className="w-8 h-8 bg-gray-800 hover:bg-gray-900 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center transition-all duration-200 disabled:cursor-not-allowed group flex-shrink-0"
+                      whileTap={{ scale: 0.96 }}
+                    >
+                      {isLoading ? (
+                        <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      ) : (
+                        <ArrowUp className="w-3 h-3 group-hover:translate-y-[-1px] transition-transform" />
+                      )}
+                    </motion.button>
+                  </motion.form>
+                )}
+              </AnimatePresence>
+            </motion.div>
+
+            {/* Hint text */}
+            <AnimatePresence>
+              {mode === 'expanded' && (
+                <motion.p
+                  key="hint"
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={FADE}
+                  className="absolute top-full text-center text-xs text-gray-500 mt-2 w-full"
+                >
+                  Ask me about Operalytix solutions, automation, or business transformation
+                </motion.p>
+              )}
+            </AnimatePresence>
+          </div>
+        </motion.div>
       </div>
     </>
   );
