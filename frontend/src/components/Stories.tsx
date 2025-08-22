@@ -133,7 +133,7 @@ const Stories = () => {
         </div>
                   </div>
 
-            {/* Article Viewer */}
+            {/* Document Viewer */}
             {showArticleViewer && selectedDocument && (
             <DocumentViewer
                 document={selectedDocument}

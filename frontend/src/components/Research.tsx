@@ -1,4 +1,5 @@
 import { ChevronLeft, ChevronRight, Download } from "lucide-react";
+import { useMemo } from "react";
 import { useDragScroll } from "../hooks/useDragScroll";
 import { useArticles } from "../hooks/useArticles";
 import DocumentViewer from "./DocumentViewer";
@@ -10,9 +11,15 @@ const Research = () => {
     articles: researchArticles,
     loading: isLoading,
     showArticleViewer,
-    currentDocument: selectedDocument,
+    currentDocument: selectedDocument, // derived Document
+    selectedArticle,                   // raw ArticleMeta
     openArticle,
-    closeArticleViewer
+    openArticleById,                   // <-- use this for sidebar clicks
+    closeArticleViewer,
+
+    // from enhanced hook (optional but nice):
+    relatedByType,
+    getRelated,
   } = useArticles({ type: "research" });
 
   const handleCardClick = (article: any, e: React.MouseEvent) => {
@@ -47,6 +54,20 @@ const Research = () => {
     </div>
   );
 
+  // Build the sidebar list: prefer same-category (if your ArticleMeta has `category`), else same-type
+  const relatedForSidebar = useMemo(() => {
+    const sameCategory = getRelated ? getRelated({ byCategory: true, limit: 12 }) : [];
+    const base = sameCategory && sameCategory.length ? sameCategory : (relatedByType || []);
+    return base.map((a: any) => ({
+      id: a.id,
+      title: a.title,
+      subtitle: a.subtitle,
+      thumbnail: a.thumbnail,
+      createdAt: a.createdAt,
+      description: a.description,
+    }));
+  }, [getRelated, relatedByType]);
+
   return (
     <>
       <section id="research" className="py-12 sm:py-16 lg:py-20 bg-gray-50">
@@ -58,9 +79,9 @@ const Research = () => {
                 Research
               </h2>
               <div className="flex items-center space-x-2">
-                <div className="w-16 sm:w-20 h-1 bg-gray-900 rounded-full"></div>
-                <div className="w-8 sm:w-12 h-1 bg-gray-300 rounded-full"></div>
-                <div className="w-6 sm:w-8 h-1 bg-gray-200 rounded-full"></div>
+                <div className="w-16 sm:w-20 h-1 bg-gray-900 rounded-full" />
+                <div className="w-8 sm:w-12 h-1 bg-gray-300 rounded-full" />
+                <div className="w-6 sm:w-8 h-1 bg-gray-200 rounded-full" />
               </div>
             </div>
             {/* Navigation arrows */}
@@ -92,7 +113,7 @@ const Research = () => {
             ) : researchArticles.length === 0 ? (
               renderEmptyState()
             ) : (
-              researchArticles.map((article) => (
+              researchArticles.map((article: any) => (
                 <div
                   key={article.id}
                   className="flex-none w-80 sm:w-96 group cursor-pointer transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl relative"
@@ -128,7 +149,7 @@ const Research = () => {
                             Research •{" "}
                             {new Date(article.createdAt || "").toLocaleDateString("en-US", {
                               month: "short",
-                              year: "numeric"
+                              year: "numeric",
                             })}
                           </div>
                           <h3 className="text-base sm:text-lg font-bold leading-tight mb-2">
@@ -153,12 +174,14 @@ const Research = () => {
         </div>
       </section>
 
-      {/* Document Viewer Modal */}
+      {/* Document Viewer Modal with sidebar */}
       {showArticleViewer && selectedDocument && (
         <DocumentViewer
           document={selectedDocument}
           onClose={closeArticleViewer}
-          fullscreen // 👈 force fullscreen on desktop too
+          fullscreen
+          relatedArticles={relatedForSidebar}
+          onSelectArticle={(a) => openArticleById(String(a.id))} // <-- FIX: open by id
         />
       )}
     </>
