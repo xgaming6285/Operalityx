@@ -10,9 +10,18 @@ import {
   ExternalLink,
   Search,
   ChevronDown,
+  Brain,
+  Zap,
+  Users,
+  BookOpen,
+  Newspaper,
+  Briefcase,
+  HelpCircle,
+  Home,
 } from "lucide-react";
 import { DocumentViewerProps } from "../types/document";
 import ContactForm from "./ContactForm";
+import { Link } from "react-router-dom";
 
 // -----------------------------
 // Types
@@ -37,7 +46,97 @@ type Props = DocumentViewerProps & {
 const NAV_HEIGHT = 56; // px
 
 // -----------------------------
-// Sidebar (new)
+// Navigation Sidebar (new)
+// -----------------------------
+
+type NavigationItem = {
+  name: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  description: string;
+};
+
+const navigationItems: NavigationItem[] = [
+  { name: "Home", href: "/", icon: Home, description: "Main page" },
+  { name: "Research", href: "/research", icon: Brain, description: "Research papers and studies" },
+  { name: "Solutions", href: "/solutions", icon: Zap, description: "Business solutions" },
+  { name: "Community", href: "/community", icon: Users, description: "Community content" },
+  { name: "Stories", href: "/stories", icon: BookOpen, description: "Success stories" },
+  { name: "News", href: "/news", icon: Newspaper, description: "Latest news" },
+  { name: "Careers", href: "/careers", icon: Briefcase, description: "Career opportunities" },
+  { name: "Support", href: "/support", icon: HelpCircle, description: "Get help" },
+];
+
+const NavigationSidebar: React.FC = () => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  return (
+    <aside className={`hidden xl:flex flex-col border-r border-gray-200 bg-gray-50/80 backdrop-blur supports-[backdrop-filter]:bg-gray-50 min-h-0 transition-all duration-300 ${
+      isCollapsed ? "w-16" : "w-64"
+    }`}>
+      {/* Header */}
+      <div className="sticky top-0 z-10 bg-gray-50/90 backdrop-blur border-b border-gray-200">
+        <div className="px-4 py-4">
+          <div className="flex items-center justify-between">
+            {!isCollapsed && (
+              <div>
+                <div className="text-sm font-semibold text-gray-900">Navigation</div>
+                <div className="text-xs text-gray-500">Quick access</div>
+              </div>
+            )}
+            <button
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              className="p-1.5 rounded-md hover:bg-gray-200 transition-colors"
+              title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              <ChevronDown className={`w-4 h-4 text-gray-600 transition-transform ${isCollapsed ? "rotate-180" : ""}`} />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Navigation List */}
+      <div className="flex-1 overflow-auto scrollbar-hide px-3 py-4 space-y-2">
+        {navigationItems.map((item) => (
+          <Link
+            key={item.name}
+            to={item.href}
+            className={`group flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white hover:shadow-sm transition-all duration-200 ${
+              isCollapsed ? "justify-center" : ""
+            }`}
+            title={isCollapsed ? item.description : undefined}
+          >
+            <div className="flex-shrink-0">
+              <item.icon className="w-5 h-5 text-gray-600 group-hover:text-gray-900 transition-colors" />
+            </div>
+            {!isCollapsed && (
+              <div className="min-w-0 flex-1">
+                <div className="text-sm font-medium text-gray-900 group-hover:text-gray-700 transition-colors">
+                  {item.name}
+                </div>
+                <div className="text-xs text-gray-500 truncate">
+                  {item.description}
+                </div>
+              </div>
+            )}
+          </Link>
+        ))}
+      </div>
+
+      {/* Footer */}
+      {!isCollapsed && (
+        <div className="border-t border-gray-200 px-4 py-3">
+          <div className="text-xs text-gray-500 text-center">
+            Operalityx
+          </div>
+        </div>
+      )}
+    </aside>
+  );
+};
+
+// -----------------------------
+// Sidebar (existing - renamed to RelatedSidebar)
 // -----------------------------
 
 type SidebarProps = {
@@ -426,74 +525,80 @@ const DocumentViewer: React.FC<Props> = ({
           )}
         </div>
 
-        {/* Content Area: main + sidebar */}
+        {/* Content Area: navigation + main + sidebar */}
         <div className="flex-1 min-h-0">
-          <div
-            className={`grid h-full ${
-              hasSidebar ? "lg:grid-cols-[1fr_360px]" : "grid-cols-1"
-            }`}
-          >
-            {/* MAIN */}
-            <div className="min-h-0 overflow-auto bg-white scrollbar-hide">
-              {/* Padding top = 0 because header is sticky and outside scroll context */}
-              <div
-                className={`${isCleanView ? "" : "px-4 sm:px-6 lg:px-8"} py-0`}
-                style={{ minHeight: `calc(100% - 0px)` }}
-              >
-                {/* Render content EXACTLY */}
-                <div className="w-full h-full">
-                  {doc.contentType === "pdf" ? (
-                    <iframe
-                      src={doc.content}
-                      className="w-full"
-                      style={{
-                        border: "none",
-                        width: "100%",
-                        // Full-height minus a little breathing space at bottom
-                        height: `calc(100vh - ${NAV_HEIGHT + 8}px)`,
-                      }}
-                      title={doc.title}
-                    />
-                  ) : doc.contentType === "image" ? (
-                    <div
-                      dangerouslySetInnerHTML={{ __html: doc.content }}
-                      style={{
-                        width: "100%",
-                        minHeight: `calc(100vh - ${NAV_HEIGHT + 8}px)`,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  ) : (
-                    <>
+          <div className="flex h-full">
+            {/* Navigation Sidebar (left) */}
+            <NavigationSidebar />
+            
+            {/* Main content and related sidebar */}
+            <div
+              className={`flex-1 grid ${
+                hasSidebar ? "lg:grid-cols-[1fr_360px]" : "grid-cols-1"
+              }`}
+            >
+              {/* MAIN */}
+              <div className="min-h-0 overflow-auto bg-white scrollbar-hide">
+                {/* Padding top = 0 because header is sticky and outside scroll context */}
+                <div
+                  className={`${isCleanView ? "" : "px-4 sm:px-6 lg:px-8"} py-0`}
+                  style={{ minHeight: `calc(100% - 0px)` }}
+                >
+                  {/* Render content EXACTLY */}
+                  <div className="w-full h-full">
+                    {doc.contentType === "pdf" ? (
+                      <iframe
+                        src={doc.content}
+                        className="w-full"
+                        style={{
+                          border: "none",
+                          width: "100%",
+                          // Full-height minus a little breathing space at bottom
+                          height: `calc(100vh - ${NAV_HEIGHT + 8}px)`,
+                        }}
+                        title={doc.title}
+                      />
+                    ) : doc.contentType === "image" ? (
                       <div
                         dangerouslySetInnerHTML={{ __html: doc.content }}
                         style={{
                           width: "100%",
                           minHeight: `calc(100vh - ${NAV_HEIGHT + 8}px)`,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
                           backgroundColor: "white",
                         }}
-                        className={`${isCleanView ? "" : "prose max-w-none prose-p:leading-7"} `}
                       />
-                      {/* Contact form for HTML */}
-                      <div className={`${isCleanView ? "hidden" : "px-0 sm:px-2 lg:px-4 py-6 border-t border-gray-200 bg-white"}`}>
-                        <ContactForm
-                          articleTitle={doc.title}
-                          className="max-w-2xl mx-auto"
+                    ) : (
+                      <>
+                        <div
+                          dangerouslySetInnerHTML={{ __html: doc.content }}
+                          style={{
+                            width: "100%",
+                            minHeight: `calc(100vh - ${NAV_HEIGHT + 8}px)`,
+                            backgroundColor: "white",
+                          }}
+                          className={`${isCleanView ? "" : "prose max-w-none prose-p:leading-7"} `}
                         />
-                      </div>
-                    </>
-                  )}
+                        {/* Contact form for HTML */}
+                        <div className={`${isCleanView ? "hidden" : "px-0 sm:px-2 lg:px-4 py-6 border-t border-gray-200 bg-white"}`}>
+                          <ContactForm
+                            articleTitle={doc.title}
+                            className="max-w-2xl mx-auto"
+                          />
+                        </div>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* SIDEBAR (enhanced) */}
-            {hasSidebar && (
-              <RelatedSidebar items={relatedArticles} formatDate={formatDate} onSelect={onSelectArticle} />
-            )}
+              {/* SIDEBAR (enhanced) */}
+              {hasSidebar && (
+                <RelatedSidebar items={relatedArticles} formatDate={formatDate} onSelect={onSelectArticle} />
+              )}
+            </div>
           </div>
         </div>
 
