@@ -12,9 +12,9 @@ import { useState } from "react";
 const Index = () => {
   const [isChatActive, setIsChatActive] = useState(false);
 
-  const { isVisible } = useScrollTrigger({ 
-    hideDelay: 3000, // Hide after 3 seconds of no scrolling
-    isActive: isChatActive // Don't hide when chat is active
+  const { state } = useScrollTrigger({
+    hideDelay: 3000,
+    isActive: isChatActive,
   });
 
   return (
@@ -25,12 +25,13 @@ const Index = () => {
       <Community />
       <Stories />
       <News />
-      
-      {/* Scroll-triggered AI Chat Modal */}
-      <ScrollChatModal 
-        isVisible={isVisible} 
-        onClose={() => {}} 
+
+      {/* Scroll-triggered AI Chat */}
+      <ScrollChatModal
+        uiState={state}
+        onClose={() => {}}
         onActiveChange={setIsChatActive}
+        logo={<img src="/images/logo-icon.png" alt="Operalytix" className="w-8 h-8 object-contain" />}
       />
     </Layout>
   );

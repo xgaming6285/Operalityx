@@ -1,24 +1,23 @@
 import { useEffect, useRef, useState } from 'react';
 
+type UiState = 'hidden' | 'expanded' | 'collapsed';
+
 interface UseScrollTriggerOptions {
-  hideDelay?: number; // Hide after ms of no scrolling
-  isActive?: boolean; // Keep visible while interacting
+  hideDelay?: number; // collapse after ms of no scrolling
+  isActive?: boolean; // keep expanded while interacting
 }
 
-export const useScrollTrigger = ({
-  hideDelay = 3000,
-  isActive = false,
-}: UseScrollTriggerOptions = {}) => {
-  const [isVisible, setIsVisible] = useState(false);
+export const useScrollTrigger = (
+  { hideDelay = 3000, isActive = false }: UseScrollTriggerOptions = {}
+) => {
+  const [state, setState] = useState<UiState>('hidden');
 
-  // Refs to avoid stale closures and to persist between renders
   const hideTimeoutRef = useRef<number | null>(null);
   const lastYRef = useRef<number>(typeof window !== 'undefined' ? window.scrollY : 0);
   const rafRef = useRef<number | null>(null);
 
-  // Tunables (kept internal to preserve your public API)
-  const TOP_OFFSET = 8;       // px within which we still consider "top"
-  const DIR_THRESHOLD = 4;    // px delta before we consider it a direction change
+  const TOP_OFFSET = 8;     // px considered "at top"
+  const DIR_THRESHOLD = 4;  // px before we consider it a direction change
 
   const clearHideTimer = () => {
     if (hideTimeoutRef.current) {
@@ -27,44 +26,40 @@ export const useScrollTrigger = ({
     }
   };
 
-  const scheduleHide = () => {
-    if (isActive) return; // don't auto-hide while active
+  const scheduleCollapse = () => {
+    if (isActive) return; // don’t auto-collapse while active
     clearHideTimer();
-    hideTimeoutRef.current = window.setTimeout(() => setIsVisible(false), hideDelay);
+    hideTimeoutRef.current = window.setTimeout(() => {
+      setState((prev) => (prev === 'hidden' ? 'hidden' : 'collapsed'));
+    }, hideDelay);
   };
 
   useEffect(() => {
-    // Initialize on mount
     const y0 = window.scrollY;
     lastYRef.current = y0;
-    setIsVisible(y0 > TOP_OFFSET); // hidden at top, visible if already scrolled
-    scheduleHide();
+    // If we load part-way down the page, show as collapsed initially
+    setState(y0 > TOP_OFFSET ? 'collapsed' : 'hidden');
+    scheduleCollapse();
 
     const onScroll = () => {
-      // Use rAF to coalesce events and avoid layout thrash
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       rafRef.current = requestAnimationFrame(() => {
         const y = window.scrollY;
         const dy = y - lastYRef.current;
 
-        // Hide when at the very top
         if (y <= TOP_OFFSET) {
-          setIsVisible(false);
-        } else if (dy > DIR_THRESHOLD) {
-          // Show when scrolling DOWN (ignore tiny jiggles)
-          setIsVisible(true);
+          setState('hidden');
+        } else if (dy > DIR_THRESHOLD || dy < -DIR_THRESHOLD) {
+          // Any meaningful scroll movement expands it
+          setState('expanded');
         }
-        // (Intentionally NOT hiding on scroll up per your requirement)
 
         lastYRef.current = y;
-
-        // Any scroll activity resets the inactivity timer
         clearHideTimer();
-        scheduleHide();
+        scheduleCollapse();
       });
     };
 
-    // Passive for perf; also capture touchmove for mobile
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('touchmove', onScroll, { passive: true });
 
@@ -74,32 +69,22 @@ export const useScrollTrigger = ({
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       clearHideTimer();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hideDelay, isActive]);
 
-  // Keep visible while active (e.g., typing)
+  // Force expanded while interacting
   useEffect(() => {
     if (isActive) {
-      setIsVisible(true);
-      // Also pause the hide timer while active
-      // (timer is already skipped in scheduleHide)
+      setState((cur) => (cur === 'hidden' ? 'hidden' : 'expanded'));
     } else {
-      // When activity ends, schedule a hide after the delay, unless at top
-      scheduleHide();
+      scheduleCollapse();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isActive, hideDelay]);
 
-  const hideModal = () => {
-    clearHideTimer();
-    setIsVisible(false);
-  };
+  // Public helpers (optional)
+  const hide = () => { clearHideTimer(); setState('hidden'); };
+  const expand = () => { clearHideTimer(); setState('expanded'); scheduleCollapse(); };
+  const collapse = () => { clearHideTimer(); setState('collapsed'); scheduleCollapse(); };
 
-  const showModal = () => {
-    clearHideTimer();
-    setIsVisible(true);
-    scheduleHide();
-  };
-
-  return { isVisible, hideModal, showModal };
+  return { state, hide, expand, collapse };
 };

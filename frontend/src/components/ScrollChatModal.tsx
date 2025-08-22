@@ -1,18 +1,34 @@
 import { useState } from 'react';
 import { X, ArrowUp } from 'lucide-react';
 
+type UiState = 'hidden' | 'expanded' | 'collapsed';
+
 interface ScrollChatModalProps {
-  isVisible: boolean;
+  // New prop (preferred)
+  uiState?: UiState;
+  // Back-compat with your old usage
+  isVisible?: boolean;
   onClose: () => void;
   onActiveChange?: (isActive: boolean) => void;
+  // Optional: provide your real logo element (svg/img/component)
+  logo?: React.ReactNode;
 }
 
-const ScrollChatModal = ({ isVisible, onClose, onActiveChange }: ScrollChatModalProps) => {
+const ScrollChatModal = ({
+  uiState,
+  isVisible,
+  onClose,
+  onActiveChange,
+  logo
+}: ScrollChatModalProps) => {
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showResponse, setShowResponse] = useState(false);
   const [response, setResponse] = useState('');
   const [isInputFocused, setIsInputFocused] = useState(false);
+
+  // Resolve UI mode (support old isVisible prop)
+  const mode: UiState = uiState ?? (isVisible ? 'expanded' : 'hidden');
 
   const parseResponse = (response: string): { content: string; thinking?: string } => {
     const thinkingMatch = response.match(/<think>(.*?)<\/think>/s);
@@ -90,9 +106,18 @@ const ScrollChatModal = ({ isVisible, onClose, onActiveChange }: ScrollChatModal
     }
   };
 
+  // ---------- UI ----------
+  const containerVisibility =
+    mode === 'hidden'
+      ? 'opacity-0 translate-y-4 pointer-events-none'
+      : 'opacity-100 translate-y-0 pointer-events-auto';
+
+  const bubbleWidth = mode === 'collapsed' ? 'w-16' : 'w-full'; // collapsed = circle
+  const bubblePadding = mode === 'collapsed' ? 'px-0 py-0' : 'px-4 py-3';
+
   return (
     <>
-      {/* Backdrop overlay (with fade) */}
+      {/* Backdrop when the response panel is open */}
       <div
         className={[
           'fixed inset-0 bg-black/30 backdrop-blur-sm z-40 transition-opacity duration-200',
@@ -102,17 +127,18 @@ const ScrollChatModal = ({ isVisible, onClose, onActiveChange }: ScrollChatModal
         aria-hidden={!showResponse}
       />
 
-      {/* Bottom Chat Bubble (fade/slide in & out) */}
+      {/* Docked container */}
       <div
         className={[
           'fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-md px-4',
           'transition-all duration-300',
-          isVisible ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-4 pointer-events-none',
+          containerVisibility,
         ].join(' ')}
-        aria-hidden={!isVisible}
+        aria-hidden={mode === 'hidden'}
       >
         <div className="relative">
-          {/* Response Card (appears above input when there's a response) */}
+
+          {/* Response Card */}
           <div
             className={[
               'mb-3 bg-white rounded-xl shadow-xl border border-gray-200 p-4',
@@ -155,39 +181,65 @@ const ScrollChatModal = ({ isVisible, onClose, onActiveChange }: ScrollChatModal
             )}
           </div>
 
-          {/* Main input bubble */}
-          <form onSubmit={handleSubmit} className="relative">
-            <div className="bg-white rounded-full shadow-xl border border-gray-200 px-4 py-3 flex items-center gap-3 transition-all duration-200 hover:shadow-2xl focus-within:shadow-2xl focus-within:border-blue-300">
-              <input
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onFocus={handleInputFocus}
-                onBlur={handleInputBlur}
-                placeholder="Ask Operalytix"
-                className="flex-1 text-gray-700 placeholder-gray-400 bg-transparent focus:outline-none text-sm"
-                disabled={isLoading}
-                autoFocus
-              />
-
+          {/* COLLAPSED (logo button) & EXPANDED (search) */}
+          <div
+            className={[
+              'bg-white rounded-full shadow-xl border border-gray-200 flex items-center gap-3',
+              'transition-all duration-300 hover:shadow-2xl',
+              bubbleWidth,
+              bubblePadding,
+            ].join(' ')}
+          >
+            {mode === 'collapsed' ? (
               <button
-                type="submit"
-                disabled={isLoading || !message.trim()}
-                className="w-8 h-8 bg-gray-800 hover:bg-gray-900 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center transition-all duration-200 disabled:cursor-not-allowed group flex-shrink-0"
+                type="button"
+                onClick={() => onActiveChange?.(true)}
+                className="w-16 h-16 rounded-full flex items-center justify-center bg-white hover:bg-gray-50 transition-all duration-200"
+                aria-label="Open Operalytix search"
               >
-                {isLoading ? (
-                  <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                ) : (
-                  <ArrowUp className="w-3 h-3 group-hover:translate-y-[-1px] transition-transform" />
-                )}
+                <div className="flex items-center justify-center w-8 h-8">
+                  {logo ?? (
+                    <img
+                      src="/logo.svg"
+                      alt="Operalytix"
+                      className="w-8 h-8 object-contain"
+                    />
+                  )}
+                </div>
               </button>
-            </div>
-          </form>
+            ) : (
+              <form onSubmit={handleSubmit} className="relative flex-1 flex items-center gap-3">
+                <input
+                  type="text"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  onFocus={handleInputFocus}
+                  onBlur={handleInputBlur}
+                  placeholder="Ask Operalytix"
+                  className="flex-1 text-gray-700 placeholder-gray-400 bg-transparent focus:outline-none text-sm"
+                  disabled={isLoading}
+                  autoFocus
+                />
+                <button
+                  type="submit"
+                  disabled={isLoading || !message.trim()}
+                  className="w-8 h-8 bg-gray-800 hover:bg-gray-900 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center transition-all duration-200 disabled:cursor-not-allowed group flex-shrink-0"
+                >
+                  {isLoading ? (
+                    <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <ArrowUp className="w-3 h-3 group-hover:translate-y-[-1px] transition-transform" />
+                  )}
+                </button>
+              </form>
+            )}
+          </div>
 
-          {/* Suggestion text */}
-          <p className="text-center text-xs text-gray-500 mt-2">
-            Ask me about Operalytix solutions, automation, or business transformation
-          </p>
+          {mode === 'expanded' && (
+            <p className="text-center text-xs text-gray-500 mt-2">
+              Ask me about Operalytix solutions, automation, or business transformation
+            </p>
+          )}
         </div>
       </div>
     </>
