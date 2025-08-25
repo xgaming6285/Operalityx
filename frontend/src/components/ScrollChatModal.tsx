@@ -10,6 +10,7 @@ interface ScrollChatModalProps {
   isVisible?: boolean; // back-compat
   onClose: () => void;
   onActiveChange?: (isActive: boolean) => void;
+  onHoverChange?: (isHovered: boolean) => void;
   logo?: ReactNode;
 }
 
@@ -26,6 +27,7 @@ const ScrollChatModal = ({
   isVisible,
   onClose,
   onActiveChange,
+  onHoverChange,
   logo,
 }: ScrollChatModalProps) => {
   const [message, setMessage] = useState("");
@@ -128,7 +130,7 @@ const ScrollChatModal = ({
   // glass style only for the logo orb
   const glassCollapsed =
     "bg-white/55 supports-[backdrop-filter]:bg-white/35 backdrop-blur-xl " +
-    "border border-white/30 ring-1 ring-black/5 shadow-2xl " +
+    "border border-white/30 ring-1 ring-black/5 " +
     "dark:bg-gray-900/45 dark:supports-[backdrop-filter]:bg-gray-900/30 dark:border-white/10";
 
   // Removed layoutId to prevent visual artifacts during transitions
@@ -155,6 +157,8 @@ const ScrollChatModal = ({
       <div
         className="fixed inset-x-0 bottom-6 z-30 flex justify-center pointer-events-none px-4"
         aria-hidden={mode === "hidden"}
+        onMouseEnter={() => onHoverChange?.(true)}
+        onMouseLeave={() => onHoverChange?.(false)}
       >
         <motion.div
           className={[
@@ -186,7 +190,7 @@ const ScrollChatModal = ({
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -6, scale: 0.98 }}
                   transition={{ ...SPRING, duration: 0.25 }}
-                  className="absolute bottom-full mb-3 w-full bg-white rounded-xl shadow-xl border border-gray-200 p-4"
+                  className="absolute bottom-full mb-3 w-full bg-white rounded-xl border border-gray-200 p-4"
                 >
                   <div className="flex justify-between items-start mb-3">
                     <h3 className="font-medium text-gray-800 text-sm">
@@ -257,9 +261,6 @@ const ScrollChatModal = ({
                   ? glassCollapsed
                   : "bg-white border border-gray-200",
                 "rounded-full",
-                // Conditional shadow with smooth transition
-                mode === "expanded" ? "shadow-xl" : "shadow-none",
-                "transition-shadow duration-150 ease-out",
               ].join(" ")}
             >
               <AnimatePresence initial={false} mode="wait">
@@ -280,7 +281,7 @@ const ScrollChatModal = ({
                         <motion.img
                           src="/logo.svg"
                           alt="Operalytix"
-                          className="w-8 h-8 object-contain drop-shadow"
+                          className="w-8 h-8 object-contain"
                           initial={{ rotate: -6 }}
                           animate={{ rotate: 0 }}
                           transition={{
