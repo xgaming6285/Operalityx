@@ -177,7 +177,7 @@ const HeroCarousel = () => {
             </div>
             
             {/* Dot indicators */}
-            <div className="flex justify-center gap-2">
+            <div className="flex justify-center gap-2 pb-6">
                 {cards.map((_, index) => (
                     <button
                         key={index}
