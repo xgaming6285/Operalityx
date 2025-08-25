@@ -1,42 +1,49 @@
-import { useState } from 'react';
-import { X, ArrowUp } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import type { ReactNode, FormEvent } from 'react';
+import { useState } from "react";
+import { X, ArrowUp } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import type { ReactNode, FormEvent } from "react";
 
-type UiState = 'hidden' | 'expanded' | 'collapsed';
+type UiState = "hidden" | "expanded" | "collapsed";
 
 interface ScrollChatModalProps {
-  uiState?: UiState;           // preferred
-  isVisible?: boolean;         // back-compat
+  uiState?: UiState; // preferred
+  isVisible?: boolean; // back-compat
   onClose: () => void;
   onActiveChange?: (isActive: boolean) => void;
   logo?: ReactNode;
 }
 
-const SPRING = { type: 'spring', stiffness: 360, damping: 32, mass: 0.9 } as const;
-const FADE = { duration: 0.18, ease: 'easeOut' } as const;
+const SPRING = {
+  type: "spring",
+  stiffness: 360,
+  damping: 32,
+  mass: 0.9,
+} as const;
+const FADE = { duration: 0.18, ease: "easeOut" } as const;
 
 const ScrollChatModal = ({
   uiState,
   isVisible,
   onClose,
   onActiveChange,
-  logo
+  logo,
 }: ScrollChatModalProps) => {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showResponse, setShowResponse] = useState(false);
-  const [response, setResponse] = useState('');
+  const [response, setResponse] = useState("");
   const [isInputFocused, setIsInputFocused] = useState(false);
 
   // Resolve UI mode (support old isVisible prop)
-  const mode: UiState = uiState ?? (isVisible ? 'expanded' : 'hidden');
+  const mode: UiState = uiState ?? (isVisible ? "expanded" : "hidden");
 
-  const parseResponse = (rawResponse: string): { content: string; thinking?: string } => {
+  const parseResponse = (
+    rawResponse: string
+  ): { content: string; thinking?: string } => {
     const thinkingMatch = rawResponse.match(/<think>(.*?)<\/think>/s);
     if (thinkingMatch) {
       const thinking = thinkingMatch[1].trim();
-      const content = rawResponse.replace(/<think>.*?<\/think>/s, '').trim();
+      const content = rawResponse.replace(/<think>.*?<\/think>/s, "").trim();
       return { content, thinking };
     }
     return { content: rawResponse };
@@ -51,11 +58,17 @@ const ScrollChatModal = ({
     setShowResponse(true);
 
     try {
-      const apiResponse = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/chat`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMessage, conversationHistory: [] }),
-      });
+      const apiResponse = await fetch(
+        `${import.meta.env.VITE_API_URL || ""}/api/chat`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message: userMessage,
+            conversationHistory: [],
+          }),
+        }
+      );
 
       const data = await apiResponse.json();
 
@@ -64,25 +77,28 @@ const ScrollChatModal = ({
         setResponse(parsed.content);
       } else {
         const errorMessage =
-          data.error === 'Authentication failed'
-            ? 'Authentication issue with AI service. Please contact support.'
-            : data.error === 'Rate limit exceeded'
-            ? 'AI service is busy. Please try again in a moment.'
-            : (data.response as string) || 'Sorry, I encountered an error. Please try again.';
+          data.error === "Authentication failed"
+            ? "Authentication issue with AI service. Please contact support."
+            : data.error === "Rate limit exceeded"
+            ? "AI service is busy. Please try again in a moment."
+            : (data.response as string) ||
+              "Sorry, I encountered an error. Please try again.";
         setResponse(errorMessage);
       }
     } catch (err: unknown) {
       // eslint-disable-next-line no-console
-      console.error('Error sending message:', err);
-      setResponse("Sorry, I'm having trouble connecting to the server. Please check your connection and try again.");
+      console.error("Error sending message:", err);
+      setResponse(
+        "Sorry, I'm having trouble connecting to the server. Please check your connection and try again."
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
   const resetChat = () => {
-    setMessage('');
-    setResponse('');
+    setMessage("");
+    setResponse("");
     setShowResponse(false);
   };
 
@@ -111,12 +127,11 @@ const ScrollChatModal = ({
 
   // glass style only for the logo orb
   const glassCollapsed =
-    'bg-white/55 supports-[backdrop-filter]:bg-white/35 backdrop-blur-xl ' +
-    'border border-white/30 ring-1 ring-black/5 shadow-2xl ' +
-    'dark:bg-gray-900/45 dark:supports-[backdrop-filter]:bg-gray-900/30 dark:border-white/10';
+    "bg-white/55 supports-[backdrop-filter]:bg-white/35 backdrop-blur-xl " +
+    "border border-white/30 ring-1 ring-black/5 shadow-2xl " +
+    "dark:bg-gray-900/45 dark:supports-[backdrop-filter]:bg-gray-900/30 dark:border-white/10";
 
-  // Shared layoutId lets Framer Motion morph shape/size/borderRadius smoothly
-  const BUBBLE_ID = 'operalytix-bubble';
+  // Removed layoutId to prevent visual artifacts during transitions
 
   return (
     <>
@@ -128,7 +143,7 @@ const ScrollChatModal = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={FADE}
+            transition={{ duration: 0.15, ease: "easeOut" }}
             className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40"
             onClick={handleBackdropClick}
             aria-hidden={!showResponse}
@@ -139,20 +154,29 @@ const ScrollChatModal = ({
       {/* Docked container - Fixed centering with consistent width */}
       <div
         className="fixed inset-x-0 bottom-6 z-30 flex justify-center pointer-events-none px-4"
-        aria-hidden={mode === 'hidden'}
+        aria-hidden={mode === "hidden"}
       >
         <motion.div
           className={[
-            'w-full max-w-md pointer-events-auto',
-            'transform-gpu will-change-transform will-change-opacity',
-            mode === 'hidden' ? 'opacity-0' : 'opacity-100',
-          ].join(' ')}
+            "w-full max-w-md pointer-events-auto",
+            "transform-gpu will-change-transform will-change-opacity",
+            "overflow-hidden", // Prevent visual artifacts
+            mode === "hidden" ? "opacity-0" : "opacity-100",
+          ].join(" ")}
           initial={{ y: 16, opacity: 0 }}
-          animate={{ y: mode === 'hidden' ? 16 : 0, opacity: mode === 'hidden' ? 0 : 1 }}
+          animate={{
+            y: mode === "hidden" ? 16 : 0,
+            opacity: mode === "hidden" ? 0 : 1,
+          }}
           exit={{ y: 16, opacity: 0 }}
-          transition={SPRING}
+          transition={{
+            type: "spring",
+            stiffness: 280,
+            damping: 25,
+            mass: 0.7,
+          }}
         >
-          <div className="relative flex justify-center">
+          <div className="relative flex justify-center w-full">
             {/* Response Card */}
             <AnimatePresence initial={false}>
               {showResponse && (
@@ -161,11 +185,13 @@ const ScrollChatModal = ({
                   initial={{ opacity: 0, y: -8, scale: 0.98 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -6, scale: 0.98 }}
-                  transition={SPRING}
+                  transition={{ ...SPRING, duration: 0.25 }}
                   className="absolute bottom-full mb-3 w-full bg-white rounded-xl shadow-xl border border-gray-200 p-4"
                 >
                   <div className="flex justify-between items-start mb-3">
-                    <h3 className="font-medium text-gray-800 text-sm">Operalytix Response</h3>
+                    <h3 className="font-medium text-gray-800 text-sm">
+                      Operalytix Response
+                    </h3>
                     <button
                       onClick={handleResponseClose}
                       className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -178,10 +204,18 @@ const ScrollChatModal = ({
                     <div className="flex items-center gap-2 py-3">
                       <div className="flex gap-1">
                         <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce" />
-                        <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
-                        <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                        <div
+                          className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce"
+                          style={{ animationDelay: "0.1s" }}
+                        />
+                        <div
+                          className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce"
+                          style={{ animationDelay: "0.2s" }}
+                        />
                       </div>
-                      <span className="text-gray-600 text-sm">Operalytix is thinking...</span>
+                      <span className="text-gray-600 text-sm">
+                        Operalytix is thinking...
+                      </span>
                     </div>
                   ) : (
                     <div className="text-gray-700 leading-relaxed whitespace-pre-wrap text-sm">
@@ -203,21 +237,33 @@ const ScrollChatModal = ({
 
             {/* Main bubble container - Fixed width for consistent centering */}
             <motion.div
-              layout
-              layoutId={BUBBLE_ID}
-              transition={SPRING}
+              animate={{
+                width: mode === "collapsed" ? 64 : "100%",
+                height: mode === "collapsed" ? 64 : 56,
+                paddingLeft: mode === "collapsed" ? 0 : 16,
+                paddingRight: mode === "collapsed" ? 0 : 16,
+                paddingTop: mode === "collapsed" ? 0 : 12,
+                paddingBottom: mode === "collapsed" ? 0 : 12,
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 30,
+                mass: 0.8,
+              }}
               className={[
-                'flex items-center justify-center transform-gpu will-change-transform',
-                mode === 'collapsed' ? 'w-16 h-16' : 'w-full h-14',
-                mode === 'collapsed' ? 'px-0 py-0' : 'px-4 py-3',
-                mode === 'collapsed'
+                "flex items-center justify-center transform-gpu will-change-transform",
+                mode === "collapsed"
                   ? glassCollapsed
-                  : 'bg-white shadow-xl border border-gray-200',
-                'rounded-full',
-              ].join(' ')}
+                  : "bg-white border border-gray-200",
+                "rounded-full",
+                // Conditional shadow with smooth transition
+                mode === "expanded" ? "shadow-xl" : "shadow-none",
+                "transition-shadow duration-150 ease-out",
+              ].join(" ")}
             >
               <AnimatePresence initial={false} mode="wait">
-                {mode === 'collapsed' ? (
+                {mode === "collapsed" ? (
                   <motion.button
                     key="orb"
                     initial={{ opacity: 0, scale: 0.95 }}
@@ -229,9 +275,7 @@ const ScrollChatModal = ({
                     className="w-16 h-16 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-[1.03]"
                     aria-label="Open Operalytix search"
                   >
-                    <motion.div
-                      className="flex items-center justify-center w-8 h-8"
-                    >
+                    <motion.div className="flex items-center justify-center w-8 h-8">
                       {logo ?? (
                         <motion.img
                           src="/logo.svg"
@@ -239,7 +283,11 @@ const ScrollChatModal = ({
                           className="w-8 h-8 object-contain drop-shadow"
                           initial={{ rotate: -6 }}
                           animate={{ rotate: 0 }}
-                          transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 260,
+                            damping: 20,
+                          }}
                         />
                       )}
                     </motion.div>
@@ -287,7 +335,7 @@ const ScrollChatModal = ({
 
             {/* Hint text */}
             <AnimatePresence>
-              {mode === 'expanded' && (
+              {mode === "expanded" && (
                 <motion.p
                   key="hint"
                   initial={{ opacity: 0, y: -4 }}
@@ -295,8 +343,7 @@ const ScrollChatModal = ({
                   exit={{ opacity: 0, y: -4 }}
                   transition={FADE}
                   className="absolute top-full text-center text-xs text-gray-500 mt-2 w-full"
-                >
-                </motion.p>
+                ></motion.p>
               )}
             </AnimatePresence>
           </div>
