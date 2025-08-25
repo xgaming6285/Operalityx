@@ -11,10 +11,12 @@ import { useState } from "react";
 
 const Index = () => {
   const [isChatActive, setIsChatActive] = useState(false);
+  const [isChatHovering, setIsChatHovering] = useState(false);
 
   const { state } = useScrollTrigger({
-    hideDelay: 3000,
+    hideDelay: 1500,
     isActive: isChatActive,
+    isHovering: isChatHovering,
   });
 
   return (
@@ -31,7 +33,14 @@ const Index = () => {
         uiState={state}
         onClose={() => {}}
         onActiveChange={setIsChatActive}
-        logo={<img src="/images/smaller-logo-hd.png" alt="Operalytix" className="w-8 h-8 object-contain" />}
+        onHoverChange={setIsChatHovering}
+        logo={
+          <img
+            src="/images/smaller-logo-hd.png"
+            alt="Operalytix"
+            className="w-8 h-8 object-contain"
+          />
+        }
       />
     </Layout>
   );

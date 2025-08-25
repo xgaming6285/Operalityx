@@ -10,6 +10,7 @@ interface ScrollChatModalProps {
   isVisible?: boolean; // back-compat
   onClose: () => void;
   onActiveChange?: (isActive: boolean) => void;
+  onHoverChange?: (isHovering: boolean) => void;
   logo?: ReactNode;
 }
 
@@ -26,6 +27,7 @@ const ScrollChatModal = ({
   isVisible,
   onClose,
   onActiveChange,
+  onHoverChange,
   logo,
 }: ScrollChatModalProps) => {
   const [message, setMessage] = useState("");
@@ -117,6 +119,14 @@ const ScrollChatModal = ({
     if (!isInputFocused) onActiveChange?.(false);
   };
 
+  const handleMouseEnter = () => {
+    onHoverChange?.(true);
+  };
+
+  const handleMouseLeave = () => {
+    onHoverChange?.(false);
+  };
+
   const handleBackdropClick = () => {
     if (showResponse) {
       handleResponseClose();
@@ -169,6 +179,8 @@ const ScrollChatModal = ({
             damping: 25,
             mass: 0.7,
           }}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         >
           <div className="relative flex justify-center">
             {/* Response Card */}
