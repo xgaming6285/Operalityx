@@ -19,7 +19,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     return (
         <div className={`flex items-center justify-center ${className}`}>
             <img 
-                src="/images/logo-icon.png" 
+                src="/images/smaller-logo-hd.png" 
                 alt="Loading" 
                 className={`${sizeClasses[size]} animate-spin`}
                 style={{
