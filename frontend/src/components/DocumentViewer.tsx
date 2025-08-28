@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
+import { motion, AnimatePresence, useAnimation } from "framer-motion";
 import {
   X,
   Maximize2,
@@ -21,7 +22,6 @@ import {
 } from "lucide-react";
 import { DocumentViewerProps, RelatedArticle } from "../types/document";
 import ContactForm from "./ContactForm";
-import { useNavigate } from "react-router-dom";
 import { ArticleService, ArticleMeta } from "../services/articleService";
 
 // -----------------------------
@@ -67,11 +67,16 @@ const NavigationSidebar: React.FC<{
   selectedCategory: string;
 }> = ({ onClose, onCategoryChange, selectedCategory }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const controls = useAnimation();
 
-  const handleItemClick = (item: NavigationItem) => {
+  const handleItemClick = async (item: NavigationItem) => {
     if (item.action === 'close') {
       onClose();
     } else {
+      // Add a subtle animation feedback
+      await controls.start({ scale: 0.95 });
+      await controls.start({ scale: 1 });
+      
       // Filter articles by category instead of navigating
       onCategoryChange(item.category);
     }
@@ -104,8 +109,8 @@ const NavigationSidebar: React.FC<{
 
       {/* Navigation List */}
       <div className="flex-1 overflow-auto scrollbar-hide px-3 py-4 space-y-2">
-        {navigationItems.map((item) => (
-          <button
+        {navigationItems.map((item, index) => (
+          <motion.button
             key={item.name}
             onClick={() => handleItemClick(item)}
             className={`group flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white hover:shadow-sm transition-all duration-200 w-full text-left ${
@@ -114,6 +119,11 @@ const NavigationSidebar: React.FC<{
               selectedCategory === item.category ? "bg-white shadow-sm border border-gray-200" : ""
             }`}
             title={isCollapsed ? item.description : undefined}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.05, duration: 0.3 }}
+            whileHover={{ scale: 1.02, x: 4 }}
+            whileTap={{ scale: 0.98 }}
           >
             <div className="flex-shrink-0">
               <item.icon className={`w-5 h-5 transition-colors ${
@@ -136,7 +146,7 @@ const NavigationSidebar: React.FC<{
                 </div>
               </div>
             )}
-          </button>
+          </motion.button>
         ))}
       </div>
 
@@ -167,6 +177,7 @@ type SidebarProps = {
 const RelatedSidebar: React.FC<SidebarProps> = ({ items, formatDate, onSelect, loading, category }) => {
   const [query, setQuery] = useState("");
   const [sortBy, setSortBy] = useState<"recent" | "title">("recent");
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -200,30 +211,59 @@ const RelatedSidebar: React.FC<SidebarProps> = ({ items, formatDate, onSelect, l
       <div className="sticky top-0 z-10 bg-gray-50/90 backdrop-blur border-b border-gray-200">
         <div className="px-5 pt-4">
           <div className="flex items-baseline justify-between">
-            <div>
-              <div className="text-sm font-semibold text-gray-900">
+            <motion.div
+              key={category}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <motion.div 
+                className="text-sm font-semibold text-gray-900"
+                animate={{ color: loading ? "#9ca3af" : "#111827" }}
+                transition={{ duration: 0.2 }}
+              >
                 {(category || "all") === "all" ? "More articles" : `${(category || "").charAt(0).toUpperCase() + (category || "").slice(1)} articles`}
-              </div>
-              <div className="text-xs text-gray-500">
+              </motion.div>
+              <motion.div 
+                className="text-xs text-gray-500"
+                animate={{ opacity: loading ? 0.6 : 1 }}
+                transition={{ duration: 0.2 }}
+              >
                 {loading ? "Loading..." : (category || "all") === "all" ? "You might also like" : `All ${category || ""} content`}
-              </div>
-            </div>
-            <div className="text-[11px] text-gray-500">
+              </motion.div>
+            </motion.div>
+            <motion.div 
+              className="text-[11px] text-gray-500"
+              animate={{ opacity: loading ? 0.6 : 1 }}
+              transition={{ duration: 0.2 }}
+            >
               {loading ? "..." : `${filtered.length} results`}
-            </div>
+            </motion.div>
           </div>
 
           {/* Controls */}
           <div className="mt-3 flex items-center gap-2 pb-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <motion.div 
+              className="relative flex-1"
+              animate={{ scale: isSearchFocused ? 1.02 : 1 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Search className={`absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none transition-colors duration-200 ${
+                isSearchFocused ? "text-blue-500" : "text-gray-400"
+              }`} />
               <input
-                className="w-full pl-8 pr-3 py-2 text-xs rounded-md border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-gray-300"
+                className={`w-full pl-8 pr-3 py-2 text-xs rounded-md border transition-all duration-200 bg-white focus:outline-none ${
+                  isSearchFocused 
+                    ? "border-blue-300 ring-2 ring-blue-100 shadow-sm" 
+                    : "border-gray-200 hover:border-gray-300"
+                }`}
                 placeholder="Search related articles…"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
+                onFocus={() => setIsSearchFocused(true)}
+                onBlur={() => setIsSearchFocused(false)}
               />
-            </div>
+            </motion.div>
 
             <div className="relative">
               <select
@@ -242,79 +282,187 @@ const RelatedSidebar: React.FC<SidebarProps> = ({ items, formatDate, onSelect, l
 
              {/* List */}
        <div className="flex-1 overflow-auto scrollbar-hide px-4 py-4 space-y-4">
-         {loading ? (
-           <div className="px-3 py-10 text-center text-sm text-gray-500">
-             Loading articles...
-           </div>
-         ) : (
-           filtered.map((a) => (
-           <button
-             key={a.id}
-             onClick={() => onSelect?.(a)}
-             className="group w-full text-left"
-             aria-label={`Open ${a.title}`}
-           >
-             <div className="rounded-xl bg-white border border-gray-200/80 hover:border-gray-300 hover:shadow-md transition-all duration-200 overflow-hidden">
+         <AnimatePresence mode="wait">
+           {loading ? (
+             <motion.div
+               key="loading"
+               initial={{ opacity: 0 }}
+               animate={{ opacity: 1 }}
+               exit={{ opacity: 0 }}
+               className="space-y-4"
+             >
+               {/* Professional Loading Skeletons */}
+               {[...Array(3)].map((_, i) => (
+                 <motion.div
+                   key={i}
+                   initial={{ opacity: 0, y: 20 }}
+                   animate={{ opacity: 1, y: 0 }}
+                   transition={{ delay: i * 0.1 }}
+                   className="rounded-xl bg-white border border-gray-200 overflow-hidden"
+                 >
+                   <div className="relative w-full h-32 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-pulse">
+                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-pulse" />
+                   </div>
+                   <div className="p-4 space-y-3">
+                     <div className="space-y-2">
+                       <div className="h-4 bg-gray-200 rounded animate-pulse" />
+                       <div className="h-3 bg-gray-200 rounded w-3/4 animate-pulse" />
+                     </div>
+                     <div className="h-3 bg-gray-200 rounded w-1/2 animate-pulse" />
+                   </div>
+                 </motion.div>
+               ))}
+             </motion.div>
+           ) : (
+             <motion.div
+               key="content"
+               initial={{ opacity: 0 }}
+               animate={{ opacity: 1 }}
+               exit={{ opacity: 0 }}
+               className="space-y-4"
+             >
+               {filtered.map((a, index) => (
+                 <motion.button
+                   key={a.id}
+                   onClick={() => onSelect?.(a)}
+                   className="group w-full text-left"
+                   aria-label={`Open ${a.title}`}
+                   initial={{ opacity: 0, y: 20 }}
+                   animate={{ opacity: 1, y: 0 }}
+                   transition={{ delay: index * 0.05, duration: 0.3 }}
+                   whileHover={{ 
+                     scale: 1.02,
+                     transition: { duration: 0.2 }
+                   }}
+                   whileTap={{ scale: 0.98 }}
+                 >
+                   <motion.div 
+                     className="rounded-xl bg-white border border-gray-200/80 overflow-hidden shadow-sm"
+                     whileHover={{ 
+                       borderColor: "#d1d5db",
+                       boxShadow: "0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+                       transition: { duration: 0.2 }
+                     }}
+                   >
                {/* Thumbnail - larger and more prominent */}
-               <div className="relative w-full h-32 overflow-hidden bg-gray-100">
+               <div className="relative w-full h-32 overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
                  {a.thumbnail ? (
-                   <img
+                   <motion.img
                      src={a.thumbnail}
                      alt={a.title}
-                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                     className="w-full h-full object-cover"
                      loading="lazy"
+                     whileHover={{ scale: 1.08 }}
+                     transition={{ duration: 0.4, ease: "easeOut" }}
                    />
                  ) : (
-                   <div className="w-full h-full flex items-center justify-center text-gray-400">
+                   <motion.div 
+                     className="w-full h-full flex items-center justify-center text-gray-400"
+                     whileHover={{ scale: 1.1 }}
+                     transition={{ duration: 0.2 }}
+                   >
                      <FileText className="w-8 h-8" />
-                   </div>
+                   </motion.div>
                  )}
                  {/* Enhanced gradient overlay */}
-                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                 <motion.div 
+                   className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-black/5 to-transparent"
+                   initial={{ opacity: 0 }}
+                   whileHover={{ opacity: 1 }}
+                   transition={{ duration: 0.3 }}
+                 />
                  
                  {/* New badge positioned on thumbnail */}
                  {isNew(a.createdAt) && (
-                   <div className="absolute top-2 right-2">
-                     <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-emerald-500 text-white shadow-sm">
+                   <motion.div 
+                     className="absolute top-2 right-2"
+                     initial={{ scale: 0, opacity: 0 }}
+                     animate={{ scale: 1, opacity: 1 }}
+                     transition={{ delay: 0.2, type: "spring", stiffness: 500, damping: 30 }}
+                   >
+                     <motion.span 
+                       className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-lg"
+                       initial={{ 
+                         boxShadow: "0 4px 6px -1px rgba(16, 185, 129, 0.3)"
+                       }}
+                       whileHover={{ 
+                         boxShadow: "0 8px 12px -1px rgba(16, 185, 129, 0.4)"
+                       }}
+                       transition={{ duration: 0.2 }}
+                     >
                        New
-                     </span>
-                   </div>
+                     </motion.span>
+                   </motion.div>
                  )}
                </div>
 
                {/* Content - more spacious */}
-               <div className="p-4">
-                 <div className="flex items-start justify-between gap-3 mb-2">
-                   <h4 className="text-base font-semibold text-gray-900 line-clamp-2 group-hover:text-gray-700 transition-colors leading-tight">
+               <div className="p-5">
+                 <div className="flex items-start justify-between gap-3 mb-3">
+                   <motion.h4 
+                     className="text-base font-semibold text-gray-900 line-clamp-2 leading-tight"
+                     whileHover={{ color: "#374151" }}
+                     transition={{ duration: 0.2 }}
+                   >
                      {a.title}
-                   </h4>
-                   <ExternalLink className="w-4 h-4 text-gray-400 flex-shrink-0 mt-1 group-hover:text-gray-600 transition-colors" />
+                   </motion.h4>
+                   <motion.div
+                     whileHover={{ scale: 1.2, color: "#4b5563" }}
+                     transition={{ duration: 0.2 }}
+                   >
+                     <ExternalLink className="w-4 h-4 text-gray-400 flex-shrink-0 mt-1" />
+                   </motion.div>
                  </div>
                  
                  {a.subtitle && (
-                   <p className="text-sm text-gray-600 line-clamp-2 mb-3 leading-relaxed">{a.subtitle}</p>
+                   <motion.p 
+                     className="text-sm text-gray-600 line-clamp-2 mb-4 leading-relaxed"
+                     initial={{ opacity: 0.8 }}
+                     whileHover={{ opacity: 1 }}
+                     transition={{ duration: 0.2 }}
+                   >
+                     {a.subtitle}
+                   </motion.p>
                  )}
 
                  <div className="flex items-center gap-3 text-xs text-gray-500">
                    {a.createdAt && (
-                     <span className="inline-flex items-center gap-1.5">
-                       <Calendar className="w-4 h-4" />
+                     <motion.span 
+                       className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-gray-50"
+                       whileHover={{ backgroundColor: "#f3f4f6", scale: 1.05 }}
+                       transition={{ duration: 0.2 }}
+                     >
+                       <Calendar className="w-3.5 h-3.5" />
                        {formatDate(a.createdAt)}
-                     </span>
+                     </motion.span>
                    )}
                  </div>
                </div>
-             </div>
-           </button>
-           ))
-         )}
+                   </motion.div>
+                 </motion.button>
+               ))}
+             </motion.div>
+           )}
+         </AnimatePresence>
 
         {!loading && filtered.length === 0 && (
-          <div className="px-3 py-10 text-center text-sm text-gray-500">
-            {category === "careers" ? "Career opportunities coming soon..." :
-             category === "support" ? "Support resources coming soon..." :
-             "No articles match your search."}
-          </div>
+          <motion.div 
+            className="px-3 py-10 text-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <motion.div
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+              className="text-sm text-gray-500 bg-gray-50 rounded-lg p-4 border border-gray-200"
+            >
+              {category === "careers" ? "🚀 Career opportunities coming soon..." :
+               category === "support" ? "💬 Support resources coming soon..." :
+               "🔍 No articles match your search."}
+            </motion.div>
+          </motion.div>
         )}
       </div>
     </aside>
@@ -463,8 +611,14 @@ const DocumentViewer: React.FC<Props> = ({
   }, [relatedArticles]);
 
   // Handle category change
-  const handleCategoryChange = useCallback((category: string) => {
+  const handleCategoryChange = useCallback(async (category: string) => {
+    // Add a subtle loading transition
+    setLoadingArticles(true);
     setSelectedCategory(category);
+    
+    // Small delay for smooth transition
+    await new Promise(resolve => setTimeout(resolve, 200));
+    
     loadArticlesForCategory(category);
   }, [loadArticlesForCategory]);
 
