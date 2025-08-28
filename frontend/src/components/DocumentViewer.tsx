@@ -108,7 +108,7 @@ const NavigationSidebar: React.FC<{
       </div>
 
       {/* Navigation List */}
-      <div className="flex-1 overflow-auto scrollbar-hide px-3 py-4 space-y-2">
+      <div className="flex-1 overflow-auto scrollbar-custom px-3 py-4 space-y-2">
         {navigationItems.map((item, index) => (
           <motion.button
             key={item.name}
@@ -281,7 +281,7 @@ const RelatedSidebar: React.FC<SidebarProps> = ({ items, formatDate, onSelect, l
       </div>
 
              {/* List */}
-       <div className="flex-1 overflow-auto scrollbar-hide px-4 py-4 space-y-4">
+       <div className="flex-1 overflow-auto scrollbar-custom px-4 py-4 space-y-4">
          <AnimatePresence mode="wait">
            {loading ? (
              <motion.div
@@ -627,6 +627,41 @@ const DocumentViewer: React.FC<Props> = ({
     loadArticlesForCategory(selectedCategory);
   }, [loadArticlesForCategory, selectedCategory]);
 
+  // Prevent body scroll when DocumentViewer is open
+  useEffect(() => {
+    // Save the original styles
+    const originalBodyOverflow = window.getComputedStyle(document.body).overflow;
+    const originalHtmlOverflow = window.getComputedStyle(document.documentElement).overflow;
+    const originalBodyPosition = window.getComputedStyle(document.body).position;
+    const rootElement = document.getElementById('root');
+    const originalRootOverflow = rootElement ? window.getComputedStyle(rootElement).overflow : '';
+    
+    // Prevent body, html, and root scroll
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+    document.body.style.height = '100%';
+    
+    // Also prevent root element scroll
+    if (rootElement) {
+      rootElement.style.overflow = 'hidden';
+    }
+    
+    // Cleanup: restore original styles when component unmounts
+    return () => {
+      document.body.style.overflow = originalBodyOverflow;
+      document.documentElement.style.overflow = originalHtmlOverflow;
+      document.body.style.position = originalBodyPosition;
+      document.body.style.width = '';
+      document.body.style.height = '';
+      
+      if (rootElement) {
+        rootElement.style.overflow = originalRootOverflow;
+      }
+    };
+  }, []);
+
   return (
     <div
       className={`fixed inset-0 z-50 ${
@@ -776,7 +811,7 @@ const DocumentViewer: React.FC<Props> = ({
               }`}
             >
               {/* MAIN */}
-              <div className="min-h-0 overflow-auto bg-white scrollbar-hide">
+              <div className="min-h-0 overflow-auto bg-white scrollbar-main">
                 {/* Padding top = 0 because header is sticky and outside scroll context */}
                 <div
                   className={`${isCleanView ? "" : "px-4 sm:px-6 lg:px-8"} py-0`}

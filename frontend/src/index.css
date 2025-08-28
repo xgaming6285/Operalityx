@@ -223,6 +223,73 @@
   display: none; /* Chrome, Safari and Opera */
 }
 
+/* Custom styled scrollbars */
+.scrollbar-custom {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: rgba(156, 163, 175, 0.5) transparent; /* Firefox */
+}
+
+.scrollbar-custom::-webkit-scrollbar {
+  width: 3px; /* Chrome, Safari and Opera */
+  height: 1px;
+}
+
+.scrollbar-custom::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 2px;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.5);
+  border-radius: 2px;
+  transition: background 0.2s ease;
+  min-height: 20px; /* Minimum thumb height */
+  background-clip: padding-box;
+  border: 1px solid transparent;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.8);
+}
+
+.scrollbar-custom::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* More prominent scrollbar for main content areas */
+.scrollbar-main {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: rgba(156, 163, 175, 0.6) transparent; /* Firefox */
+}
+
+.scrollbar-main::-webkit-scrollbar {
+  width: 4px; /* Chrome, Safari and Opera */
+  height: 4px;
+}
+
+.scrollbar-main::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 2px;
+  margin: 1px;
+}
+
+.scrollbar-main::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.6);
+  border-radius: 2px;
+  transition: all 0.2s ease;
+  min-height: 30px; /* Minimum thumb height */
+  background-clip: padding-box;
+  border: 1px solid transparent;
+}
+
+.scrollbar-main::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.8);
+}
+
+.scrollbar-main::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 /* Smooth scrolling for anchor links */
 html {
   scroll-behavior: smooth;
