@@ -22,6 +22,7 @@ export const useScrollTrigger = ({
   const rafRef = useRef<number | null>(null);
 
   const TOP_OFFSET = 8; // px considered "at top"
+  const BOTTOM_OFFSET = 100; // px considered "at bottom"
   const DIR_THRESHOLD = 4; // px before we consider it a direction change
 
   const clearHideTimer = () => {
@@ -42,8 +43,14 @@ export const useScrollTrigger = ({
   useEffect(() => {
     const y0 = window.scrollY;
     lastYRef.current = y0;
-    // If we load part-way down the page, show as collapsed initially
-    setState(y0 > TOP_OFFSET ? "collapsed" : "hidden");
+    
+    // Check if we're at the bottom initially
+    const documentHeight = document.documentElement.scrollHeight;
+    const windowHeight = window.innerHeight;
+    const initiallyAtBottom = y0 + windowHeight >= documentHeight - BOTTOM_OFFSET;
+    
+    // If we load at top or bottom, hide; otherwise show as collapsed
+    setState(y0 <= TOP_OFFSET || initiallyAtBottom ? "hidden" : "collapsed");
     scheduleCollapse();
 
     const onScroll = () => {
@@ -51,8 +58,13 @@ export const useScrollTrigger = ({
       rafRef.current = requestAnimationFrame(() => {
         const y = window.scrollY;
         const dy = y - lastYRef.current;
+        
+        // Calculate if we're at the bottom of the page
+        const documentHeight = document.documentElement.scrollHeight;
+        const windowHeight = window.innerHeight;
+        const scrolledToBottom = y + windowHeight >= documentHeight - BOTTOM_OFFSET;
 
-        if (y <= TOP_OFFSET) {
+        if (y <= TOP_OFFSET || scrolledToBottom) {
           setState("hidden");
         } else if (dy > DIR_THRESHOLD || dy < -DIR_THRESHOLD) {
           // Any meaningful scroll movement expands it
