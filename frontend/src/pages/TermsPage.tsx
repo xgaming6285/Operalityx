@@ -27,7 +27,7 @@ const TermsPage = () => {
                             Welcome to our platform
                         </h2>
                         <p className="text-lg text-gray-600 leading-relaxed mb-8 max-w-3xl mx-auto">
-                            By using Operalityx's services, you agree to these terms. We've designed our platform to provide secure, 
+                            By using Operalytix's services, you agree to these terms. We've designed our platform to provide secure, 
                             locally-hosted AI solutions while maintaining the highest standards of privacy and reliability.
                         </p>
                     </div>
@@ -165,7 +165,7 @@ const TermsPage = () => {
                             <div>
                                 <h3 className="text-xl font-semibold text-gray-900 mb-4">Our Rights</h3>
                                 <p className="text-gray-600 leading-relaxed">
-                                    The Operalityx platform, including its features, functionality, and original content, remains our exclusive property. 
+                                    The Operalytix platform, including its features, functionality, and original content, remains our exclusive property. 
                                     Our trademarks and technology cannot be used without written permission.
                                 </p>
                             </div>
@@ -213,7 +213,7 @@ const TermsPage = () => {
                                     We provide our services "as is" and limit our liability to the maximum extent permitted by law.
                                 </p>
                                 <p className="text-gray-600 leading-relaxed">
-                                    Operalityx and its affiliates shall not be liable for indirect, incidental, or consequential damages 
+                                    Operalytix and its affiliates shall not be liable for indirect, incidental, or consequential damages 
                                     resulting from your use of our services.
                                 </p>
                             </div>

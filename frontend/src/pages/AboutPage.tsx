@@ -11,7 +11,7 @@ const AboutPage = () => {
                             Building reliable AI systems you can trust
                         </h1>
                         <p className="text-xl sm:text-2xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
-                            Operalityx creates secure, locally-hosted AI solutions for businesses who value privacy and control.
+                            Operalytix creates secure, locally-hosted AI solutions for businesses who value privacy and control.
                         </p>
                     </div>
                 </section>

@@ -132,7 +132,7 @@ const BrandManifestoPage = () => {
                                     and never prioritize our convenience over your security.
                                 </p>
                                 <p className="text-gray-600 leading-relaxed">
-                                    When you choose Operalityx, you're choosing a partner who believes your success and security go hand in hand.
+                                    When you choose Operalytix, you're choosing a partner who believes your success and security go hand in hand.
                                 </p>
                             </div>
                         </div>

@@ -1,6 +1,9 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import CompanyOverviewModal from "./CompanyOverviewModal";
 
 const HeroSection = () => {
+    const [showOverviewModal, setShowOverviewModal] = useState(false);
     return (
         <div className="min-h-screen bg-gradient-to-br from-turquoise-900 via-turquoise-800 to-black flex items-center justify-center px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center">
@@ -67,6 +70,7 @@ const HeroSection = () => {
                             <Button
                                 variant="outline"
                                 size="lg"
+                                onClick={() => setShowOverviewModal(true)}
                                 className="w-full sm:w-auto bg-white/20 border-white/30 text-white hover:bg-white/30 hover:border-white/50 transition-all duration-300 px-6 sm:px-8 py-3 text-base sm:text-lg"
                             >
                                 Read More
@@ -91,6 +95,12 @@ const HeroSection = () => {
                     <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-white/30"></div>
                 </div>
             </div>
+
+            {/* Company Overview Modal */}
+            <CompanyOverviewModal 
+                isOpen={showOverviewModal} 
+                onClose={() => setShowOverviewModal(false)}
+            />
         </div>
     );
 };

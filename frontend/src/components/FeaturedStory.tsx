@@ -11,7 +11,7 @@ const FeaturedStory = () => {
     title: "Operalityx Stories: AI Transformation Journey",
     subtitle: "Experience the Future of AI Innovation",
     excerpt: "Watch exclusive behind-the-scenes footage showcasing real AI transformations, breakthrough moments, and the human stories that drive innovation forward.",
-    author: "Operalityx Team",
+    author: "Operalytix Team",
     readTime: "Featured Video",
     category: "Featured Story",
     videoSrc: "/stories/stories-video.mp4"

@@ -406,7 +406,7 @@ const CareersPage = () => {
                         
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <Link
-                                to="mailto:careers@operalityx.com"
+                                to="mailto:careers@operalytix.com"
                                 className="bg-gray-900 text-white px-6 py-3 rounded-md font-medium hover:bg-gray-800 transition-colors duration-200"
                             >
                                 Send Your Resume
@@ -486,7 +486,7 @@ const CareersPage = () => {
 
                             <div className="pt-4 border-t border-gray-200">
                                 <a
-                                    href={`mailto:careers@operalityx.com?subject=Application for ${selectedJob.title}`}
+                                    href={`mailto:careers@operalytix.com?subject=Application for ${selectedJob.title}`}
                                     className="w-full bg-gray-900 text-white px-6 py-3 rounded-md font-medium hover:bg-gray-800 transition-colors duration-200 flex items-center justify-center gap-2"
                                 >
                                     Apply for this Position

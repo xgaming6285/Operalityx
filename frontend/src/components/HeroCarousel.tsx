@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import CompanyOverviewModal from './CompanyOverviewModal';
 import ChatBox from './ChatBox';
 
 const HeroCarousel = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [cardWidth, setCardWidth] = useState(0);
+    const [showOverviewModal, setShowOverviewModal] = useState(false);
 
     const cards = [
         {
@@ -78,6 +80,8 @@ const HeroCarousel = () => {
     const goToChatBox = () => {
         setCurrentSlide(0);
     };
+
+
 
     // Handle drag end to snap to nearest slide
     const handleDragEnd = (_: any, info: any) => {
@@ -160,13 +164,13 @@ const HeroCarousel = () => {
                                             >
                                                 Get Started
                                             </button>
-                                            <a 
-                                                href="#research" 
+                                            <button 
+                                                onClick={() => setShowOverviewModal(true)}
                                                 onPointerDown={(e) => e.stopPropagation()}
                                                 className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border bg-white border-white rounded-full font-semibold hover:bg-white/10 transition-colors text-base sm:text-lg text-black no-underline text-center"
                                             >
                                                 Read More
-                                            </a>
+                                            </button>
                                         </motion.div>
                                     </>
                                 )}
@@ -188,6 +192,12 @@ const HeroCarousel = () => {
                     />
                 ))}
             </div>
+
+            {/* Company Overview Modal */}
+            <CompanyOverviewModal 
+                isOpen={showOverviewModal} 
+                onClose={() => setShowOverviewModal(false)}
+            />
         </div>
     );
 };
