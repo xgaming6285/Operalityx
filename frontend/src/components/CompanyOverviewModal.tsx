@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import {
   X,
   Brain,
@@ -16,6 +17,7 @@ interface CompanyOverviewModalProps {
 }
 
 const CompanyOverviewModal: React.FC<CompanyOverviewModalProps> = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
   const [showLogo, setShowLogo] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
@@ -60,6 +62,12 @@ const CompanyOverviewModal: React.FC<CompanyOverviewModalProps> = ({ isOpen, onC
     }
     return () => document.removeEventListener('keydown', handleEscape);
   }, [isOpen, onClose]);
+
+  // Handle navigation to research page
+  const handleViewResearch = () => {
+    onClose(); // Close the modal first
+    navigate('/research'); // Navigate to research page
+  };
 
 
 
@@ -345,6 +353,7 @@ const CompanyOverviewModal: React.FC<CompanyOverviewModalProps> = ({ isOpen, onC
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
+                      onClick={handleViewResearch}
                       className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors flex items-center justify-center space-x-2"
                     >
                       <span>View Research</span>

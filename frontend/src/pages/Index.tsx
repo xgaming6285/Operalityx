@@ -6,6 +6,7 @@ import Community from "@/components/Community";
 import Stories from "@/components/Stories";
 import News from "@/components/news";
 import ScrollChatModal from "@/components/ScrollChatModal";
+import ChatBubble from "@/components/ChatBubble";
 import { useScrollTrigger } from "@/hooks/useScrollTrigger";
 import { useState } from "react";
 
@@ -42,6 +43,9 @@ const Index = () => {
           />
         }
       />
+
+      {/* Chat Bubble */}
+      <ChatBubble />
     </Layout>
   );
 };
