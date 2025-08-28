@@ -3,7 +3,7 @@ export interface Document {
   title: string;
   subtitle?: string;
   description: string;
-  type: "story" | "news" | "research";
+  type: "story" | "news" | "research" | "solution" | "community";
   contentType: "word" | "pdf" | "html" | "markdown" | "image";
   originalFileName?: string;
   thumbnail?: string;
@@ -15,6 +15,15 @@ export interface Document {
     fileSize?: number;
     wordCount?: number;
   };
+}
+
+export interface RelatedArticle {
+  id: string | number;
+  title: string;
+  subtitle?: string;
+  thumbnail?: string;
+  createdAt?: string;
+  description?: string;
 }
 
 

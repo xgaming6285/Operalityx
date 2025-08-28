@@ -199,7 +199,7 @@ const SupportPage = () => {
           >
             <div className="w-24 h-24 bg-white rounded-2xl shadow-lg flex items-center justify-center">
               <img 
-                src="/images/logo-icon.png" 
+                src="/images/smaller-logo-hd.png" 
                 alt="Operalytix Support" 
                 className="w-16 h-16 object-contain"
               />
@@ -471,7 +471,7 @@ const SupportPage = () => {
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
                     <img 
-                      src="/images/logo-icon.png" 
+                      src="/images/smaller-logo-hd.png" 
                       alt="AI Assistant" 
                       className="w-8 h-8 object-contain"
                     />
@@ -511,7 +511,7 @@ const SupportPage = () => {
                           {msg.role === 'user' ? (
                             <User className="w-4 h-4" />
                           ) : (
-                            <img src="/images/logo-icon.png" alt="AI" className="w-5 h-5 object-contain" />
+                            <img src="/images/smaller-logo-hd.png" alt="AI" className="w-5 h-5 object-contain" />
                           )}
                         </div>
                         <div className={`px-4 py-3 rounded-2xl ${
@@ -530,7 +530,7 @@ const SupportPage = () => {
                   <div className="flex justify-start">
                     <div className="flex items-start gap-3">
                       <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                        <img src="/images/logo-icon.png" alt="AI" className="w-5 h-5 object-contain animate-pulse" />
+                        <img src="/images/smaller-logo-hd.png" alt="AI" className="w-5 h-5 object-contain animate-pulse" />
                       </div>
                       <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
                         <div className="flex items-center gap-2">

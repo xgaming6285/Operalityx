@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import {
   X,
   Maximize2,
@@ -19,22 +19,14 @@ import {
   HelpCircle,
   Home,
 } from "lucide-react";
-import { DocumentViewerProps } from "../types/document";
+import { DocumentViewerProps, RelatedArticle } from "../types/document";
 import ContactForm from "./ContactForm";
 import { useNavigate } from "react-router-dom";
+import { ArticleService, ArticleMeta } from "../services/articleService";
 
 // -----------------------------
 // Types
 // -----------------------------
-
-type RelatedArticle = {
-  id: string | number;
-  title: string;
-  subtitle?: string;
-  thumbnail?: string;
-  createdAt?: string;
-  description?: string;
-};
 
 type Props = DocumentViewerProps & {
   /** Optional: related items to show in the right sidebar */
@@ -55,30 +47,33 @@ type NavigationItem = {
   icon: React.ComponentType<{ className?: string }>;
   description: string;
   action?: 'navigate' | 'close';
+  category: string; // Add category for filtering
 };
 
 const navigationItems: NavigationItem[] = [
-  { name: "Home", href: "/", icon: Home, description: "Close viewer", action: 'close' },
-  { name: "Research", href: "/research", icon: Brain, description: "Research papers and studies" },
-  { name: "Solutions", href: "/solutions", icon: Zap, description: "Business solutions" },
-  { name: "Community", href: "/community", icon: Users, description: "Community content" },
-  { name: "Stories", href: "/stories", icon: BookOpen, description: "Success stories" },
-  { name: "News", href: "/news", icon: Newspaper, description: "Latest news" },
-  { name: "Careers", href: "/careers", icon: Briefcase, description: "Career opportunities" },
-  { name: "Support", href: "/support", icon: HelpCircle, description: "Get help" },
+  { name: "Home", href: "/", icon: Home, description: "Close viewer", category: "all", action: "close" },
+  { name: "Research", href: "/research", icon: Brain, description: "Research papers and studies", category: "research" },
+  { name: "Solutions", href: "/solutions", icon: Zap, description: "Business solutions", category: "solution" },
+  { name: "Community", href: "/community", icon: Users, description: "Community content", category: "community" },
+  { name: "Stories", href: "/stories", icon: BookOpen, description: "Success stories", category: "story" },
+  { name: "News", href: "/news", icon: Newspaper, description: "Latest news", category: "news" },
+  { name: "Careers", href: "/careers", icon: Briefcase, description: "Career opportunities", category: "careers" },
+  { name: "Support", href: "/support", icon: HelpCircle, description: "Get help and support", category: "support" },
 ];
 
-const NavigationSidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+const NavigationSidebar: React.FC<{ 
+  onClose: () => void; 
+  onCategoryChange: (category: string) => void;
+  selectedCategory: string;
+}> = ({ onClose, onCategoryChange, selectedCategory }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const navigate = useNavigate();
 
   const handleItemClick = (item: NavigationItem) => {
     if (item.action === 'close') {
       onClose();
     } else {
-      // Use React Router navigation for SPA behavior
-      onClose(); // Close the modal first
-      navigate(item.href); // Then navigate
+      // Filter articles by category instead of navigating
+      onCategoryChange(item.category);
     }
   };
 
@@ -115,15 +110,25 @@ const NavigationSidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             onClick={() => handleItemClick(item)}
             className={`group flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white hover:shadow-sm transition-all duration-200 w-full text-left ${
               isCollapsed ? "justify-center" : ""
+            } ${
+              selectedCategory === item.category ? "bg-white shadow-sm border border-gray-200" : ""
             }`}
             title={isCollapsed ? item.description : undefined}
           >
             <div className="flex-shrink-0">
-              <item.icon className="w-5 h-5 text-gray-600 group-hover:text-gray-900 transition-colors" />
+              <item.icon className={`w-5 h-5 transition-colors ${
+                selectedCategory === item.category 
+                  ? "text-blue-600" 
+                  : "text-gray-600 group-hover:text-gray-900"
+              }`} />
             </div>
             {!isCollapsed && (
               <div className="min-w-0 flex-1">
-                <div className="text-sm font-medium text-gray-900 group-hover:text-gray-700 transition-colors">
+                <div className={`text-sm font-medium transition-colors ${
+                  selectedCategory === item.category 
+                    ? "text-blue-900 font-semibold" 
+                    : "text-gray-900 group-hover:text-gray-700"
+                }`}>
                   {item.name}
                 </div>
                 <div className="text-xs text-gray-500 truncate">
@@ -155,9 +160,11 @@ type SidebarProps = {
   items: RelatedArticle[];
   formatDate: (d?: string) => string;
   onSelect?: (a: RelatedArticle) => void;
+  loading?: boolean;
+  category?: string;
 };
 
-const RelatedSidebar: React.FC<SidebarProps> = ({ items, formatDate, onSelect }) => {
+const RelatedSidebar: React.FC<SidebarProps> = ({ items, formatDate, onSelect, loading, category }) => {
   const [query, setQuery] = useState("");
   const [sortBy, setSortBy] = useState<"recent" | "title">("recent");
 
@@ -194,10 +201,16 @@ const RelatedSidebar: React.FC<SidebarProps> = ({ items, formatDate, onSelect })
         <div className="px-5 pt-4">
           <div className="flex items-baseline justify-between">
             <div>
-              <div className="text-sm font-semibold text-gray-900">More articles</div>
-              <div className="text-xs text-gray-500">You might also like</div>
+              <div className="text-sm font-semibold text-gray-900">
+                {(category || "all") === "all" ? "More articles" : `${(category || "").charAt(0).toUpperCase() + (category || "").slice(1)} articles`}
+              </div>
+              <div className="text-xs text-gray-500">
+                {loading ? "Loading..." : (category || "all") === "all" ? "You might also like" : `All ${category || ""} content`}
+              </div>
             </div>
-            <div className="text-[11px] text-gray-500">{filtered.length} results</div>
+            <div className="text-[11px] text-gray-500">
+              {loading ? "..." : `${filtered.length} results`}
+            </div>
           </div>
 
           {/* Controls */}
@@ -229,7 +242,12 @@ const RelatedSidebar: React.FC<SidebarProps> = ({ items, formatDate, onSelect })
 
              {/* List */}
        <div className="flex-1 overflow-auto scrollbar-hide px-4 py-4 space-y-4">
-         {filtered.map((a) => (
+         {loading ? (
+           <div className="px-3 py-10 text-center text-sm text-gray-500">
+             Loading articles...
+           </div>
+         ) : (
+           filtered.map((a) => (
            <button
              key={a.id}
              onClick={() => onSelect?.(a)}
@@ -288,11 +306,14 @@ const RelatedSidebar: React.FC<SidebarProps> = ({ items, formatDate, onSelect })
                </div>
              </div>
            </button>
-         ))}
+           ))
+         )}
 
-        {filtered.length === 0 && (
+        {!loading && filtered.length === 0 && (
           <div className="px-3 py-10 text-center text-sm text-gray-500">
-            No articles match your search.
+            {category === "careers" ? "Career opportunities coming soon..." :
+             category === "support" ? "Support resources coming soon..." :
+             "No articles match your search."}
           </div>
         )}
       </div>
@@ -317,6 +338,9 @@ const DocumentViewer: React.FC<Props> = ({
   const [showMetadata, setShowMetadata] = useState(false);
   const [isCleanView, setIsCleanView] = useState(false);
   const [showHelpTooltip, setShowHelpTooltip] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [filteredArticles, setFilteredArticles] = useState<RelatedArticle[]>(relatedArticles);
+  const [loadingArticles, setLoadingArticles] = useState(false);
 
   // Detect mobile and maintain fullscreen default
   useEffect(() => {
@@ -404,6 +428,50 @@ const DocumentViewer: React.FC<Props> = ({
     () => Array.isArray(relatedArticles) && relatedArticles.length > 0,
     [relatedArticles]
   );
+
+  // Load articles for the selected category
+  const loadArticlesForCategory = useCallback(async (category: string) => {
+    if (category === "all") {
+      setFilteredArticles(relatedArticles);
+      return;
+    }
+
+    // Handle special categories that don't have articles
+    if (category === "careers" || category === "support") {
+      setFilteredArticles([]);
+      return;
+    }
+
+    setLoadingArticles(true);
+    try {
+      const articles = await ArticleService.getArticlesByType(category);
+      const relatedArticlesForCategory = articles.map((article: ArticleMeta) => ({
+        id: article.id,
+        title: article.title,
+        subtitle: article.subtitle,
+        thumbnail: article.thumbnail,
+        createdAt: article.createdAt,
+        description: article.description,
+      }));
+      setFilteredArticles(relatedArticlesForCategory);
+    } catch (error) {
+      console.error("Failed to load articles for category:", category, error);
+      setFilteredArticles([]);
+    } finally {
+      setLoadingArticles(false);
+    }
+  }, [relatedArticles]);
+
+  // Handle category change
+  const handleCategoryChange = useCallback((category: string) => {
+    setSelectedCategory(category);
+    loadArticlesForCategory(category);
+  }, [loadArticlesForCategory]);
+
+  // Load initial articles
+  useEffect(() => {
+    loadArticlesForCategory(selectedCategory);
+  }, [loadArticlesForCategory, selectedCategory]);
 
   return (
     <div
@@ -541,7 +609,11 @@ const DocumentViewer: React.FC<Props> = ({
         <div className="flex-1 min-h-0">
           <div className="flex h-full">
             {/* Navigation Sidebar (left) */}
-            <NavigationSidebar onClose={onClose} />
+            <NavigationSidebar 
+              onClose={onClose} 
+              onCategoryChange={handleCategoryChange}
+              selectedCategory={selectedCategory}
+            />
             
             {/* Main content and related sidebar */}
             <div
@@ -558,57 +630,35 @@ const DocumentViewer: React.FC<Props> = ({
                 >
                   {/* Render content EXACTLY */}
                   <div className="w-full h-full">
-                    {doc.contentType === "pdf" ? (
-                      <iframe
-                        src={doc.content}
-                        className="w-full"
-                        style={{
-                          border: "none",
-                          width: "100%",
-                          // Full-height minus a little breathing space at bottom
-                          height: `calc(100vh - ${NAV_HEIGHT + 8}px)`,
-                        }}
-                        title={doc.title}
+                    <div
+                      dangerouslySetInnerHTML={{ __html: doc.content }}
+                      style={{
+                        width: "100%",
+                        minHeight: `calc(100vh - ${NAV_HEIGHT + 8}px)`,
+                        backgroundColor: "white",
+                      }}
+                      className={`${isCleanView ? "" : "prose max-w-none prose-p:leading-7"} `}
+                    />
+                    {/* Contact form for HTML */}
+                    <div className={`${isCleanView ? "hidden" : "px-0 sm:px-2 lg:px-4 py-6 border-t border-gray-200 bg-white"}`}>
+                      <ContactForm
+                        articleTitle={doc.title}
+                        className="max-w-2xl mx-auto"
                       />
-                    ) : doc.contentType === "image" ? (
-                      <div
-                        dangerouslySetInnerHTML={{ __html: doc.content }}
-                        style={{
-                          width: "100%",
-                          minHeight: `calc(100vh - ${NAV_HEIGHT + 8}px)`,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          backgroundColor: "white",
-                        }}
-                      />
-                    ) : (
-                      <>
-                        <div
-                          dangerouslySetInnerHTML={{ __html: doc.content }}
-                          style={{
-                            width: "100%",
-                            minHeight: `calc(100vh - ${NAV_HEIGHT + 8}px)`,
-                            backgroundColor: "white",
-                          }}
-                          className={`${isCleanView ? "" : "prose max-w-none prose-p:leading-7"} `}
-                        />
-                        {/* Contact form for HTML */}
-                        <div className={`${isCleanView ? "hidden" : "px-0 sm:px-2 lg:px-4 py-6 border-t border-gray-200 bg-white"}`}>
-                          <ContactForm
-                            articleTitle={doc.title}
-                            className="max-w-2xl mx-auto"
-                          />
-                        </div>
-                      </>
-                    )}
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* SIDEBAR (enhanced) */}
               {hasSidebar && (
-                <RelatedSidebar items={relatedArticles} formatDate={formatDate} onSelect={onSelectArticle} />
+                <RelatedSidebar 
+                  items={filteredArticles} 
+                  formatDate={formatDate} 
+                  onSelect={onSelectArticle}
+                  loading={loadingArticles}
+                  category={selectedCategory}
+                />
               )}
             </div>
           </div>
